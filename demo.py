@@ -63,12 +63,15 @@ def demo_live_search_offer_enricher() :
 		"search_id": 2848,
 		"ean": "00017817770613"
 	}
+	data = {
+		'data': base64.b64encode(json.dumps(message).encode())
+	}
 	# Define a mocked context
 	context = {
 		'event_id': '-1'
 	}
 	# Execute the function
-	result = live_search_offer_enricher(message, context, production=False)
+	result = live_search_offer_enricher(data, context, production=False)
 	print(result)
 
 if __name__ == '__main__' :

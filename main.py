@@ -37,7 +37,10 @@ def live_search_offer_enricher(event, context, production=True) :
 		Consumes messages on the topic 'live_search_offers', enriches them
 		and then updates the Firebase Realtime Database with the output.
 	"""
-	print('Got offers for search_id: ', event['search_id'])
+	payload = json.loads(base64.b64decode(event['data']))
+	print(payload)
+
+	print('Got offers for search_id: ', payload['search_id'])
 	# Fetch the service account key JSON file contents
 	cred = credentials.Certificate('firebase_service_account.json')
 	# Initialize the app with a service account, granting admin privileges
@@ -47,11 +50,11 @@ def live_search_offer_enricher(event, context, production=True) :
 	# Open a connection to the database
 	ref = db.reference('offerSearch')
 	# Choose the relevant search
-	search_ref = ref.child(str(event['search_id']))
+	search_ref = ref.child(str(payload['search_id']))
 
 	# TODO: Enrich and format the data in this stage
 
 	# Update the specific search in Firebase RTD with the newly fetched offers
 	search_ref.update({
-		'offers/' + event['offer_source']: event['offers']
+		'offers/' + payload['offer_source']: payload['offers']
 	})
