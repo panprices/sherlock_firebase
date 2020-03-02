@@ -1,4 +1,9 @@
+import base64
 import json
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+
 from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import format_search_offer_msg
 
@@ -25,3 +30,28 @@ def offer_search_trigger(event, context, production=True):
 			raise e
 		print(pub_results)
 		return pub_results
+
+def live_search_offer_enricher(event, context, production=True) :
+
+	"""
+		Consumes messages on the topic 'live_search_offers', enriches them
+		and then updates the Firebase Realtime Database with the output.
+	"""
+	print('Got offers for search_id: ', event['search_id'])
+	# Fetch the service account key JSON file contents
+	cred = credentials.Certificate('firebase_service_account.json')
+	# Initialize the app with a service account, granting admin privileges
+	firebase_admin.initialize_app(cred, {
+		'databaseURL': 'https://panprices.firebaseio.com/'
+	})
+	# Open a connection to the database
+	ref = db.reference('offerSearch')
+	# Choose the relevant search
+	search_ref = ref.child(str(event['search_id']))
+
+	# TODO: Enrich and format the data in this stage
+
+	# Update the specific search in Firebase RTD with the newly fetched offers
+	search_ref.update({
+		'offers/' + event['offer_source']: event['offers']
+	})
