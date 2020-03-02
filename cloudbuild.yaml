@@ -1,0 +1,22 @@
+steps:
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         '${_FUNCTION_NAME}',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-resource',
+         '${_FIREBASE_RTD_PATH}',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37',
+         '--max-instances',
+         '1'
+         ]
+
+substitutions:
+  _FUNCTION_NAME: offer_search_trigger 
+  _FIREBASE_RTD_PATH: 'projects/_/instances/panprices/refs/offerSearch/{searchID}'
+
+images: []
