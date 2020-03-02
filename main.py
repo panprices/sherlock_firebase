@@ -14,8 +14,6 @@ def offer_search_trigger(event, context, production=True):
 		on PubSub so that we trigger Sherlock.
 	"""
 
-	# Print out the resource string that triggered the function
-	print(f"Function triggered by change to: {context['resource']}.")
 	# Print out the entire event object
 	print('Publishing the following live search for product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
