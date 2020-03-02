@@ -43,8 +43,12 @@ def live_search_offer_enricher(event, context, production=True) :
 	print('Got offers for search_id: ', payload['search_id'])
 	# Fetch the service account key JSON file contents
 	cred = credentials.Certificate('firebase_service_account.json')
+	
+	# import random
+
+
 	# Initialize the app with a service account, granting admin privileges
-	firebase_admin.initialize_app(cred, {
+	app = firebase_admin.initialize_app(cred, {
 		'databaseURL': 'https://panprices.firebaseio.com/'
 	})
 	# Open a connection to the database
@@ -58,3 +62,6 @@ def live_search_offer_enricher(event, context, production=True) :
 	search_ref.update({
 		'offers/' + payload['offer_source']: payload['offers']
 	})
+	# Kill the connection to not have it open and run in to the error
+	# when trying to open the default admin app
+	firebase_admin.delete_app(app)
