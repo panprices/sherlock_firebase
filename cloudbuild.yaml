@@ -2,21 +2,17 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy',
-         '${_FUNCTION_NAME}',
+         'offer_search_trigger',
          '--source',
          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-event',
+         'providers/google.firebase.database/eventTypes/ref.create',
          '--trigger-resource',
-         '${_FIREBASE_RTD_PATH}',
+         'projects/_/instances/panprices/refs/offerSearch/{searchID}',
          '--region',
          'europe-west1',
          '--runtime',
-         'python37',
-         '--max-instances',
-         '1'
+         'python37'
          ]
-
-substitutions:
-  _FUNCTION_NAME: offer_search_trigger 
-  _FIREBASE_RTD_PATH: 'projects/_/instances/panprices/refs/offerSearch/{searchID}'
 
 images: []
