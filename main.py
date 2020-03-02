@@ -20,7 +20,7 @@ def offer_search_trigger(event, context, production=True):
 	if production :
 		try :
 			publisher = Publisher('panprices', 'sherlock_products')
-			pub_results = publisher.publish_messages([event])
+			pub_results = publisher.publish_messages([event['delta']])
 		except Exception as e :
 			raise e
 		print(pub_results)

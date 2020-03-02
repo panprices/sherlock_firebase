@@ -7,12 +7,15 @@ from main import offer_search_trigger
 def demo_offer_search_trigger() :
 	# Mock a message
 	message = {
-		'name': 'Bose QuietComfort 35 II',
-		'id': '1357530',
-		'price': 2500,
-		'search_id': '12312',
-		'ean': '00017817770613',
-		'user_agent': 'blabla'
+		"data": None, 
+		"delta": {
+			'name': 'Bose QuietComfort 35 II',
+			'id': '1357530',
+			'price': 2500,
+			'search_id': '12312',
+			'ean': '00017817770613',
+			'user_agent': 'blabla'
+		}
 	}
 	# Define a mocked context
 	context = {
