@@ -4,11 +4,12 @@ import base64
 
 from main import offer_search_trigger
 from main import live_search_offer_enricher
+from main import product_search_trigger
 
 def demo_offer_search_trigger() :
 	# Mock a message
 	message = {
-		"data": None, 
+		"data": None,
 		"delta": {
 			'name': 'Bose QuietComfort 35 II',
 			'id': '1357530',
@@ -74,6 +75,27 @@ def demo_live_search_offer_enricher() :
 	result = live_search_offer_enricher(data, context, production=False)
 	print(result)
 
+def demo_product_search_trigger() :
+	# Mock a message
+	message = {
+		"data": None,
+		"delta": {
+			"Google Home": {
+				"createdAt": 1597938406487,
+				"updatedAt": 1597938454902,
+				"results": []
+			},
+		}
+	}
+	# Define a mocked context
+	context = {
+		'event_id': '-1',
+		'resource': 'projects/_/instances/panprices/refs/productSearch/'
+	}
+	# Execute the function
+	result = product_search_trigger(message, context, production=False)
+	print(result)
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -92,6 +114,12 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='Enrich offer output and update Firebase Realtime Database.'
 	)
+	parser.add_argument(
+		'-pst',
+		'--product_search_trigger',
+		action='store_true',
+		help='Listen to Realtime Firebase Triggers on productSearch and trigger to PubSub.'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -99,3 +127,5 @@ if __name__ == '__main__' :
 		demo_offer_search_trigger()
 	elif args.offer_enricher :
 		demo_live_search_offer_enricher()
+	elif args.product_search_trigger :
+		demo_product_search_trigger()

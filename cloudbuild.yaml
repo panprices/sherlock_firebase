@@ -28,4 +28,19 @@ steps:
          'python37'
          ]
 
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'product_search_trigger',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-event',
+         'providers/google.firebase.database/eventTypes/ref.create',
+         '--trigger-resource',
+         'projects/_/instances/panprices/refs/productSearch/{searchQuery}',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37'
+         ]
+
 images: []
