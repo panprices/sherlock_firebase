@@ -109,7 +109,7 @@ def product_search_publish_result(event, context, production=True):
 		current_entry = current_entry_ref.get({"results"})[0]
 		result = {}
 		# If results exist add to existing results dict
-		if current_entry != None:
+		if current_entry != None and "results" in current_entry:
 			result = current_entry["results"]
 		# Overwrites if gtin id already exists
 		result[payload["gtin"]] = payload
