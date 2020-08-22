@@ -78,7 +78,7 @@ def product_search_trigger(event, context, production=True):
 	# Publish the event to the sherlock_products Pubsub topic
 	if production :
 		try :
-			publisher = Publisher('panprices', 'sherlock_product_search')
+			publisher = Publisher('panprices', 'sherlock_google_shopping_test')
 			pub_results = publisher.publish_messages([event['delta']])
 		except Exception as e :
 			raise e
