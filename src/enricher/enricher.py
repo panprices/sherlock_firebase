@@ -6,7 +6,7 @@ import threading
 def _get_support_table(table) :
 	storage_client = storage.Client('panprices')
 	bucket = storage_client.bucket('panprices_sherlock')
-	blob = bucket.blob('support_tables/' + table + '.csv')		
+	blob = bucket.blob('support_tables/' + table + '.csv')
 	content = blob.download_as_string()
 	return content
 

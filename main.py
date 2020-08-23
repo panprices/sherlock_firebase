@@ -90,7 +90,7 @@ def product_search_publish_result(event, context, production=True):
 		Listens to changes on pubsub output topic from google shopping
 		and writes final results to firebase. If there are previous results
 		on the search the function appends. If a gtin appears again, it gets
-		overwritten. 
+		overwritten.
 	"""
 
 	try:
@@ -105,7 +105,7 @@ def product_search_publish_result(event, context, production=True):
 		ref = db.reference('productSearch')
 		# Choose the relevant search
 		current_entry_ref = ref.child(str(payload['searchQuery']))
-		# Get existing data in this specific search 
+		# Get existing data in this specific search
 		current_entry = current_entry_ref.get({"results"})[0]
 		result = {}
 		# If results exist add to existing results dict
@@ -113,12 +113,17 @@ def product_search_publish_result(event, context, production=True):
 			result = current_entry["results"]
 		# Overwrites if gtin id already exists
 		result[payload["gtin"]] = payload
-		# Update the specific search in Firebase RTD with the newly fetched offers
-		current_entry_ref.update({
-			"results": result
-		})
+		# Remove some fields we don't want to present to the client
+		del result[payload["gtin"]]["product_url"]
+		del result[payload["gtin"]]["source"]
+		del result[payload["gtin"]]["img_encoded"]
+		# Only publish if we are running in production
+		if production :
+			# Update the specific search in Firebase RTD with the newly fetched offers
+			current_entry_ref.update({
+				"results": result
+			})
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
 	except Exception as e:
 		raise e
-
