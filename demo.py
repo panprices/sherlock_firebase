@@ -6,6 +6,8 @@ from main import offer_search_trigger
 from main import live_search_offer_enricher
 from main import product_search_trigger
 from main import product_search_publish_result
+from main import delete_old_firebase_data
+from main import sherlock_shopping_finish_signal
 
 def demo_offer_search_trigger() :
 	# Mock a message
@@ -123,6 +125,38 @@ def demo_product_search_publish_result() :
 	result = product_search_publish_result(data, context, production=False)
 	print(result)
 
+def demo_sherlock_shopping_finish_signal() :
+	# Mock a message
+	message = {
+		"searchQuery": "foo_bar"
+	}
+	data = {
+		'data': base64.b64encode(json.dumps(message).encode())
+	}
+	# Define a mocked context
+	context = {
+		'event_id': '-1'
+	}
+	# Execute the function
+	result = sherlock_shopping_finish_signal(data, context , production=False)
+	print(result)
+
+def demo_delete_old_firebase_data() :
+	# Mock a message
+	message = {
+		"hello": "hi"
+	}
+	data = {
+		'data': base64.b64encode(json.dumps(message).encode())
+	}
+	# Define a mocked context
+	context = {
+		'event_id': '-1'
+	}
+	# Execute the function
+	result = delete_old_firebase_data(data, context)
+	print(result)
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -153,6 +187,18 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='Publish to Realtime Firebase on productSearch.'
 	)
+	parser.add_argument(
+		'-ssfs',
+		'--sherlock_shopping_finish_signal',
+		action='store_true',
+		help='Consume finished message from Sherlock Google Shopping and update Firebase.'
+	)
+	parser.add_argument(
+		'-dofd',
+		'--delete_old_firebase_data',
+		action='store_true',
+		help='Publish to Realtime Firebase on productSearch.'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -164,3 +210,7 @@ if __name__ == '__main__' :
 		demo_product_search_trigger()
 	elif args.product_search_publish_result:
 		demo_product_search_publish_result()
+	elif args.delete_old_firebase_data:
+		demo_delete_old_firebase_data()
+	elif args.sherlock_shopping_finish_signal:
+		demo_sherlock_shopping_finish_signal()

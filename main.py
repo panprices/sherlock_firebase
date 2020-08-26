@@ -1,6 +1,7 @@
 import base64
 import json
 import firebase_admin
+from datetime import datetime
 from firebase_admin import credentials
 from firebase_admin import db
 
@@ -125,5 +126,60 @@ def product_search_publish_result(event, context, production=True):
 			})
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
+	except Exception as e:
+		raise e
+
+def sherlock_shopping_finish_signal(event, context, production=True) :
+	"""
+		Listens to changes on pubsub finish topic from google shopping
+		and updates the firebase object for the specific search query.
+		This way the client will now when to render a message saying
+		that the search never resulted in any valid matches with GTIN
+		which is important for the user experience.
+	"""
+	try :
+		payload = json.loads(base64.b64decode(event['data']))
+		# Fetch the service account key JSON file contents
+		cred = credentials.Certificate('firebase_service_account.json')
+		# Initialize the app with a service account, granting admin privileges
+		app = firebase_admin.initialize_app(cred, {
+			'databaseURL': 'https://panprices.firebaseio.com/'
+		})
+		# Open a connection to the database
+		ref = db.reference('productSearch')
+		# Choose the relevant search
+		current_entry_ref = ref.child(str(payload['searchQuery']))
+		# Only publish if we are running in production
+		if production :
+			# Update the specific search in Firebase RTD with the newly fetched offers
+			current_entry_ref.update({
+				"searchCompleted": True
+			})
+		# Kill the connection, otherwise the next instance trying to connect will crash
+		firebase_admin.delete_app(app)
+	except Exception as e:
+		raise e
+
+def delete_old_firebase_data(event, context) :
+	try:
+		payload = json.loads(base64.b64decode(event['data']))
+		# Fetch the service account key JSON file contents
+		cred = credentials.Certificate('firebase_service_account.json')
+		# Initialize the app with a service account, granting admin privileges
+		app = firebase_admin.initialize_app(cred, {
+			'databaseURL': 'https://panprices.firebaseio.com/'
+		})
+		# Open a connection to the database
+		ref = db.reference('productSearch')
+
+		# THIS IS WHERE I ENDED. FIGURE OUT HOW TO GET THE PROPER TS AND SHIT TO
+		# REMOVE DATA OLDER THEN 1H OR SOMETHING.
+
+		cutoff = datetime.now() - 1 * 60 * 60 * 1000;
+
+		old = ref.order_by_child('timestamp').end_at(cutoff).limit_to_last(1);
+
+		print(old)
+
 	except Exception as e:
 		raise e
