@@ -45,11 +45,11 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy',
-         'sherlock_shopping_finish_signal',
+         'product_search_publish_result',
          '--source',
          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
          '--trigger-topic',
-         'sherlock_google_shopping_finished',
+         'sherlock_google_ids',
          '--region',
          'europe-west1',
          '--runtime',
@@ -58,11 +58,11 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy',
-         'product_search_publish_result',
+         'sherlock_shopping_finish_signal',
          '--source',
          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
          '--trigger-topic',
-         'sherlock_google_ids',
+         'sherlock_google_shopping_finished',
          '--region',
          'europe-west1',
          '--runtime',
