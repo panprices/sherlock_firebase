@@ -1,7 +1,7 @@
 import base64
 import json
 import firebase_admin
-from datetime import datetime
+from datetime import datetime, timedelta
 from firebase_admin import credentials
 from firebase_admin import db
 
@@ -169,17 +169,27 @@ def delete_old_firebase_data(event, context) :
 		app = firebase_admin.initialize_app(cred, {
 			'databaseURL': 'https://panprices.firebaseio.com/'
 		})
-		# Open a connection to the database
-		ref = db.reference('productSearch')
-
-		# THIS IS WHERE I ENDED. FIGURE OUT HOW TO GET THE PROPER TS AND SHIT TO
-		# REMOVE DATA OLDER THEN 1H OR SOMETHING.
-
-		cutoff = datetime.now() - 1 * 60 * 60 * 1000;
-
-		old = ref.order_by_child('timestamp').end_at(cutoff).limit_to_last(1);
-
-		print(old)
+		# Get the timestamp of data and time 1 hour ago
+		cutoff = datetime.now() - timedelta(hours = 1)
+		# The above returns something like 1598616388.782356 get rounded 12 digits
+		cutoff_ts = int(float(cutoff.timestamp()) * 1000)
+		# Get all the past searches which are older than 1 hour
+		items_to_remove = db \
+			.reference('productSearch') \
+			.order_by_child('createdAt') \
+			.end_at(cutoff_ts) \
+			.get()
+		# Iterate over all the paths and delete them one by one.
+		# This is obviously an O(n) operation which is not ideal.
+		for search_query in items_to_remove.keys():
+			try :
+				print('Deleting the dat for search query path: ', search_query)
+				# Request from the Firebase API that the specific search query
+				# be deleted.
+				db.reference('productSearch').child(search_query).delete()
+			except Exception as e:
+				raise e
+		return
 
 	except Exception as e:
 		raise e

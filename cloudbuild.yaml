@@ -69,4 +69,17 @@ steps:
          'python37'
          ]
 
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'delete_old_firebase_data',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-topic',
+         'trigger_delete_old_firebase_data',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37'
+         ]
+
 images: []
