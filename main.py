@@ -190,6 +190,6 @@ def delete_old_firebase_data(event, context) :
 			except Exception as e:
 				raise e
 		return
-
 	except Exception as e:
+		print("There was an error: ", e)
 		raise e
