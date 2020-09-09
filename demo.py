@@ -14,12 +14,12 @@ def demo_offer_search_trigger() :
 	message = {
 		"data": None,
 		"delta": {
-			'name': 'Bose QuietComfort 35 II',
-			'id': '1357530',
-			'price': 2500,
-			'search_id': '12312',
-			'ean': '00017817770613',
-			'user_agent': 'blabla'
+			'00190199383852': {
+				'createdAt': '1598969652038',
+				'gtin': '00190199383852',
+				'price': 2500,
+				'offerFetchComplete': False
+			}
 		}
 	}
 	# Define a mocked context
@@ -102,17 +102,22 @@ def demo_product_search_trigger() :
 def demo_product_search_publish_result() :
 	# Mock a message
 	message = {
+		"createdAt": 1598977013859,
+		"name": "Sony Alpha A7",
+		"pathName": "sony_alpha_a7",
+		"searchCompleted": False,
 		"source": "google_shopping",
-		"product_name": "Apple iPhone XR - 64GB - GSM Unlocked - Black ",
-		"gtin": "00753359751696",
-		"price": 59900,
-		"currency": "USD",
+		"product_name": "Sony A7 III Kamerahus ",
+		"gtin": "04548736079656",
+		"price": 2399000,
+		"currency": "SEK",
 		"img_encoded": "",
-		"img_url": "https://storage.googleapis.com/panprices/products/884a2431-8af1-3fe3-94f8-f57f7e099033.jpg",
-		"country": "NULL",
-		"product_url": "https://www.google.com/shopping/product/161535565509281091",
-		"product_description": "An advanced LCD. Even faster Face ID. And a breakthrough camera system. The iPhone XR is beautiful any way you look at it.",
-		"searchQuery": "apple_iphone_10"
+		"img_url": "https://storage.googleapis.com/panprices/products/c04357ec-aa55-3579-bbc6-0265983a5e78.jpg",
+		"country": "SE",
+		"product_url": "https://www.google.com/shopping/product/17082225217934858373",
+		"product_description": "Sony A7 Mark III systemkameran är utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit anmärkningsvärt i Sony Alpha seriens kameror och där är nya A7 lll inget undantag. Lagring av video i XAVC-S format samt strålande färgåtergivning tack vare S-Log2 lagring. Via WiFi och NFC är det enkelt att dela bilder och videor samt fjärrstyra kameran via mobiltelefonen. Den vridbara pekskärmen gör det lättare att filma eller ta bilder även ur svåra vinklar.",
+		"searchQuery": "sony_alpha_a7",
+		"bundleResult": False
 	}
 	data = {
 		'data': base64.b64encode(json.dumps(message).encode())

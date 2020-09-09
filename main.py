@@ -52,7 +52,7 @@ def live_search_offer_enricher(event, context, production=True) :
 	search_ref = ref.child(str(payload['search_id']))
 	# TODO: Enrich and format the data in this stage
 
-	add_offers_metadata(payload['offers'])
+	# add_offers_metadata(payload['offers'])
 
 	# Update the specific search in Firebase RTD with the newly fetched offers
 	search_ref.update({
