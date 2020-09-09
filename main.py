@@ -39,7 +39,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		and then updates the Firebase Realtime Database with the output.
 	"""
 	payload = json.loads(base64.b64decode(event['data']))
-	print('Got offers for search_id: ', payload['search_id'])
+	print('Got offers for search_id: ', payload['gtin'])
 	# Fetch the service account key JSON file contents
 	cred = credentials.Certificate('firebase_service_account.json')
 	# Initialize the app with a service account, granting admin privileges
@@ -47,9 +47,9 @@ def live_search_offer_enricher(event, context, production=True) :
 		'databaseURL': 'https://panprices.firebaseio.com/'
 	})
 	# Open a connection to the database
-	ref = db.reference('offerSearch')
+	ref = db.reference('offers')
 	# Choose the relevant search
-	search_ref = ref.child(str(payload['search_id']))
+	search_ref = ref.child(str(payload['gtin']))
 	# TODO: Enrich and format the data in this stage
 
 	# add_offers_metadata(payload['offers'])
