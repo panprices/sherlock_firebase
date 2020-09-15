@@ -9,8 +9,8 @@ from src.database.database import connect_to_db
 def offer_to_tup(offer) :
 	return (
 		offer.get('product_id') or None,
-		offer.get('source') or None,
-		offer.get('retailer_product_name') or None,
+		offer.get('offer_source') or None,
+		offer.get('retail_prod_name') or None,
 		offer.get('retailer_name') or None,
 		offer.get('country') or None,
 		offer.get('price') or None,
@@ -52,8 +52,8 @@ def add_offers_metadata(offers) :
 				%s AS currency,
 				%s AS offer_url,
 				%s AS requested_at,
-				%s AS match_score
-			UNION
+				%s::int AS match_score
+			UNION ALL
 		""", offer_to_tup(offer),
 		) for offer in offers
 	)
@@ -189,6 +189,7 @@ def add_offers_metadata(offers) :
 			retailer_name,
 			country,
 			adj_price AS price,
+			currency,
 			offer_url,
 			-- TODO: Move this to some other place higher up
 			CASE
@@ -200,11 +201,9 @@ def add_offers_metadata(offers) :
 			ship,
 			shipping_fee,
 			saving
-		FROM offers_complete;
+		FROM offers_complete
+		WHERE offer_source IS NOT NULL; -- Remove the row needed for the union
 	""")
 	rows = cur_dict.fetchall()
 	pg_pool.putconn(connection)
-
-	import json
-	print(json.dumps(rows, indent=2))
 	return rows

@@ -32,54 +32,82 @@ def demo_offer_search_trigger() :
 	print(result)
 
 def demo_live_search_offer_enricher() :
-	# Mock a message
-	message = {
-		"createdAt": 1600170673311,
-		"gtin": "00753759185090303",
-		"offerFetchComplete": False,
-		"triggeredFromClient": True,
-		"offers": [
-			{
-				'product_id': None,
-				'source': 'kelkoo_SE',
-				'retailer_product_name': 'Garmin Forerunner 645 Laufuhr OS',
-				'retailer_name': 'Keller-sports',
-				'country': 'SE',
-				'price': '348100',
-				'currency': 'SEK',
-				'offer_url': 'https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600172585000&.sig=BzsJ4y82T77ypv3r3Hk.Jv8WWjI-&affiliationId=96954747&catId=100278823&comId=13615713&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=se&ecs=ok&merchantid=13615713&offerId=ad53d80c9fd190499f3137134edae13a&searchId=1076982508302_1600172584990_44786&searchQuery=&service=5&wait=true',
-				'requested_at': '2020-09-15 12:23:05.010171',
-				'match_score': 1
-			},
-			{
-				'product_id': None,
-				'source': 'kelkoo_FI',
-				'retailer_product_name': 'Garmin Forerunner 645 GPS-urheilukello',
-				'retailer_name': 'Karkkainen.com',
-				'country': 'FI',
-				'price': '29900',
-				'currency': 'EUR',
-				'offer_url': 'https://fi-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600172585133&.sig=b1L4jHDGqp4Y4RD7rHLsYcY1h5Q-&affiliationId=96954749&catId=100278823&comId=14696913&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=fi&ecs=ok&merchantid=14696913&offerId=cce8504475b9f27cf58572dc3418fbec&searchId=10769920517132_1600172585125_38626&searchQuery=&service=5&wait=true', 'requested_at': '2020-09-15 12:23:05.144777',
-				'match_score': 1
-			}
-		],
-		"offer_source": "kelkoo",
-		"name": None,
-		"product_id": None,
-		"price": None
-	}
+	# Mock two messages
+	messages = [
+		{
+			"createdAt": 1600170673311,
+			"gtin": "00753759185091",
+			"offerFetchComplete": False,
+			"triggeredFromClient": True,
+			"offers": [
+				{
+					'product_id': None,
+					'offer_source': 'kelkoo_SE',
+					'retail_prod_name': 'Garmin Forerunner 645 Laufuhr OS',
+					'retailer_name': 'Keller-sports',
+					'country': 'SE',
+					'price': '348100',
+					'currency': 'SEK',
+					'offer_url': 'https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600172585000&.sig=BzsJ4y82T77ypv3r3Hk.Jv8WWjI-&affiliationId=96954747&catId=100278823&comId=13615713&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=se&ecs=ok&merchantid=13615713&offerId=ad53d80c9fd190499f3137134edae13a&searchId=1076982508302_1600172584990_44786&searchQuery=&service=5&wait=true',
+					'requested_at': '2020-09-15 12:23:05.010171',
+					'match_score': 1
+				},
+				{
+					'product_id': None,
+					'offer_source': 'kelkoo_FI',
+					'retail_prod_name': 'Garmin Forerunner 645 GPS-urheilukello',
+					'retailer_name': 'Karkkainen.com',
+					'country': 'FI',
+					'price': '29900',
+					'currency': 'EUR',
+					'offer_url': 'https://fi-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600172585133&.sig=b1L4jHDGqp4Y4RD7rHLsYcY1h5Q-&affiliationId=96954749&catId=100278823&comId=14696913&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=fi&ecs=ok&merchantid=14696913&offerId=cce8504475b9f27cf58572dc3418fbec&searchId=10769920517132_1600172585125_38626&searchQuery=&service=5&wait=true', 'requested_at': '2020-09-15 12:23:05.144777',
+					'requested_at': '2020-09-15 12:23:05.010171',
+					'match_score': 1
+				}
+			],
+			"offer_source": "kelkoo",
+			"name": None,
+			"product_id": None,
+			"price": None
+		},
+		{
+			"createdAt": 1600170673311,
+			"gtin": "00753759185091",
+			"offerFetchComplete": False,
+			"triggeredFromClient": True,
+			"offers": [
+				{
+					'product_id': None,
+					'offer_source': 'prisjakt_SE',
+					'retail_prod_name': 'GARMIN GPS-KLOCKA FORERUNNER 645 SVART MED PULSM\u00c4TARE OCH MUSIK',
+					'retailer_name': 'Decathlon SE',
+					'country': 'SE',
+					'price': '4299',
+					'currency': 'SEK',
+					'offer_url': 'https://www.prisjakt.nu/redirect.php?prisid=1865101190&api_client=1331',
+					'requested_at': '2020-09-15 12:23:05.010171',
+					'match_score': 1
+				}
+			],
+			"offer_source": "prisjakt",
+			"name": None,
+			"product_id": None,
+			"price": None
+		}
+	]
 
-	# Modify it to behave like the input in Cloud Functions
-	data = {
-		'data': base64.b64encode(json.dumps(message).encode())
-	}
-	# Define a mocked context
-	context = {
-		'event_id': '-1'
-	}
-	# Execute the function
-	result = live_search_offer_enricher(data, context, production=True)
-	print(result)
+	for message in messages :
+		# Modify it to behave like the input in Cloud Functions
+		data = {
+			'data': base64.b64encode(json.dumps(message).encode())
+		}
+		# Define a mocked context
+		context = {
+			'event_id': '-1'
+		}
+		# Execute the function
+		result = live_search_offer_enricher(data, context, production=True)
+		print(result)
 
 def demo_product_search_trigger() :
 	# Mock a message

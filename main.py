@@ -56,9 +56,10 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Get the existing offers data, on this we need to calculate savings
 		existing_offers_in_firebase = search_ref.get('fetchedOffers')
 		# Join existing and new offers together to a list (if existing data exists)
-		if len(existing_offers_in_firebase) > 2 :
-			existing_offers_in_firebase = existing_offers_in_firebase[0]['fetchedOffers']
-			all_offers = payload['offers'] + existing_offers_in_firebase
+		# If there are no offers Firebase will return this weird tuple: (None, 'null_etag')
+		if list(existing_offers_in_firebase)[0] != None :
+			existing_offers = existing_offers_in_firebase[0]['fetchedOffers']
+			all_offers = existing_offers + payload['offers']
 		else :
 			all_offers = payload['offers']
 		# Enrich and format all the combined offers
