@@ -34,39 +34,42 @@ def demo_offer_search_trigger() :
 def demo_live_search_offer_enricher() :
 	# Mock a message
 	message = {
+		"createdAt": 1599662371190,
+		"gtin": "00190199392403",
+		"name": "[Hardcoded] - Apple iPhone 11 PRO",
+		"offerFetchComplete": False,
+		"triggeredFromClient": True,
+		"price": 22000,
 		"offers": [
 			{
-				"product_id": "1357530",
-				"source": "kelkoo_DE",
-				"retailer_product_name": "Bose L1 Model II/B2",
-				"retailer_name": "Thomann",
-				"country": "DE",
-				"price": "233200",
-				"currency": "EUR",
-				"offer_url": "https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1583176995007&.sig=s9TqnXFk0LTl2hK.9W12KTgJAGQ-&affiliationId=96954745&catId=122301&comId=3936523&contextLevel=1&contextOfferPosition=1&contextPageSize=13&country=de&ecs=ok&merchantid=3936523&offerId=4e8f43c7dd091f29bb354a50f266852d&searchId=10769920718718_1583176994996_236865&searchQuery=Ym9zZSBxdWlldGNvbWZvcnQgMzUgaWk%3D&service=5&wait=true",
-				"requested_at": "2020-03-02 19:23:15.031627",
+				"product_id": None,
+				"source": "kelkoo_NO",
+				"retailer_product_name": "Apple iPhone 11 Pro 512GB, midnattsgr\u00f8nn",
+				"retailer_name": "Telenor",
+				"country": "NO",
+				"price": "1579900",
+				"currency": "NOK",
+				"offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600107468583&.sig=Qrq9iBfmpuK63PsaMzObR6h_WOM-&affiliationId=96954748&catId=100010713&comId=100480081&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=no&ecs=ok&merchantid=100480081&offerId=4c6b9a5bb4eb3fb753d60e038aaca333&searchId=10769920129045_1600107468580_35636&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-14 20:17:48.596682",
 				"match_score": 1
 			},
 			{
-				"product_id": "1357530",
-				"source": "kelkoo_DE",
-				"retailer_product_name": "Bose L1 Model II/B1",
-				"retailer_name": "Thomann",
-				"country": "DE",
-				"price": "217000",
-				"currency": "EUR",
-				"offer_url": "https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1583176995007&.sig=OUitcyJEswHLIOx5rYsZNGRFFTo-&affiliationId=96954745&catId=122301&comId=3936523&contextLevel=1&contextOfferPosition=2&contextPageSize=13&country=de&ecs=ok&merchantid=3936523&offerId=b1e44900a6fa014a95126812903ac948&searchId=10769920718718_1583176994996_236865&searchQuery=Ym9zZSBxdWlldGNvbWZvcnQgMzUgaWk%3D&service=5&wait=true",
-				"requested_at": "2020-03-02 19:23:15.031687",
+				"product_id": None,
+				"source": "kelkoo_SE",
+				"retailer_product_name": "Apple iPhone 11 Pro 512GB - Gr\u00f6n",
+				"retailer_name": "CyberPhoto",
+				"country": "SE",
+				"price": "1736900",
+				"currency": "SEK",
+				"offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600107468663&.sig=5Awk9EMDw0fGLrdNHkzlyAujQGY-&affiliationId=96954747&catId=100020213&comId=3375501&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=se&ecs=ok&merchantid=3375501&offerId=b0bbc1db9d41c2de8333cff0bab7a500&searchId=10769920613836_1600107468660_45549&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-14 20:17:48.679433",
 				"match_score": 1
 			}
 		],
 		"offer_source": "kelkoo",
-		"name": "Bose QuietComfort 35 II",
-		"product_id": "1357530",
-		"price": 2500,
-		"search_id": 2848,
-		"ean": "00017817770613"
+		"product_id": None
 	}
+
 	data = {
 		'data': base64.b64encode(json.dumps(message).encode())
 	}
@@ -115,7 +118,7 @@ def demo_product_search_publish_result() :
 		"img_url": "https://storage.googleapis.com/panprices/products/c04357ec-aa55-3579-bbc6-0265983a5e78.jpg",
 		"country": "SE",
 		"product_url": "https://www.google.com/shopping/product/17082225217934858373",
-		"product_description": "Sony A7 Mark III systemkameran är utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit anmärkningsvärt i Sony Alpha seriens kameror och där är nya A7 lll inget undantag. Lagring av video i XAVC-S format samt strålande färgåtergivning tack vare S-Log2 lagring. Via WiFi och NFC är det enkelt att dela bilder och videor samt fjärrstyra kameran via mobiltelefonen. Den vridbara pekskärmen gör det lättare att filma eller ta bilder även ur svåra vinklar.",
+		"product_description": "Sony A7 Mark III systemkameranar  utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit undantag. Lagring av  svåra vinklar.",
 		"searchQuery": "sony_alpha_a7",
 		"bundleResult": False
 	}

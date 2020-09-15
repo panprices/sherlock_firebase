@@ -52,14 +52,22 @@ def live_search_offer_enricher(event, context, production=True) :
 	ref = db.reference('offers')
 	# Choose the relevant search
 	search_ref = ref.child(str(payload['gtin']))
-	# TODO: Enrich and format the data in this stage
-
-	# add_offers_metadata(payload['offers'])
-
+	# Get the existing offers data, this we need to calculate savings
+	existing_offers_in_firebase = search_ref.get()
+	# Join existing and new offers together to a list
+	if existing_offers_in_firebase :
+		all_offers = payload['offers'] + existing_offers_in_firebase.get('fetchedOffers')
+	else :
+		all_offers = payload['offers']
+	# Enrich and format all the combined offers
+	enriched_offers = add_offers_metadata(all_offers)
 	# Update the specific search in Firebase RTD with the newly fetched offers
-	search_ref.update({
-		'offers/' + payload['offer_source']: payload['offers']
-	})
+	if production :
+		search_ref.update({
+			'fetchedOffers/': enriched_offers,
+			'fetchedSources/' + payload['offer_source']: True
+		})
+		print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
 	# Kill the connection, otherwise the next instance trying to connect will crash
 	firebase_admin.delete_app(app)
 

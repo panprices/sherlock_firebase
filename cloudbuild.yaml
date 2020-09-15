@@ -25,7 +25,9 @@ steps:
          '--region',
          'europe-west1',
          '--runtime',
-         'python37'
+         'python37',
+         '--max-instances',
+         '50'
          ]
 
 - name: 'gcr.io/cloud-builders/gcloud'
