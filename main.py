@@ -40,36 +40,41 @@ def live_search_offer_enricher(event, context, production=True) :
 		Consumes messages on the topic 'live_search_offers', enriches them
 		and then updates the Firebase Realtime Database with the output.
 	"""
-	payload = json.loads(base64.b64decode(event['data']))
-	print('Got offers for search_id: ', payload['gtin'])
-	# Fetch the service account key JSON file contents
-	cred = credentials.Certificate('firebase_service_account.json')
-	# Initialize the app with a service account, granting admin privileges
-	app = firebase_admin.initialize_app(cred, {
-		'databaseURL': 'https://panprices.firebaseio.com/'
-	})
-	# Open a connection to the database
-	ref = db.reference('offers')
-	# Choose the relevant search
-	search_ref = ref.child(str(payload['gtin']))
-	# Get the existing offers data, this we need to calculate savings
-	existing_offers_in_firebase = search_ref.get()
-	# Join existing and new offers together to a list
-	if existing_offers_in_firebase :
-		all_offers = payload['offers'] + existing_offers_in_firebase.get('fetchedOffers')
-	else :
-		all_offers = payload['offers']
-	# Enrich and format all the combined offers
-	enriched_offers = add_offers_metadata(all_offers)
-	# Update the specific search in Firebase RTD with the newly fetched offers
-	if production :
-		search_ref.update({
-			'fetchedOffers/': enriched_offers,
-			'fetchedSources/' + payload['offer_source']: True
+	try :
+		payload = json.loads(base64.b64decode(event['data']))
+		print('Got offers for search_id: ', payload['gtin'])
+		# Fetch the service account key JSON file contents
+		cred = credentials.Certificate('firebase_service_account.json')
+		# Initialize the app with a service account, granting admin privileges
+		app = firebase_admin.initialize_app(cred, {
+			'databaseURL': 'https://panprices.firebaseio.com/'
 		})
-		print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
-	# Kill the connection, otherwise the next instance trying to connect will crash
-	firebase_admin.delete_app(app)
+		# Open a connection to the database
+		ref = db.reference('offers')
+		# Choose the relevant search
+		search_ref = ref.child(str(payload['gtin']))
+		# Get the existing offers data, this we need to calculate savings
+		existing_offers_in_firebase = search_ref.get()
+		# Join existing and new offers together to a list
+		if existing_offers_in_firebase :
+			all_offers = payload['offers'] + existing_offers_in_firebase.get('fetchedOffers') or []
+		else :
+			all_offers = payload['offers']
+		# Enrich and format all the combined offers
+		enriched_offers = add_offers_metadata(all_offers)
+		# Update the specific search in Firebase RTD with the newly fetched offers
+		if production :
+			search_ref.update({
+				'fetchedOffers/': enriched_offers,
+				'fetchedSources/' + payload['offer_source']: True
+			})
+			print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
+		# Kill the connection, otherwise the next instance trying to connect will crash
+		firebase_admin.delete_app(app)
+	except Exception as e:
+		msg_string = json.dumps(payload)
+		print(f'something went wrong when handling message: {msg_string}')
+		raise e
 
 def product_search_trigger(event, context, production=True):
 
