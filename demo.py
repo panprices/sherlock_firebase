@@ -34,42 +34,66 @@ def demo_offer_search_trigger() :
 def demo_live_search_offer_enricher() :
 	# Mock a message
 	message = {
-		"createdAt": 1599662371190,
-		"gtin": "00190199392403",
-		"name": "[Hardcoded] - Apple iPhone 11 PRO",
+		"createdAt": 1600170673311,
+		"gtin": "00190199389342",
 		"offerFetchComplete": False,
 		"triggeredFromClient": True,
-		"price": 22000,
 		"offers": [
 			{
 				"product_id": None,
 				"source": "kelkoo_NO",
-				"retailer_product_name": "Apple iPhone 11 Pro 512GB, midnattsgr\u00f8nn",
+				"retailer_product_name": "Apple iPhone 11 Pro 64GB Gold",
+				"retailer_name": "Netonnet.no",
+				"country": "NO",
+				"price": "1119000",
+				"currency": "NOK",
+				"offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600170676023&.sig=NcKs4rAh6nFU.caSgKXIJ2I0zXQ-&affiliationId=96954748&catId=100020213&comId=6995723&contextLevel=1&contextOfferPosition=1&contextPageSize=2&country=no&ecs=ok&merchantid=6995723&offerId=5c22b0f698c293a251bb6ef143c33ff8&searchId=10769825031957_1600170676020_49164&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-15 11:51:16.038276",
+				"match_score": 1
+			},
+			{
+				"product_id": None,
+				"source": "kelkoo_NO",
+				"retailer_product_name": "Apple iPhone 11 Pro 64GB, gull",
 				"retailer_name": "Telenor",
 				"country": "NO",
-				"price": "1579900",
+				"price": "1159900",
 				"currency": "NOK",
-				"offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600107468583&.sig=Qrq9iBfmpuK63PsaMzObR6h_WOM-&affiliationId=96954748&catId=100010713&comId=100480081&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=no&ecs=ok&merchantid=100480081&offerId=4c6b9a5bb4eb3fb753d60e038aaca333&searchId=10769920129045_1600107468580_35636&searchQuery=&service=5&wait=true",
-				"requested_at": "2020-09-14 20:17:48.596682",
+				"offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600170676024&.sig=pEW1slZQcu8CzZ2FZQWBNK7kPOg-&affiliationId=96954748&catId=100010713&comId=100480081&contextLevel=1&contextOfferPosition=2&contextPageSize=2&country=no&ecs=ok&merchantid=100480081&offerId=39b5c50b0a3ec3d7cd863454c41aae2a&searchId=10769825031957_1600170676020_49164&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-15 11:51:16.038302",
 				"match_score": 1
 			},
 			{
 				"product_id": None,
 				"source": "kelkoo_SE",
-				"retailer_product_name": "Apple iPhone 11 Pro 512GB - Gr\u00f6n",
+				"retailer_product_name": "Apple iPhone 11 Pro 64GB Gold",
+				"retailer_name": "Netonnet.se",
+				"country": "SE",
+				"price": "1099000",
+				"currency": "SEK",
+				"offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600170676077&.sig=bdbohhHS4r5cb8vv.vPOU1CST9M-&affiliationId=96954747&catId=100020213&comId=100456719&contextLevel=1&contextOfferPosition=1&contextPageSize=2&country=se&ecs=ok&merchantid=100456719&offerId=21234f9ca6e26be08322c9cc1f2ca3a8&searchId=10769920413306_1600170676071_29528&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-15 11:51:16.090122",
+				"match_score": 1
+			},
+			{
+				"product_id": None,
+				"source": "kelkoo_SE",
+				"retailer_product_name": "Apple iPhone 11 Pro 64GB - Guld",
 				"retailer_name": "CyberPhoto",
 				"country": "SE",
-				"price": "1736900",
+				"price": "1079000",
 				"currency": "SEK",
-				"offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600107468663&.sig=5Awk9EMDw0fGLrdNHkzlyAujQGY-&affiliationId=96954747&catId=100020213&comId=3375501&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=se&ecs=ok&merchantid=3375501&offerId=b0bbc1db9d41c2de8333cff0bab7a500&searchId=10769920613836_1600107468660_45549&searchQuery=&service=5&wait=true",
-				"requested_at": "2020-09-14 20:17:48.679433",
+				"offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1600170676077&.sig=C0vy7_XjF3PVhnXgtWfG3n0UZL0-&affiliationId=96954747&catId=100020213&comId=3375501&contextLevel=1&contextOfferPosition=2&contextPageSize=2&country=se&ecs=ok&merchantid=3375501&offerId=36e528db7971f8a97205753cc56d4aa7&searchId=10769920413306_1600170676071_29528&searchQuery=&service=5&wait=true",
+				"requested_at": "2020-09-15 11:51:16.090150",
 				"match_score": 1
 			}
 		],
 		"offer_source": "kelkoo",
-		"product_id": None
+		"name": None,
+		"product_id": None,
+		"price": None
 	}
-
+	# Modify it to behave like the input in Cloud Functions
 	data = {
 		'data': base64.b64encode(json.dumps(message).encode())
 	}
