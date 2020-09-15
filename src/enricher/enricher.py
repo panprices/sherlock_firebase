@@ -204,4 +204,7 @@ def add_offers_metadata(offers) :
 	""")
 	rows = cur_dict.fetchall()
 	pg_pool.putconn(connection)
+
+	import json
+	print(json.dumps(rows, indent=2))
 	return rows

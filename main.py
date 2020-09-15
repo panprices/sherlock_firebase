@@ -53,11 +53,12 @@ def live_search_offer_enricher(event, context, production=True) :
 		ref = db.reference('offers')
 		# Choose the relevant search
 		search_ref = ref.child(str(payload['gtin']))
-		# Get the existing offers data, this we need to calculate savings
-		existing_offers_in_firebase = search_ref.get()
-		# Join existing and new offers together to a list
-		if existing_offers_in_firebase.get('fetchedOffers') :
-			all_offers = payload['offers'] + existing_offers_in_firebase.get('fetchedOffers')
+		# Get the existing offers data, on this we need to calculate savings
+		existing_offers_in_firebase = search_ref.get('fetchedOffers')
+		# Join existing and new offers together to a list (if existing data exists)
+		if len(existing_offers_in_firebase) > 2 :
+			existing_offers_in_firebase = existing_offers_in_firebase[0]['fetchedOffers']
+			all_offers = payload['offers'] + existing_offers_in_firebase
 		else :
 			all_offers = payload['offers']
 		# Enrich and format all the combined offers
