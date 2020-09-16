@@ -4,6 +4,8 @@ from src.database.database import connect_to_db
 '''
 	This is necessary since Firebase does not sture keys with
 	a value set to null (which seems really stupid).
+	Grab the same structure as offer_consumer expects:
+	https://github.com/panprices/sherlock_db_functions/blob/master/main.py#L68
 '''
 
 def offer_to_tup(offer) :
