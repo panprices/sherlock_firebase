@@ -54,11 +54,19 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Choose the relevant search
 		search_ref = ref.child(str(payload['gtin']))
 		# Get the existing offers data, on this we need to calculate savings
-		existing_offers_in_firebase = search_ref.get('fetchedOffers')
+		fetch_ref = search_ref.get('fetchedOffers')
 		# Join existing and new offers together to a list (if existing data exists)
-		# If there are no offers Firebase will return this weird tuple: (None, 'null_etag')
-		if list(existing_offers_in_firebase)[0] != None :
-			existing_offers = existing_offers_in_firebase[0]['fetchedOffers']
+		'''
+			CASES TO CHECK FOR HERE:
+			 - If there are no offers Firebase will return this weird tuple:
+			 (None, 'null_etag') This happens in test.
+			 - If the client has created a message and this function gets triggered
+			 in production we will return something like {createdAt:X, gtin:Y, offers:Z}
+			 but the key fetchedOffers won't be in there because that property gets
+			 set by this function the first time.
+		'''
+		if list(fetch_ref)[0] != None and 'fetchedOffers' in fetch_ref[0] :
+			existing_offers = fetch_ref[0]['fetchedOffers']
 			all_offers = existing_offers + payload['offers']
 		else :
 			all_offers = payload['offers']
