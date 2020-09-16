@@ -50,7 +50,7 @@ def add_offers_metadata(offers) :
 				%s AS retail_prod_name,
 				%s AS retailer_name,
 				%s AS country,
-				%s::integer AS price,
+				%s AS price,
 				%s AS currency,
 				%s AS offer_url,
 				%s AS requested_at,
@@ -190,8 +190,14 @@ def add_offers_metadata(offers) :
 			retail_prod_name,
 			retailer_name,
 			country,
-			adj_price AS price,
-			currency,
+			/*
+				API does not return price like this to the client but since
+				we will fetch from Firebase when the 2nd offer source comes
+				in and then have incoming data with two precision points
+				and compare to one without it will get wrong.
+			*/
+			adj_price * 100 AS price,
+			'SEK' AS currency,
 			offer_url,
 			-- TODO: Move this to some other place higher up
 			CASE

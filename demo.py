@@ -82,7 +82,7 @@ def demo_live_search_offer_enricher() :
 					'retail_prod_name': 'GARMIN GPS-KLOCKA FORERUNNER 645 SVART MED PULSM\u00c4TARE OCH MUSIK',
 					'retailer_name': 'Decathlon SE',
 					'country': 'SE',
-					'price': '4299',
+					'price': '429900',
 					'currency': 'SEK',
 					'offer_url': 'https://www.prisjakt.nu/redirect.php?prisid=1865101190&api_client=1331',
 					'requested_at': '2020-09-15 12:23:05.010171',
