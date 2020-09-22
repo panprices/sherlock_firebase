@@ -148,7 +148,26 @@ def demo_product_search_publish_result() :
 		"product_url": "https://www.google.com/shopping/product/17082225217934858373",
 		"product_description": "Sony A7 Mark III systemkameranar  utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit undantag. Lagring av  svåra vinklar.",
 		"searchQuery": "sony_alpha_a7",
-		"bundleResult": False
+		"bundleResult": False,
+		"performance":{
+			"product_search_trigger":{
+				"start":1600779213989.5525,
+				"end":1600779214358.9958,
+				"exeTime":369.443416595459
+			},
+			"sherlock_google_shopping":{
+				"start":1600779779701.9631,
+				"end":1600779782203.0269,
+				"exeTime":2501.063585281372,
+				"delay_from_product_search_trigger":647646.1186523438
+			},
+			"sherlock_upload_image":{
+				"start":1600780764941.1404,
+				"end":1600780765311.0593,
+				"exeTime":369.9188232421875,
+				"delay_from_sherlock_google_shopping":982738.1135253906
+			}
+		}
 	}
 	data = {
 		'data': base64.b64encode(json.dumps(message).encode())

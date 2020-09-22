@@ -1,6 +1,7 @@
 import base64
 import json
 import firebase_admin
+import time
 from datetime import datetime, timedelta
 from firebase_admin import credentials
 from firebase_admin import db
@@ -98,13 +99,21 @@ def product_search_trigger(event, context, production=True):
 		on PubSub so that we trigger Google Shopping and later be able
 		to return the results back down to the client.
 	"""
-
+	start = time.time()
 	# Print out the entire event object
 	print('Publishing the following search for a product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
-	if production :
+	if production:
 		try :
 			publisher = Publisher('panprices', 'sherlock_google_shopping')
+			end = time.time()
+			event['delta']['performance'] = {
+				'product_search_trigger': {
+					'start': start * 1000,
+					'end': end * 1000,
+					'exeTime': (end - start) * 1000
+				}
+			}
 			pub_results = publisher.publish_messages([event['delta']])
 		except Exception as e :
 			raise e
@@ -120,6 +129,8 @@ def product_search_publish_result(event, context, production=True):
 	"""
 
 	try:
+		start = time.time()
+
 		payload = json.loads(base64.b64decode(event['data']))
 		# Fetch the service account key JSON file contents
 		cred = credentials.Certificate('firebase_service_account.json')
@@ -146,6 +157,14 @@ def product_search_publish_result(event, context, production=True):
 		# Only publish if we are running in production
 		if production :
 			# Update the specific search in Firebase RTD with the newly fetched offers
+			if 'performance' in payload:
+				end = time.time()
+				result[payload['gtin']]['performance']['product_search_publish_result'] = {
+					'start': start * 1000,
+					'end': end * 1000,
+					'exeTime': (end - start) * 1000,
+					'delay_from_sherlock_upload_image': start * 1000 - payload['performance']['sherlock_upload_image']['end']
+				}
 			current_entry_ref.update({
 				"results": result
 			})
