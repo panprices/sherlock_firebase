@@ -87,6 +87,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		print(f'something went wrong when handling message: {msg_string}')
 		raise e
 
+product_search_trigger_publisher = Publisher('panprices', 'sherlock_google_shopping')
 def product_search_trigger(event, context, production=True):
 
 	"""
@@ -105,7 +106,6 @@ def product_search_trigger(event, context, production=True):
 	# Publish the event to the sherlock_products Pubsub topic
 	if production:
 		try :
-			publisher = Publisher('panprices', 'sherlock_google_shopping')
 			end = time.time()
 			event['delta']['performance'] = {
 				'product_search_trigger': {
@@ -114,7 +114,7 @@ def product_search_trigger(event, context, production=True):
 					'exeTime': (end - start) * 1000
 				}
 			}
-			pub_results = publisher.publish_messages([event['delta']])
+			pub_results = product_search_trigger_publisher.publish_messages([event['delta']])
 		except Exception as e :
 			raise e
 		print(pub_results)
