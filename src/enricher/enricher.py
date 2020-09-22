@@ -208,7 +208,7 @@ def add_offers_metadata(offers) :
 			domain,
 			ship,
 			shipping_fee,
-			saving * 100 -- see comment above on prices
+			saving * 100 AS saving -- see comment above on prices
 		FROM offers_complete
 		WHERE offer_source IS NOT NULL; -- Remove the row needed for the union
 	""")
