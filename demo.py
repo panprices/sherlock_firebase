@@ -29,9 +29,11 @@ def demo_offer_search_trigger() :
 	}
 	# Execute the function
 	result = offer_search_trigger(
-		base64.b64encode(json.dumps(message).encode()),
+		# We do not encode this to byte since Firebase input value
+		# from trigger is different then that from PubSub.
+		message, 
 		context,
-		production=False
+		production=True
 	)
 	print(result)
 

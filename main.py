@@ -28,7 +28,9 @@ def offer_search_trigger(event, context, production=True):
 	# Publish the event to the sherlock_products Pubsub topic
 	if production :
 		try :
-			payload = json.loads(base64.b64decode(event))
+			# We do not have to decode since this function is triggered via
+			# Firebase trigger and not PubSub where we need to decode.
+			payload = event
 			# Get the product_token which is the only key in the incoming dict
 			product_token = [*payload['delta']][0] # * generates list of keys
 			# Decrypt the GTIN from the product_token
