@@ -12,7 +12,9 @@ steps:
          '--region',
          'europe-west1',
          '--runtime',
-         'python37'
+         'python37',
+         '--set-env-vars',
+         '_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}'
          ]
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -55,7 +57,9 @@ steps:
          '--region',
          'europe-west1',
          '--runtime',
-         'python37'
+         'python37',
+         '--set-env-vars',
+         '_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}'
          ]
 
 - name: 'gcr.io/cloud-builders/gcloud'
