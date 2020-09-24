@@ -1,17 +1,50 @@
-### Sherlock Firebase
+## Sherlock Firebase
 
-#### How to run
+### How to run locally
 
-We are using Docker to run this in local envoirment to emulate production as a Google Cloud Function. This application requires the C SQLite driver. Google Cloud supports this, sometimes however there are issues with this driver malfunctioning across different versions of Python.
+#### Set up envoriment
 
-#### With Docker
+This requires Python 3.7 or over. It's recommended to run this in a virtual envoriment.
 
-Build the image:
 ```
-sudo docker build -t sherlock_firebase .
+pip install requirements.txt
 ```
 
-Run the image:
+#### Configure key
+
+Ask a fellow engineer to provide you with the encryption key. Then from the file `example_fernet_key.env` create `fernet_key.env` with the actual key. Then run:
+
+```bash
+source fernet_key.env
+echo $_FERNET_SECRET_KEY
 ```
-sudo docker run --net=host sherlock_firebase -oe
+
+If everything works as intended you should see a 44 character long string.
+
+#### Run tests
+
+Run `python demo.py -h` to get the following instructions:
+
+```
+optional arguments:
+  -h, --help            show this help message and exit
+  -ost, --offer_search_trigger
+                        Listen to Realtime Firebase Triggers and Publish to
+                        Pubsub.
+  -oe, --offer_enricher
+                        Enrich offer output and update Firebase Realtime
+                        Database.
+  -pst, --product_search_trigger
+                        Listen to Realtime Firebase Triggers on productSearch
+                        and trigger to PubSub.
+  -pspr, --product_search_publish_result
+                        Publish to Realtime Firebase on productSearch.
+  -ssfs, --sherlock_shopping_finish_signal
+                        Consume finished message from Sherlock Google Shopping
+                        and update Firebase.
+  -dofd, --delete_old_firebase_data
+                        Publish to Realtime Firebase on productSearch.
+
+Argument Parser for the demo script.
+
 ```

@@ -4,3 +4,4 @@ argparse
 firebase-admin
 google-cloud-storage
 psycopg2
+cryptography

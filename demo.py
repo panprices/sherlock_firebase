@@ -14,9 +14,9 @@ def demo_offer_search_trigger() :
 	message = {
 		"data": None,
 		"delta": {
-			'00190199383852': {
+			'gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==': {
 				'createdAt': '1598969652038',
-				'gtin': '00190199383852',
+				'product_token': 'gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==',
 				'price': 2500,
 				'offerFetchComplete': False
 			}
@@ -28,7 +28,11 @@ def demo_offer_search_trigger() :
 		'resource': 'projects/_/instances/panprices/refs/offerSearch/'
 	}
 	# Execute the function
-	result = offer_search_trigger(message, context, production=False)
+	result = offer_search_trigger(
+		base64.b64encode(json.dumps(message).encode()),
+		context,
+		production=False
+	)
 	print(result)
 
 def demo_live_search_offer_enricher() :
@@ -36,7 +40,8 @@ def demo_live_search_offer_enricher() :
 	messages = [
 		{
 			"createdAt": 1600170673311,
-			"gtin": "00753759185091",
+			"gtin": "04548736079656",
+			"product_token": "gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==",
 			"offerFetchComplete": False,
 			"triggeredFromClient": True,
 			"offers": [
@@ -72,7 +77,8 @@ def demo_live_search_offer_enricher() :
 		},
 		{
 			"createdAt": 1600170673311,
-			"gtin": "00753759185091",
+			"gtin": "04548736079656",
+			"product_token": "gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==",
 			"offerFetchComplete": False,
 			"triggeredFromClient": True,
 			"offers": [
@@ -106,7 +112,7 @@ def demo_live_search_offer_enricher() :
 			'event_id': '-1'
 		}
 		# Execute the function
-		result = live_search_offer_enricher(data, context, production=True)
+		result = live_search_offer_enricher(data, context, production=False)
 		print(result)
 
 def demo_product_search_trigger() :
@@ -177,7 +183,11 @@ def demo_product_search_publish_result() :
 		'event_id': '-1'
 	}
 	# Execute the function
-	result = product_search_publish_result(data, context, production=False)
+	result = product_search_publish_result(
+		data,
+		context,
+		production=False
+	)
 	print(result)
 
 def demo_sherlock_shopping_finish_signal() :

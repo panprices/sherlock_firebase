@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from firebase_admin import credentials
 from firebase_admin import db
 
+import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
@@ -27,10 +28,20 @@ def offer_search_trigger(event, context, production=True):
 	# Publish the event to the sherlock_products Pubsub topic
 	if production :
 		try :
+			payload = json.loads(base64.b64decode(event))
+			# Get the product_token which is the only key in the incoming dict
+			product_token = [*payload['delta']][0] # * generates list of keys
+			# Decrypt the GTIN from the product_token
+			gtin = encryption.fernet_decrypt(
+				product_token
+			)
+			# Enrich the data with the GTIN
+			payload['delta'][product_token]['gtin'] = gtin
+			# Publish it to the topics which are consuming it
 			publisher = Publisher('panprices', 'sherlock_products')
-			pub_results = publisher.publish_messages([event['delta']])
+			pub_results = publisher.publish_messages([payload['delta'][product_token]])
 			publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
-			pub_results_2 = publisher_popular_products.publish_messages([event['delta']])
+			pub_results_2 = publisher_popular_products.publish_messages([payload['delta'][product_token]])
 		except Exception as e :
 			raise e
 		print(pub_results)
@@ -43,7 +54,12 @@ def live_search_offer_enricher(event, context, production=True) :
 	"""
 	try :
 		payload = json.loads(base64.b64decode(event['data']))
-		print('Got offers for search_id: ', payload['gtin'])
+		print(
+			'Got offers for gtin:',
+			payload['gtin'],
+			'with product_token:',
+			payload['product_token']
+		)
 		# Fetch the service account key JSON file contents
 		cred = credentials.Certificate('firebase_service_account.json')
 		# Initialize the app with a service account, granting admin privileges
@@ -53,7 +69,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Open a connection to the database
 		ref = db.reference('offers')
 		# Choose the relevant search
-		search_ref = ref.child(str(payload['gtin']))
+		search_ref = ref.child(str(payload['product_token']))
 		# Get the existing offers data, on this we need to calculate savings
 		fetch_ref = search_ref.get('fetchedOffers')
 		# Join existing and new offers together to a list (if existing data exists)
@@ -129,8 +145,8 @@ def product_search_publish_result(event, context, production=True):
 	"""
 
 	try:
+		# Create a timestamp for performance logging the whole pipeline
 		start = time.time()
-
 		payload = json.loads(base64.b64decode(event['data']))
 		# Fetch the service account key JSON file contents
 		cred = credentials.Certificate('firebase_service_account.json')
@@ -148,18 +164,25 @@ def product_search_publish_result(event, context, production=True):
 		# If results exist add to existing results dict
 		if current_entry != None and "results" in current_entry:
 			result = current_entry["results"]
-		# Overwrites if gtin id already exists
-		result[payload["gtin"]] = payload
+		# Generate an encrypted product token from the GTIN
+		product_token = encryption.fernet_encrypt(
+			payload["gtin"]
+		)
+		# Write all input data with the specific product_token as key
+		result[product_token] = payload
+		# Add the token to the data object as well
+		result[product_token]["product_token"] = product_token
 		# Remove some fields we don't want to present to the client
-		del result[payload["gtin"]]["product_url"]
-		del result[payload["gtin"]]["source"]
-		del result[payload["gtin"]]["img_encoded"]
+		del result[product_token]["product_url"]
+		del result[product_token]["source"]
+		del result[product_token]["img_encoded"]
+		del result[product_token]["gtin"]
 		# Only publish if we are running in production
 		if production :
 			# Update the specific search in Firebase RTD with the newly fetched offers
 			if 'performance' in payload:
 				end = time.time()
-				result[payload['gtin']]['performance']['product_search_publish_result'] = {
+				result[product_token]['performance']['product_search_publish_result'] = {
 					'start': start * 1000,
 					'end': end * 1000,
 					'exeTime': (end - start) * 1000,
