@@ -12,16 +12,15 @@ from main import sherlock_shopping_finish_signal
 def demo_offer_search_trigger() :
 	# Mock a message
 	message = {
-		"data": None,
-		"delta": {
-			'gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==': {
-				'createdAt': '1598969652038',
-				'product_token': 'gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==',
-				'price': 2500,
-				'offerFetchComplete': False
-			}
-		}
+	  "data": None,
+	  "delta": {
+	    "offerFetchComplete": False,
+	    "product_token": "gAAAAABfbLZJY3OavtgPyOBsySo-UIHaOfxo2akZgPFBZIxoeYeEKLiQB0xqOVGKQ90Eh8xBO6vX7Y5oTaiz4T6O2QrctU-mQw==",
+	    "createdAt": 1600961105031,
+	    "triggeredFromClient": True
+	  }
 	}
+
 	# Define a mocked context
 	context = {
 		'event_id': '-1',
@@ -31,7 +30,7 @@ def demo_offer_search_trigger() :
 	result = offer_search_trigger(
 		# We do not encode this to byte since Firebase input value
 		# from trigger is different then that from PubSub.
-		message, 
+		message,
 		context,
 		production=True
 	)

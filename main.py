@@ -32,18 +32,18 @@ def offer_search_trigger(event, context, production=True):
 			# Firebase trigger and not PubSub where we need to decode.
 			payload = event
 			# Get the product_token which is the only key in the incoming dict
-			product_token = [*payload['delta']][0] # * generates list of keys
+			product_token = payload['delta']['product_token'] # * generates list of keys
 			# Decrypt the GTIN from the product_token
 			gtin = encryption.fernet_decrypt(
 				product_token
 			)
 			# Enrich the data with the GTIN
-			payload['delta'][product_token]['gtin'] = gtin
+			payload['delta']['gtin'] = gtin
 			# Publish it to the topics which are consuming it
 			publisher = Publisher('panprices', 'sherlock_products')
-			pub_results = publisher.publish_messages([payload['delta'][product_token]])
+			pub_results = publisher.publish_messages([payload['delta']])
 			publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
-			pub_results_2 = publisher_popular_products.publish_messages([payload['delta'][product_token]])
+			pub_results_2 = publisher_popular_products.publish_messages([payload['delta']])
 		except Exception as e :
 			raise e
 		print(pub_results)
