@@ -5,8 +5,9 @@ import threading
 class Publisher():
 
 	def __init__(self, project_id, topic):
-			self.client = pubsub_v1.PublisherClient()
-			self.topic_path = self.client.topic_path(project_id, topic)		
+		batch_settings = pubsub_v1.types.BatchSettings(max_messages=1)
+		self.client = pubsub_v1.PublisherClient()
+		self.topic_path = self.client.topic_path(project_id, topic)
 
 	def split_tuple(self, input_data, wanted_num) :
 		num_in_each_bucket = (len(input_data) + 1) / wanted_num
@@ -44,7 +45,7 @@ class Publisher():
 		for message in messages:
 			# Data must be a bytestring
 			data = json.dumps(message, indent=2, sort_keys=True, default=str).encode('utf-8')
-	
+
 			print(data)
 
 			future = self.client.publish(self.topic_path, data=data)
