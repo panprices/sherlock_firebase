@@ -40,7 +40,7 @@ steps:
          '--trigger-event',
          'providers/google.firebase.database/eventTypes/ref.create',
          '--trigger-resource',
-         'projects/_/instances/panprices/refs/productSearch/{searchQuery}',
+         'projects/_/instances/panprices/refs/product_search/{search_query}',
          '--region',
          'europe-west1',
          '--runtime',
