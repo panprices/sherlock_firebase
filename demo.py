@@ -14,13 +14,12 @@ def demo_offer_search_trigger() :
 	message = {
 	  "data": None,
 	  "delta": {
-	    "offerFetchComplete": False,
+	    "offer_fetch_complete": False,
 	    "product_token": "gAAAAABfbLZJY3OavtgPyOBsySo-UIHaOfxo2akZgPFBZIxoeYeEKLiQB0xqOVGKQ90Eh8xBO6vX7Y5oTaiz4T6O2QrctU-mQw==",
-	    "createdAt": 1600961105031,
-	    "triggeredFromClient": True
+	    "created_at": 1600961105031,
+	    "triggered_from_client": True
 	  }
 	}
-
 	# Define a mocked context
 	context = {
 		'event_id': '-1',
@@ -40,11 +39,11 @@ def demo_live_search_offer_enricher() :
 	# Mock two messages
 	messages = [
 		{
-			"createdAt": 1600170673311,
+			"created_at": 1600170673311,
 			"gtin": "04548736079656",
 			"product_token": "gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==",
-			"offerFetchComplete": False,
-			"triggeredFromClient": True,
+			"offer_fetch_complete": False,
+			"triggered_from_client": True,
 			"offers": [
 				{
 					'product_id': None,
@@ -80,8 +79,8 @@ def demo_live_search_offer_enricher() :
 			"createdAt": 1600170673311,
 			"gtin": "04548736079656",
 			"product_token": "gAAAAABfbGk00nCjdVZ3aGMmKqvtsBSXCse3igkSiJfe-v2uJ_FrTI79diYTp-4-lzgiVhd_FK5cL1SuXmBGyiRkvUy0UsBNog==",
-			"offerFetchComplete": False,
-			"triggeredFromClient": True,
+			"offer_fetch_complete": False,
+			"triggered_from_client": True,
 			"offers": [
 				{
 					'product_id': None,
@@ -122,8 +121,8 @@ def demo_product_search_trigger() :
 		"data": None,
 		"delta": {
 			"Google Home": {
-				"createdAt": 1597938406487,
-				"updatedAt": 1597938454902,
+				"created_at": 1597938406487,
+				"updated_at": 1597938454902,
 				"results": []
 			},
 		}
@@ -140,10 +139,10 @@ def demo_product_search_trigger() :
 def demo_product_search_publish_result() :
 	# Mock a message
 	message = {
-		"createdAt": 1598977013859,
+		"created_at": 1598977013859,
 		"name": "Sony Alpha A7",
-		"pathName": "sony_alpha_a7",
-		"searchCompleted": False,
+		"path_name": "sony_alpha_a7",
+		"search_completed": False,
 		"source": "google_shopping",
 		"product_name": "Sony A7 III Kamerahus ",
 		"gtin": "04548736079656",
@@ -154,8 +153,8 @@ def demo_product_search_publish_result() :
 		"country": "SE",
 		"product_url": "https://www.google.com/shopping/product/17082225217934858373",
 		"product_description": "Sony A7 Mark III systemkameranar  utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit undantag. Lagring av  svåra vinklar.",
-		"searchQuery": "sony_alpha_a7",
-		"bundleResult": False,
+		"search_query": "sony_alpha_a7",
+		"bundle_result": False,
 		"performance":{
 			"product_search_trigger":{
 				"start":1600779213989.5525,
@@ -194,7 +193,7 @@ def demo_product_search_publish_result() :
 def demo_sherlock_shopping_finish_signal() :
 	# Mock a message
 	message = {
-		"searchQuery": "foo_bar"
+		"search_query": "foo_bar"
 	}
 	data = {
 		'data': base64.b64encode(json.dumps(message).encode())

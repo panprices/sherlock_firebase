@@ -73,7 +73,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Choose the relevant search
 		search_ref = ref.child(str(payload['product_token']))
 		# Get the existing offers data, on this we need to calculate savings
-		fetch_ref = search_ref.get('fetchedOffers')
+		fetch_ref = search_ref.get('fetched_offers')
 		# Join existing and new offers together to a list (if existing data exists)
 		'''
 			CASES TO CHECK FOR HERE:
@@ -84,8 +84,8 @@ def live_search_offer_enricher(event, context, production=True) :
 			 but the key fetchedOffers won't be in there because that property gets
 			 set by this function the first time.
 		'''
-		if list(fetch_ref)[0] != None and 'fetchedOffers' in fetch_ref[0] :
-			existing_offers = fetch_ref[0]['fetchedOffers']
+		if list(fetch_ref)[0] != None and 'fetched_offers' in fetch_ref[0] :
+			existing_offers = fetch_ref[0]['fetched_offers']
 			all_offers = existing_offers + payload['offers']
 		else :
 			all_offers = payload['offers']
@@ -94,8 +94,8 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Update the specific search in Firebase RTD with the newly fetched offers
 		if production :
 			search_ref.update({
-				'fetchedOffers/': enriched_offers,
-				'fetchedSources/' + payload['offer_source']: True
+				'fetched_offers/': enriched_offers,
+				'fetched_sources/' + payload['offer_source']: True
 			})
 			print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
 		# Kill the connection, otherwise the next instance trying to connect will crash
@@ -155,9 +155,9 @@ def product_search_publish_result(event, context, production=True):
 			'databaseURL': 'https://panprices.firebaseio.com/'
 		})
 		# Open a connection to the database
-		ref = db.reference('productSearch')
+		ref = db.reference('product_search')
 		# Choose the relevant search
-		current_entry_ref = ref.child(str(payload['searchQuery']))
+		current_entry_ref = ref.child(str(payload['search_query']))
 		# Get existing data in this specific search
 		current_entry = current_entry_ref.get({"results"})[0]
 		result = {}
@@ -217,14 +217,14 @@ def sherlock_shopping_finish_signal(event, context, production=True) :
 			'databaseURL': 'https://panprices.firebaseio.com/'
 		})
 		# Open a connection to the database
-		ref = db.reference('productSearch')
+		ref = db.reference('product_search')
 		# Choose the relevant search
-		current_entry_ref = ref.child(str(payload['searchQuery']))
+		current_entry_ref = ref.child(str(payload['search_query']))
 		# Only publish if we are running in production
 		if production :
 			# Update the specific search in Firebase RTD with the newly fetched offers
 			current_entry_ref.update({
-				"searchCompleted": True
+				"search_completed": True
 			})
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
@@ -246,18 +246,18 @@ def delete_old_firebase_data(event, context) :
 		cutoff_ts = int(float(cutoff.timestamp()) * 1000)
 		# Get all the past searches which are older than 1 hour
 		items_to_remove = db \
-			.reference('productSearch') \
-			.order_by_child('createdAt') \
+			.reference('product_search') \
+			.order_by_child('created_at') \
 			.end_at(cutoff_ts) \
 			.get()
 		# Iterate over all the paths and delete them one by one.
 		# This is obviously an O(n) operation which is not ideal.
 		for search_query in items_to_remove.keys():
 			try :
-				print('Deleting the dat for search query path: ', search_query)
+				print('Deleting the data for search query path: ', search_query)
 				# Request from the Firebase API that the specific search query
 				# be deleted.
-				db.reference('productSearch').child(search_query).delete()
+				db.reference('product_search').child(search_query).delete()
 			except Exception as e:
 				raise e
 		return
