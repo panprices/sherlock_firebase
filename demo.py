@@ -32,7 +32,7 @@ def demo_offer_search_trigger() :
 		# from trigger is different then that from PubSub.
 		message,
 		context,
-		production=True
+		production=False
 	)
 	print(result)
 
@@ -187,7 +187,7 @@ def demo_product_search_publish_result() :
 	result = product_search_publish_result(
 		data,
 		context,
-		production=False
+		production=True
 	)
 	print(result)
 

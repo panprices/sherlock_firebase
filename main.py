@@ -106,7 +106,6 @@ def live_search_offer_enricher(event, context, production=True) :
 		raise e
 
 def product_search_trigger(event, context, production=True):
-
 	"""
 		Triggered whenever there is a new database entry on the
 		productSearch resource in the Firebase Realtime Database.
@@ -145,7 +144,6 @@ def product_search_publish_result(event, context, production=True):
 		on the search the function appends. If a gtin appears again, it gets
 		overwritten.
 	"""
-
 	try:
 		# Create a timestamp for performance logging the whole pipeline
 		start = time.time()
@@ -193,6 +191,10 @@ def product_search_publish_result(event, context, production=True):
 			current_entry_ref.update({
 				"results": result
 			})
+			# Store the specific product in another data path used for the client
+			# to grab image and product_name in the offers page
+			for prod_token in result :
+				db.reference('products/' + prod_token).set(result[prod_token])
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
 	except Exception as e:
