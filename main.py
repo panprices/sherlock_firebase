@@ -120,7 +120,7 @@ def product_search_trigger(event, context, production=True):
 	# Print out the entire event object
 	print('Publishing the following search for a product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
-	if production:
+	if production and ('results' not in event['delta'] or len(event['delta']['results']) == 0):
 		try :
 			end = time.time()
 			event['delta']['performance'] = {
