@@ -96,7 +96,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		if production :
 			search_ref.update({
 				'fetched_offers/': enriched_offers,
-				'fetched_sources/' + payload['offer_source']: True
+				# 'fetched_sources/' + payload['offer_source']: True
 			})
 			print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
 		# Kill the connection, otherwise the next instance trying to connect will crash
