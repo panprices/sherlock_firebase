@@ -10,6 +10,7 @@ import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
+from src.firebase import flush_db
 
 def offer_search_trigger(event, context, production=True):
 
@@ -240,27 +241,21 @@ def delete_old_firebase_data(event, context) :
 		app = firebase_admin.initialize_app(cred, {
 			'databaseURL': 'https://panprices.firebaseio.com/'
 		})
-		# Get the timestamp of data and time 1 hour ago
-		cutoff = datetime.now() - timedelta(hours = 1)
-		# The above returns something like 1598616388.782356 get rounded 12 digits
-		cutoff_ts = int(float(cutoff.timestamp()) * 1000)
-		# Get all the past searches which are older than 1 hour
-		items_to_remove = db \
-			.reference('product_search') \
-			.order_by_child('created_at') \
-			.end_at(cutoff_ts) \
-			.get()
-		# Iterate over all the paths and delete them one by one.
-		# This is obviously an O(n) operation which is not ideal.
-		for search_query in items_to_remove.keys():
-			try :
-				print('Deleting the data for search query path: ', search_query)
-				# Request from the Firebase API that the specific search query
-				# be deleted.
-				db.reference('product_search').child(search_query).delete()
-			except Exception as e:
-				raise e
-		return
+		print("Starting to flush product_search path of data older then 1 hour.")
+		flush_db.delete_data(
+			bucket = 'product_search',
+			hours_cutoff = 1,
+			firebase_db = db
+		)
+		# Flush offers path of data older then 24 hour
+		print("Starting to flush offers path of data older then 24 hour.")
+		flush_db.delete_data(
+			bucket = 'offers',
+			hours_cutoff = 24,
+			firebase_db = db
+		)
 	except Exception as e:
 		print("There was an error: ", e)
 		raise e
+	finally :
+		print("Delete job finished.")
