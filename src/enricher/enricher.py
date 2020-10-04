@@ -152,6 +152,11 @@ def add_offers_metadata(offers) :
 			ON A.domain = B.retailer_domain
 			FULL OUTER JOIN trustpilot C
 			ON A.domain = C.retailer_domain
+		), lowest_local_price AS (
+			SELECT
+				MIN(adj_price)
+			FROM offers_with_shipping_and_trust
+			WHERE country = 'SE' -- Change this when we launch another country
 		/*
 			Filter out offers:
 				1. That do not pass the string matching test.
@@ -159,19 +164,37 @@ def add_offers_metadata(offers) :
 				3. Which we have duplicates on, for example the same from prisjakt as pricerunner
 		*/
 		), offers_filtered AS (
-			/*
-				HERE WE HAVE A VERY COMPLICATED FILTER WHICH WE NEED FOR WHEN
-				WE FETCH OFFERS BASED ON STRINGS. SKIP THIS FOR WHEN WE ARE NOW
-				FETCHING ON GTIN:S.
-			*/
 			SELECT
-				*
-			FROM offers_with_shipping_and_trust
-		), lowest_local_price AS (
-			SELECT
-				MIN(adj_price)
-			FROM offers_filtered
-			WHERE country = 'SE' -- Change this when we launch another country
+				-- Filter out when we from different sources have gotten the same offer
+				DISTINCT ON (A.retail_prod_name, A.domain, A.adj_price)
+				A.*
+			FROM offers_with_shipping_and_trust A
+			LEFT JOIN (
+				SELECT
+					A.*
+				FROM offers_with_shipping_and_trust A
+				-- Grab the offer sources to filter dynamically to be able to configure
+				-- this on the fly without having to re-deploy stuff
+				WHERE A.offer_source SIMILAR TO (
+					SELECT
+						array_to_string(
+								array(
+										SELECT
+											name
+										FROM offer_sources
+										WHERE filter IS TRUE
+								), '|'
+						)
+				)
+				AND (
+								(A.adj_price < (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'min_price')) OR
+								(A.adj_price > (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'max_price'))
+						)
+			) C
+			ON A.offers_raw_id = C.offers_raw_id
+			WHERE C.offers_raw_id IS NULL
+			-- Blacklisted retailers
+			AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
 		), offers_complete AS (
 			SELECT
 				*,
@@ -213,5 +236,10 @@ def add_offers_metadata(offers) :
 		WHERE offer_source IS NOT NULL; -- Remove the row needed for the union
 	""")
 	rows = cur_dict.fetchall()
+	'''
+		IF NEEDED LOG QUERY TO CONSOLE WITH:
+		query_string = cur_dict.query.decode()
+		print(query_string)
+	'''
 	pg_pool.putconn(connection)
 	return rows
