@@ -89,6 +89,7 @@ def add_offers_metadata(offers) :
 			ON A.retailer_name = C.name AND B.id = C.offer_source_id
 			INNER JOIN currency E
 			ON A.currency = E.name
+			WHERE C.blacklisted IS FALSE -- Remove blacklisted retailers
 		-- Add shipping data (where we have it) to the raw offers rows
 		), offers_with_shipping AS (
 			SELECT
