@@ -11,6 +11,7 @@ from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
 from src.firebase import flush_db
+from src.database.offer_url import fetch_gtin_url
 
 def offer_search_trigger(event, context, production=True):
 
@@ -27,28 +28,25 @@ def offer_search_trigger(event, context, production=True):
 	# Print out the entire event object
 	print('Publishing the following live search for product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
-	if production :
-		try :
-			# We do not have to decode since this function is triggered via
-			# Firebase trigger and not PubSub where we need to decode.
-			payload = event
-			# Get the product_token which is the only key in the incoming dict
-			product_token = payload['delta']['product_token'] # * generates list of keys
-			# Decrypt the GTIN from the product_token
-			gtin = encryption.fernet_decrypt(
-				product_token
-			)
-			# Enrich the data with the GTIN
-			payload['delta']['gtin'] = gtin
-			# Publish it to the topics which are consuming it
-			publisher = Publisher('panprices', 'sherlock_products')
-			pub_results = publisher.publish_messages([payload['delta']])
-			publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
-			pub_results_2 = publisher_popular_products.publish_messages([payload['delta']])
-		except Exception as e :
-			raise e
-		print(pub_results)
-		return pub_results
+	if production:
+		# We do not have to decode since this function is triggered via
+		# Firebase trigger and not PubSub where we need to decode.
+		payload = event
+		# Get the product_token which is the only key in the incoming dict
+		product_token = payload['delta']['product_token'] # * generates list of keys
+		# Decrypt the GTIN from the product_token
+		gtin = encryption.fernet_decrypt(product_token)
+		# query DB for associated URLs of this GTIN
+		offer_urls = fetch_gtin_url(gtin)
+		offer_urls = dict(offer_urls)
+		# Enrich the data with the GTIN
+		payload['delta']['gtin'] = gtin
+		payload['delta']['offer_urls'] = offer_urls
+		# Publish it to the topics which are consuming it
+		publisher = Publisher('panprices', 'sherlock_products')
+		publisher.publish_messages([payload['delta']])
+		publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
+		publisher_popular_products.publish_messages([payload['delta']])
 
 def live_search_offer_enricher(event, context, production=True) :
 	"""

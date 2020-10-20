@@ -45,9 +45,6 @@ class Publisher():
 		for message in messages:
 			# Data must be a bytestring
 			data = json.dumps(message, indent=2, sort_keys=True, default=str).encode('utf-8')
-
-			print(data)
-
 			future = self.client.publish(self.topic_path, data=data)
 			message_id = future.result()
 			message_ids.append(message_id)
