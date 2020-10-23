@@ -35,7 +35,9 @@ def offer_search_trigger(event, context, production=True):
 		# Get the product_token which is the only key in the incoming dict
 		product_token = payload['delta']['product_token'] # * generates list of keys
 		# Decrypt the GTIN from the product_token
+		# take the first GTIN if there are multiple one
 		gtin = encryption.fernet_decrypt(product_token)
+		gtin = gtin.split(', ')[0]
 		# query DB for associated URLs of this GTIN
 		offer_urls = fetch_gtin_url(gtin)
 		offer_urls = dict(offer_urls)
@@ -47,6 +49,7 @@ def offer_search_trigger(event, context, production=True):
 		publisher.publish_messages([payload['delta']])
 		publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
 		publisher_popular_products.publish_messages([payload['delta']])
+		print("Trigger offer fetching for: " + gtin)
 
 def live_search_offer_enricher(event, context, production=True) :
 	"""
@@ -164,8 +167,9 @@ def product_search_publish_result(event, context, production=True):
 		if current_entry != None and "results" in current_entry:
 			result = current_entry["results"]
 		# Generate an encrypted product token from the GTIN
+		# take the first GTIN if there are multiple GTIN
 		product_token = encryption.fernet_encrypt(
-			payload["gtin"]
+			payload["gtin"].split(', ')[0]
 		)
 		# Write all input data with the specific product_token as key
 		result[product_token] = payload
