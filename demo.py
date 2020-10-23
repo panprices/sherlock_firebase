@@ -15,7 +15,7 @@ def demo_offer_search_trigger() :
 	  "data": None,
 	  "delta": {
 	    "offer_fetch_complete": False,
-	    "product_token": "gAAAAABfbLZJY3OavtgPyOBsySo-UIHaOfxo2akZgPFBZIxoeYeEKLiQB0xqOVGKQ90Eh8xBO6vX7Y5oTaiz4T6O2QrctU-mQw==",
+	    "product_token": "gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
 	    "created_at": 1600961105031,
 	    "triggered_from_client": True
 	  }

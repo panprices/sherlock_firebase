@@ -28,7 +28,7 @@ def offer_search_trigger(event, context, production=True):
 	# Print out the entire event object
 	print('Publishing the following live search for product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
-	if production:
+	if not production:
 		# We do not have to decode since this function is triggered via
 		# Firebase trigger and not PubSub where we need to decode.
 		payload = event
@@ -37,7 +37,9 @@ def offer_search_trigger(event, context, production=True):
 		# Decrypt the GTIN from the product_token
 		# take the first GTIN if there are multiple one
 		gtin = encryption.fernet_decrypt(product_token)
+		print(gtin)
 		gtin = gtin.split(', ')[0]
+		print(gtin)
 		# query DB for associated URLs of this GTIN
 		offer_urls = fetch_gtin_url(gtin)
 		offer_urls = dict(offer_urls)
