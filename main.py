@@ -28,7 +28,7 @@ def offer_search_trigger(event, context, production=True):
 	# Print out the entire event object
 	print('Publishing the following live search for product: ', str(event))
 	# Publish the event to the sherlock_products Pubsub topic
-	if not production:
+	if production:
 		# We do not have to decode since this function is triggered via
 		# Firebase trigger and not PubSub where we need to decode.
 		payload = event
