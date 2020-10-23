@@ -37,21 +37,22 @@ def offer_search_trigger(event, context, production=True):
 		# Decrypt the GTIN from the product_token
 		# take the first GTIN if there are multiple one
 		gtin = encryption.fernet_decrypt(product_token)
-		print(gtin)
-		gtin = gtin.split(', ')[0]
-		print(gtin)
-		# query DB for associated URLs of this GTIN
-		offer_urls = fetch_gtin_url(gtin)
-		offer_urls = dict(offer_urls)
-		# Enrich the data with the GTIN
-		payload['delta']['gtin'] = gtin
-		payload['delta']['offer_urls'] = offer_urls
-		# Publish it to the topics which are consuming it
-		publisher = Publisher('panprices', 'sherlock_products')
-		publisher.publish_messages([payload['delta']])
-		publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
-		publisher_popular_products.publish_messages([payload['delta']])
-		print("Trigger offer fetching for: " + gtin)
+		if gtin:
+			gtin = gtin.split(', ')[0]
+			# query DB for associated URLs of this GTIN
+			offer_urls = fetch_gtin_url(gtin)
+			offer_urls = dict(offer_urls)
+			# Enrich the data with the GTIN
+			payload['delta']['gtin'] = gtin
+			payload['delta']['offer_urls'] = offer_urls
+			# Publish it to the topics which are consuming it
+			publisher = Publisher('panprices', 'sherlock_products')
+			publisher.publish_messages([payload['delta']])
+			publisher_popular_products = Publisher('panprices', 'sherlock_popular_products')
+			publisher_popular_products.publish_messages([payload['delta']])
+			print("Trigger offer fetching for: " + gtin)
+		else:
+			print(f"Empty gtin encountered: {gtin}")
 
 def live_search_offer_enricher(event, context, production=True) :
 	"""
