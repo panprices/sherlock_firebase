@@ -17,75 +17,75 @@ steps:
          '_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}'
          ]
 
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   args: ['functions', 'deploy',
-#          'live_search_offer_enricher',
-#          '--source',
-#          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
-#          '--trigger-topic',
-#          'live_search_offers',
-#          '--region',
-#          'europe-west1',
-#          '--runtime',
-#          'python37',
-#          '--max-instances',
-#          '50'
-#          ]
-#
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   args: ['functions', 'deploy',
-#          'product_search_trigger',
-#          '--source',
-#          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
-#          '--trigger-event',
-#          'providers/google.firebase.database/eventTypes/ref.create',
-#          '--trigger-resource',
-#          'projects/_/instances/panprices/refs/product_search/{search_query}',
-#          '--region',
-#          'europe-west1',
-#          '--runtime',
-#          'python37'
-#          ]
-#
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   args: ['functions', 'deploy',
-#          'product_search_publish_result',
-#          '--source',
-#          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
-#          '--trigger-topic',
-#          'sherlock_google_ids',
-#          '--region',
-#          'europe-west1',
-#          '--runtime',
-#          'python37',
-#          '--set-env-vars',
-#          '_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}'
-#          ]
-# 
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   args: ['functions', 'deploy',
-#          'sherlock_shopping_finish_signal',
-#          '--source',
-#          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
-#          '--trigger-topic',
-#          'sherlock_google_shopping_finished',
-#          '--region',
-#          'europe-west1',
-#          '--runtime',
-#          'python37'
-#          ]
-#
-# - name: 'gcr.io/cloud-builders/gcloud'
-#   args: ['functions', 'deploy',
-#          'delete_old_firebase_data',
-#          '--source',
-#          'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
-#          '--trigger-topic',
-#          'trigger_delete_old_firebase_data',
-#          '--region',
-#          'europe-west1',
-#          '--runtime',
-#          'python37'
-#          ]
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'live_search_offer_enricher',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-topic',
+         'live_search_offers',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37',
+         '--max-instances',
+         '50'
+         ]
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'product_search_trigger',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-event',
+         'providers/google.firebase.database/eventTypes/ref.create',
+         '--trigger-resource',
+         'projects/_/instances/panprices/refs/product_search/{search_query}',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37'
+         ]
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'product_search_publish_result',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-topic',
+         'sherlock_google_ids',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37',
+         '--set-env-vars',
+         '_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}'
+         ]
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'sherlock_shopping_finish_signal',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-topic',
+         'sherlock_google_shopping_finished',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37'
+         ]
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'delete_old_firebase_data',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-topic',
+         'trigger_delete_old_firebase_data',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37'
+         ]
 
 images: []
