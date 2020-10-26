@@ -153,6 +153,9 @@ def product_search_publish_result(event, context, production=True):
 		# Create a timestamp for performance logging the whole pipeline
 		start = time.time()
 		payload = json.loads(base64.b64decode(event['data']))
+		if 'search_query' not in payload:
+			# this message come from retool update image app, skip it
+			return
 		# Fetch the service account key JSON file contents
 		cred = credentials.Certificate('firebase_service_account.json')
 		# Initialize the app with a service account, granting admin privileges
