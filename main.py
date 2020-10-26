@@ -155,6 +155,7 @@ def product_search_publish_result(event, context, production=True):
 		payload = json.loads(base64.b64decode(event['data']))
 		if 'search_query' not in payload:
 			# this message come from retool update image app, skip it
+			print("No search_query found, message come from retool, skip")
 			return
 		# Fetch the service account key JSON file contents
 		cred = credentials.Certificate('firebase_service_account.json')
