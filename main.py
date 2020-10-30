@@ -11,7 +11,7 @@ from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
 from src.firebase import flush_db
-from src.database.offer_url import fetch_gtin_url
+from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 
 def offer_search_trigger(event, context, production=True):
 
@@ -42,6 +42,8 @@ def offer_search_trigger(event, context, production=True):
 			# query DB for associated URLs of this GTIN
 			offer_urls = fetch_gtin_url(gtin)
 			offer_urls = dict(offer_urls)
+			# query DB for google shopping url
+			offer_urls['google_shopping_SE'] = fetch_google_shopping_url(gtin)
 			# Enrich the data with the GTIN
 			payload['delta']['gtin'] = gtin
 			payload['delta']['offer_urls'] = offer_urls

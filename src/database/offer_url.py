@@ -8,3 +8,12 @@ def fetch_gtin_url(gtin):
 
 	pg_pool.putconn(connection)
 	return rows
+
+def fetch_google_shopping_url(gtin):
+	cur, cur_dict, connection, pg_pool = connect_to_db()
+
+	cur.execute(cur.mogrify("SELECT url FROM products WHERE gtin = %s", (gtin, )))
+	row = cur.fetchone()
+
+	pg_pool.putconn(connection)
+	return row[0]
