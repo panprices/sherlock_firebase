@@ -43,7 +43,9 @@ def offer_search_trigger(event, context, production=True):
 			offer_urls = fetch_gtin_url(gtin)
 			offer_urls = dict(offer_urls)
 			# query DB for google shopping url
-			offer_urls['google_shopping_SE'] = fetch_google_shopping_url(gtin)
+			gs_url = fetch_google_shopping_url(gtin)
+			if gs_url:
+				offer_urls['google_shopping_SE'] = gs_url
 			# Enrich the data with the GTIN
 			payload['delta']['gtin'] = gtin
 			payload['delta']['offer_urls'] = offer_urls

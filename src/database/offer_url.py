@@ -16,4 +16,4 @@ def fetch_google_shopping_url(gtin):
 	row = cur.fetchone()
 
 	pg_pool.putconn(connection)
-	return row[0]
+	return row[0] if row else None
