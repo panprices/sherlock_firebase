@@ -68,6 +68,8 @@ def live_search_offer_enricher(event, context, production=True) :
 		print(
 			'Got offers for gtin:',
 			payload['gtin'],
+			'from',
+			payload['offer_source'],
 			'with product_token:',
 			payload['product_token']
 		)
@@ -106,7 +108,7 @@ def live_search_offer_enricher(event, context, production=True) :
 				'fetched_offers/': enriched_offers,
 				# 'fetched_sources/' + payload['offer_source']: True
 			})
-			print("Enriched " + "offers/" + str(payload['gtin']) + " with offers.")
+			print("Enriched " + "offers/" + str(payload['gtin']) + " from " + payload['offer_source'] + " with offers.")
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
 	except Exception as e:
