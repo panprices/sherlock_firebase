@@ -14,6 +14,7 @@ def delete_data(bucket, hours_cutoff, firebase_db) :
 		.order_by_child('created_at') \
 		.end_at(cutoff_ts) \
 		.get()
+	print(f"Delete {len(items_to_remove)} items in {bucket} bucket")
 	# Iterate over all the paths and delete them one by one.
 	# This is obviously an O(n) operation which is not ideal.
 	for node in items_to_remove.keys():
