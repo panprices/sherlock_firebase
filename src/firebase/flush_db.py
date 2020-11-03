@@ -21,7 +21,7 @@ def delete_data(bucket, hours_cutoff, firebase_db) :
 			print('Deleting the data for ' + bucket + ' bucket: ', node)
 			# Request from the Firebase API that the specific search query
 			# be deleted.
-			firebase_db.reference('product_search').child(node).delete()
+			firebase_db.reference(bucket).child(node).delete()
 		except Exception as e:
 			raise e
 	return
