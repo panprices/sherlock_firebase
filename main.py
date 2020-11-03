@@ -98,10 +98,13 @@ def live_search_offer_enricher(event, context, production=True) :
 		if list(fetch_ref)[0] != None and 'fetched_offers' in fetch_ref[0] :
 			existing_offers = fetch_ref[0]['fetched_offers']
 			all_offers = existing_offers + payload['offers']
-		else :
+		else:
 			all_offers = payload['offers']
 		# Enrich and format all the combined offers
-		enriched_offers = add_offers_metadata(all_offers)
+		if len(all_offers) > 0:
+			enriched_offers = add_offers_metadata(all_offers)
+		else:
+			enriched_offers = []
 		# Update the specific search in Firebase RTD with the newly fetched offers
 		if production :
 			search_ref.update({
