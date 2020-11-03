@@ -85,7 +85,11 @@ steps:
          '--region',
          'europe-west1',
          '--runtime',
-         'python37'
+         'python37',
+         '--timeout',
+         '540s',
+         '--memory',
+         '1GB'
          ]
 
 images: []
