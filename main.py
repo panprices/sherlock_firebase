@@ -84,7 +84,7 @@ def live_search_offer_enricher(event, context, production=True) :
 		# Choose the relevant search
 		search_ref = ref.child(str(payload['product_token']))
 		# Get the existing offers data, on this we need to calculate savings
-		fetch_ref = search_ref.get('fetched_offers')
+		fetch_ref = search_ref.child('fetched_offers')
 		# Join existing and new offers together to a list (if existing data exists)
 		'''
 			CASES TO CHECK FOR HERE:
@@ -95,23 +95,27 @@ def live_search_offer_enricher(event, context, production=True) :
 			 but the key fetchedOffers won't be in there because that property gets
 			 set by this function the first time.
 		'''
-		if list(fetch_ref)[0] != None and 'fetched_offers' in fetch_ref[0] :
-			existing_offers = fetch_ref[0]['fetched_offers']
-			all_offers = existing_offers + payload['offers']
-		else:
-			all_offers = payload['offers']
-		# Enrich and format all the combined offers
-		if len(all_offers) > 0:
-			enriched_offers = add_offers_metadata(all_offers)
-		else:
-			enriched_offers = []
+		# defind function for transaction
+		# use transaction to avoid concurrency bug, because different data from
+		# different fetching modules will come in at different message -> separate function invocation
+		def enrich_data(existing_offers):
+			if existing_offers != None and len(existing_offers) > 0:
+				all_offers = existing_offers + payload['offers']
+			else:
+				all_offers = payload['offers']
+			# Enrich and format all the combined offers
+			if len(all_offers) > 0:
+				return add_offers_metadata(all_offers)
+			else:
+				return []
+		enriched_offers = fetch_ref.transaction(enrich_data)
 		# Update the specific search in Firebase RTD with the newly fetched offers
-		if production :
+		if production:
 			search_ref.update({
 				'fetched_offers/': enriched_offers,
 				# 'fetched_sources/' + payload['offer_source']: True
 			})
-			print(f"Enriched {len(all_offers)} offers/{payload['gtin']} to {len(enriched_offers)} enriched one.")
+			print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
 	except Exception as e:
