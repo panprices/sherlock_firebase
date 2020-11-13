@@ -2,7 +2,6 @@ import base64
 import json
 import firebase_admin
 import time
-from datetime import datetime, timedelta
 from firebase_admin import credentials
 from firebase_admin import db
 
@@ -12,6 +11,7 @@ from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
+from src.database.product import get_popular_product
 
 def offer_search_trigger(event, context, production=True):
 
@@ -281,3 +281,43 @@ def delete_old_firebase_data(event, context) :
 		raise e
 	finally :
 		print("Delete job finished.")
+
+def popular_product_search_trigger(event, context):
+	product_tokens = get_popular_product()
+
+	if len(product_tokens) <= 0:
+		print("No popular product to fetch")
+		return
+
+	# Fetch the service account key JSON file contents
+	cred = credentials.Certificate('firebase_service_account.json')
+	# Initialize the app with a service account, granting admin privileges
+	app = firebase_admin.initialize_app(cred, {
+		'databaseURL': 'https://panprices.firebaseio.com/'
+	})
+	# Open a connection to the database
+	ref = db.reference('offers')
+
+	# transform a list of product token to the form we use in the firebase offers path
+	# the result is in the form:
+	# {
+	# 	<product_token> : {
+	# 		"offer_fetch_complete": False,
+	#		"product_token": product_token,
+	#		"created_at": int(round(time.time() * 1000)),
+	#		"triggered_from_client": True,
+	#		"popular": True ## this key is to signify the later step in the pipeline this offer is triggered from the popular product
+	# 	}
+	# }
+	# convert to a list of tuple (key, value), before passing to dict()
+	transformed_products = dict([(product_token, {
+		"offer_fetch_complete": False,
+		"product_token": product_token,
+		"created_at": int(round(time.time() * 1000)),
+		"triggered_from_client": True,
+		"popular": True
+	}) for product_token in product_tokens])
+
+	ref.update(transformed_products)
+
+	print(f"Trigger fetching offers for {len(product_tokens)} popular products")

@@ -8,6 +8,7 @@ from main import product_search_trigger
 from main import product_search_publish_result
 from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
+from main import popular_product_search_trigger
 
 def demo_offer_search_trigger() :
 	# Mock a message
@@ -221,6 +222,9 @@ def demo_delete_old_firebase_data() :
 	result = delete_old_firebase_data(data, context)
 	print(result)
 
+def demo_popular_product_search_trigger():
+	popular_product_search_trigger({}, {})
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -263,6 +267,12 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='Publish to Realtime Firebase on productSearch.'
 	)
+	parser.add_argument(
+		'-ppst',
+		'--popular_product_search_trigger',
+		action='store_true',
+		help='fetch product with non null popularity index and publish to firebase offers path'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -278,3 +288,5 @@ if __name__ == '__main__' :
 		demo_delete_old_firebase_data()
 	elif args.sherlock_shopping_finish_signal:
 		demo_sherlock_shopping_finish_signal()
+	elif args.popular_product_search_trigger:
+		demo_popular_product_search_trigger()

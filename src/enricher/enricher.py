@@ -75,7 +75,7 @@ def add_offers_metadata(offers) :
 				NULL AS offer_url,
 				NULL AS requested_at,
 				NULL AS match_score
-		), offers_raw AS (
+		), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
 			SELECT
 				A.*,
 				C.domain,
@@ -153,7 +153,7 @@ def add_offers_metadata(offers) :
 			ON A.domain = B.retailer_domain
 			FULL OUTER JOIN trustpilot C
 			ON A.domain = C.retailer_domain
-		), lowest_local_price AS (
+		), lowest_local_price AS ( ---- get the lowest price among offers, this step touch all the offers including old and new
 			SELECT
 				MIN(adj_price)
 			FROM offers_with_shipping_and_trust
