@@ -118,12 +118,10 @@ def live_search_offer_enricher(event, context, production=True) :
 			print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
-
-		# if this is a popular product, publish to pubsub to write down in the database
-		if "popular" in payload and payload["popular"]:
-			publisher = Publisher('panprices', 'popular_product_offers')
-			payload['offers'] = enriched_offers
-			publisher.publish_messages([payload])
+		# Publish all data to a separate topic for writing it down in batches to PSQL.
+		publisher = Publisher('panprices', 'sherlock_live_offers')
+		payload['offers'] = enriched_offers
+		publisher.publish_messages([payload])
 	except Exception as e:
 		msg_string = json.dumps(payload)
 		print(f'something went wrong when handling message: {msg_string}')
