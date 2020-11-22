@@ -11,10 +11,22 @@ def get_popular_product(cutoff_time = get_current_minute(), time_range = 10):
     cur, cur_dict, connection, pg_pool = connect_to_db()
 
     cur.execute("""
-        SELECT
+        -- Grab all the popular products
+		SELECT
             product_token
         FROM products
-        WHERE popularity_idx IS NOT NULL AND rand_min_in_day >= {0} AND rand_min_in_day < {1}
+        WHERE popularity_idx IS NOT NULL
+        AND rand_min_in_day >= {0}
+        AND rand_min_in_day < {1}
+        -- Grab the products which we are doing campaigns on
+        UNION ALL
+        SELECT
+            A.product_token
+        FROM products A
+        INNER JOIN campaign_products B
+        ON A.id::text = B.product_id
+        WHERE A.rand_min_in_day >= {0}
+        AND A.rand_min_in_day < {1}
     """.format(cutoff_time - time_range, cutoff_time))
     rows = cur.fetchall()
 
