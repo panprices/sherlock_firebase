@@ -1,4 +1,5 @@
 import json
+import uuid
 from src.database.database import connect_to_db
 
 '''
@@ -19,7 +20,8 @@ def offer_to_tup(offer) :
 		offer.get('currency') or None,
 		offer.get('offer_url') or None,
 		offer.get('requested_at') or None,
-		offer.get('match_score') or None
+		offer.get('match_score') or None,
+		offer.get('offer_id') or None
 	)
 
 '''
@@ -43,7 +45,7 @@ def add_offers_metadata(offers) :
 			SELECT
 				-- We need to create a random ID since the existing
 				-- joins expects that
-				floor(random()* (10000 - 1 + 1) + 1) AS offers_raw_id,
+				uuid_generate_v4() AS offers_raw_id,
 				NULL AS updated_at,
 				%s AS product_id,
 				%s AS offer_source,
@@ -54,7 +56,8 @@ def add_offers_metadata(offers) :
 				%s AS currency,
 				%s AS offer_url,
 				%s AS requested_at,
-				%s::int AS match_score
+				%s::int AS match_score,
+				%s AS offer_id
 			UNION ALL
 		""", offer_to_tup(offer),
 		) for offer in offers
@@ -74,7 +77,8 @@ def add_offers_metadata(offers) :
 				NULL AS currency,
 				NULL AS offer_url,
 				NULL AS requested_at,
-				NULL AS match_score
+				NULL AS match_score,
+				NULL as offer_id
 		), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
 			SELECT
 				A.*,
@@ -232,7 +236,8 @@ def add_offers_metadata(offers) :
 			domain,
 			ship,
 			shipping_fee,
-			saving * 100 AS saving -- see comment above on prices
+			saving * 100 AS saving, -- see comment above on prices
+			offers_raw_id AS offer_id
 		FROM offers_complete
 		WHERE offer_source IS NOT NULL; -- Remove the row needed for the union
 	""")

@@ -109,6 +109,10 @@ def live_search_offer_enricher(event, context, production=True) :
 			else:
 				return []
 		enriched_offers = fetch_ref.transaction(enrich_data)
+
+		print(json.dumps(enriched_offers, indent=2))
+
+		
 		# Update the specific search in Firebase RTD with the newly fetched offers
 		if production:
 			search_ref.update({
@@ -116,12 +120,12 @@ def live_search_offer_enricher(event, context, production=True) :
 				# 'fetched_sources/' + payload['offer_source']: True
 			})
 			print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
+			# Publish all data to a separate topic for writing it down in batches to PSQL.
+			publisher = Publisher('panprices', 'sherlock_live_offers')
+			payload['offers'] = enriched_offers
+			publisher.publish_messages([payload])
 		# Kill the connection, otherwise the next instance trying to connect will crash
 		firebase_admin.delete_app(app)
-		# Publish all data to a separate topic for writing it down in batches to PSQL.
-		publisher = Publisher('panprices', 'sherlock_live_offers')
-		payload['offers'] = enriched_offers
-		publisher.publish_messages([payload])
 	except Exception as e:
 		msg_string = json.dumps(payload)
 		print(f'something went wrong when handling message: {msg_string}')

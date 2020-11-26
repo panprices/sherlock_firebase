@@ -75,7 +75,25 @@ def demo_live_search_offer_enricher() :
 		            "currency":"SEK",
 		            "requested_at":"2020-11-02T13:30:06Z",
 		            "match_score":None
-		        },
+		        }
+		    ],
+		    "offer_source":"google_shopping_SE"
+		},
+		{
+		    "created_at":1604323264073,
+		    "gtin":"03616131072020",
+		    "offer_fetch_complete":False,
+		    "offer_urls":{
+		        "geizhals_DE":"https://geizhals.de/1898461540",
+		        "google_shopping_SE":"https://www.google.com/shopping/product/10166805956347853825",
+		        "pricerunner_DK":None,
+		        "pricerunner_SE":None,
+		        "pricerunner_UK":None,
+		        "prisjakt_SE":None
+		    },
+		    "product_token":"gAAAAABfn-KcweQ0JV0a0Husf-SXT3aihO4X-v6MogqtBhCzuaRNsb9ERKPvAMYTo22KJOnERl9leC5L_kK4ITtacmXKofB3wQ==",
+		    "triggered_from_client":True,
+		    "offers":[
 		        {
 		            "offer_source":"google_shopping_SE",
 		            "retailer_name":"Mytheresa Sweden",
