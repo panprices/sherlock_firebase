@@ -9,6 +9,7 @@ from main import product_search_publish_result
 from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
 from main import popular_product_search_trigger
+from main import get_price_from_firebase
 
 def demo_offer_search_trigger() :
 	# Mock a message
@@ -243,6 +244,18 @@ def demo_delete_old_firebase_data() :
 def demo_popular_product_search_trigger():
 	popular_product_search_trigger({}, {})
 
+def demo_get_price_from_firebase() :
+	class Request:
+		def get_json(self, silent = False):
+			return {
+				'product_token': 'gAAAAABfc0wO2kObkDZp6Jus_zAjkxiG8GGyZob5O1Ha13Z2hP3mCvuJfNZVb33wEqPWzM2MnR-K_1kYvF2XUgrycKfs-pHJkA==',
+				'offer_id': 'c43e63e1-05e4-4ee1-acec-91252422d27d'
+			}
+
+	request = Request()
+	result = get_price_from_firebase(request)
+	print(result)
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -291,6 +304,12 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='fetch product with non null popularity index and publish to firebase offers path'
 	)
+	parser.add_argument(
+		'-gpff',
+		'--get_price_from_firebase',
+		action='store_true',
+		help='Return the price from Firebase with a product token and offer id'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -308,3 +327,5 @@ if __name__ == '__main__' :
 		demo_sherlock_shopping_finish_signal()
 	elif args.popular_product_search_trigger:
 		demo_popular_product_search_trigger()
+	elif args.get_price_from_firebase:
+		demo_get_price_from_firebase()

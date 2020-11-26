@@ -4,6 +4,7 @@ import firebase_admin
 import time
 from firebase_admin import credentials
 from firebase_admin import db
+from flask import jsonify
 
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
@@ -112,7 +113,7 @@ def live_search_offer_enricher(event, context, production=True) :
 
 		print(json.dumps(enriched_offers, indent=2))
 
-		
+
 		# Update the specific search in Firebase RTD with the newly fetched offers
 		if production:
 			search_ref.update({
@@ -329,3 +330,30 @@ def popular_product_search_trigger(event, context):
 	ref.update(transformed_products)
 
 	print(f"Trigger fetching offers for {len(product_tokens)} popular products")
+
+def get_price_from_firebase(request) :
+	request_json = request.get_json(silent=True)
+	product_token = request_json.get('product_token')
+	offer_id = request_json.get('offer_id')
+	# return 400 if the body is incorrect
+	if product_token is None or offer_id is None:
+		return ("expecting product_token and offer_id", 400)
+
+	# Fetch the service account key JSON file contents
+	cred = credentials.Certificate('firebase_service_account.json')
+	# Initialize the app with a service account, granting admin privileges
+	app = firebase_admin.initialize_app(cred, {
+		'databaseURL': 'https://panprices.firebaseio.com/'
+	})
+	# Open a connection to the database
+	ref = db.reference('offers')
+	# Choose the relevant search
+	search_ref = ref.child(product_token)
+	# Get the existing offers data, on this we need to calculate savings
+	offers = search_ref.child('fetched_offers').get()
+	for offer in offers :
+		if offer.get('offer_id') == offer_id :
+			return json.dumps(
+				int(offer['price'] / 100)
+			), 200, {'Content-Type': 'application/json'}
+	return ("There wasn't any price on this offer", 400)
