@@ -333,6 +333,10 @@ def popular_product_search_trigger(event, context):
 
 def get_price_from_firebase(request) :
 	request_json = request.get_json(silent=True)
+	print(
+		"The function was triggered with the following data: ",
+		request_json
+	)
 	product_token = request_json.get('product_token')
 	offer_id = request_json.get('offer_id')
 	# return 400 if the body is incorrect
