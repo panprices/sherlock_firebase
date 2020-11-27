@@ -110,10 +110,6 @@ def live_search_offer_enricher(event, context, production=True) :
 			else:
 				return []
 		enriched_offers = fetch_ref.transaction(enrich_data)
-
-		print(json.dumps(enriched_offers, indent=2))
-
-
 		# Update the specific search in Firebase RTD with the newly fetched offers
 		if production:
 			search_ref.update({
