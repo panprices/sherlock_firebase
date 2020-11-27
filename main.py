@@ -358,6 +358,6 @@ def get_price_from_firebase(request) :
 	for offer in offers :
 		if offer.get('offer_id') == offer_id :
 			return json.dumps(
-				int(offer['price'] / 100)
+				int(offer['price'])
 			), 200, {'Content-Type': 'application/json'}
 	return ("There wasn't any price on this offer", 400)
