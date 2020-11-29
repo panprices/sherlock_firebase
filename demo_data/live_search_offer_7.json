@@ -1,0 +1,107 @@
+{
+  "created_at": 1605867043251,
+  "gtin": "00018208954100",
+  "offer_fetch_complete": false,
+  "offer_urls": {
+    "geizhals_DE": "https://geizhals.de/nikon-d850-schwarz-gehaeuse-vba520ae-a1677786.html",
+    "google_shopping_SE": "https://www.google.com/shopping/product/3538675375893756760",
+    "pricerunner_DK": "/pl/29-4235899/Digitalkameraer/Nikon-D850-Sammenlign-Priser",
+    "pricerunner_SE": "/pl/29-4235899/Digitalkameror/Nikon-D850-priser",
+    "pricerunner_UK": "/pl/29-4235899/Digital-Cameras/Nikon-D850-Compare-Prices",
+    "prisjakt_SE": "4430129"
+  },
+  "popular": true,
+  "product_token": "gAAAAABfeih9rkFEkM5ELLkDF1NjUq4E346-92GENbMYcHyv9BBotCi3WZQvR6q5Bs3kvGng2nNQY4igjCESn1M5hlLnmn_3NA==",
+  "triggered_from_client": true,
+  "offers": [
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "CyberPhoto",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAGGgJxbg&sig=AOD64_0QofdHdD45hOQm0JtYxzRnIYp0eg&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIEw&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2892900",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Scandinavian Photo SE",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAFGgJxbg&sig=AOD64_3fTzqqtY4s5NrmAH-PEatMooWYPg&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIFg&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2885000",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "E-Infinity Online Camera Store",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAEGgJxbg&sig=AOD64_1_2jTkrT6twPZcJJlrQz4q_2USlQ&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIGQ&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2234710",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "CameraWorld",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAHGgJxbg&sig=AOD64_1G6W0L5RQjBtYZyp74-rYxmIKzeA&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIHQ&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2650178",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "RajalaProShop",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABANGgJxbg&sig=AOD64_2cMwiLvfD7nEic4CzWSIg9rd5hYw&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIIQ&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2914000",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Digitaland",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAMGgJxbg&sig=AOD64_3rwUdWnIlUbQGwwcmnhHGNguxldw&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIJA&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2179682",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Hegethorns Foto",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAOGgJxbg&sig=AOD64_2ahdMjxY6yl7gqKEvFfZhDDYNvrg&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIJw&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "3084900",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Photospecialist.com",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwiT17z38JDtAhUB5bMKHeNFCG4YABAPGgJxbg&sig=AOD64_0D7BTfcflzTgx1-z_J78DXOc9lDw&ctype=5&q=&ved=0ahUKEwj01rj38JDtAhXcEVkFHdjQCVAQ2ikIKg&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon D850 Kamerahus",
+      "price": "2959551",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:10:48Z",
+      "match_score": null
+    }
+  ],
+  "offer_source": "google_shopping_SE"
+}
