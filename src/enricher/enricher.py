@@ -11,6 +11,7 @@ from src.database.database import connect_to_db
 
 def offer_to_tup(offer) :
 	return (
+		offer.get('offer_id') or str(uuid.uuid4()),
 		offer.get('product_id') or None,
 		offer.get('offer_source') or None,
 		offer.get('retail_prod_name') or None,
@@ -21,7 +22,7 @@ def offer_to_tup(offer) :
 		offer.get('offer_url') or None,
 		offer.get('requested_at') or None,
 		offer.get('match_score') or None,
-		offer.get('offer_id') or None
+		offer.get('saving_direct_checkout') or None
 	)
 
 '''
@@ -45,7 +46,7 @@ def add_offers_metadata(offers) :
 			SELECT
 				-- We need to create a random ID since the existing
 				-- joins expects that
-				uuid_generate_v4() AS offers_raw_id,
+				%s AS offer_id,
 				NULL AS updated_at,
 				%s AS product_id,
 				%s AS offer_source,
@@ -57,7 +58,7 @@ def add_offers_metadata(offers) :
 				%s AS offer_url,
 				%s AS requested_at,
 				%s::int AS match_score,
-				%s AS offer_id
+				%s AS saving_direct_checkout
 			UNION ALL
 		""", offer_to_tup(offer),
 		) for offer in offers
@@ -66,7 +67,7 @@ def add_offers_metadata(offers) :
 		WITH offers_data AS (
 			""" + offers_str + b"""
 			SELECT
-				NULL AS offers_raw_id,
+				NULL AS offer_id,
 				NULL AS updated_at,
 				NULL AS product_id,
 				NULL AS source,
@@ -78,7 +79,7 @@ def add_offers_metadata(offers) :
 				NULL AS offer_url,
 				NULL AS requested_at,
 				NULL AS match_score,
-				NULL as offer_id
+				NULL AS saving_direct_checkout
 		), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
 			SELECT
 				A.*,
@@ -97,16 +98,22 @@ def add_offers_metadata(offers) :
 		-- Add shipping data (where we have it) to the raw offers rows
 		), offers_with_shipping AS (
 			SELECT
-				DISTINCT ON (A.offers_raw_id)
+				DISTINCT ON (A.offer_id)
 				A.*,
 				B.ship,
 		--		((B.min_order_val * C.to_sek) / 100)::int AS min_order_val, -- adjusted for the currency
 		--		((B.fee * C.to_sek) / 100)::int AS fee, -- adjusted for the currency
 				CASE
-					WHEN fee IS NULL THEN NULL
-					WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN ((B.fee * C.to_sek) / 100)::int
-					WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN ((B.fee * C.to_sek) / 100)::int
-					ELSE 0
+					WHEN fee IS NULL THEN
+						CASE
+							WHEN A.country IN ('UK', 'IT', 'ES') THEN 406
+							WHEN A.country IN ('FR', 'BE', 'LU', 'DE') THEN 203
+							WHEN A.country = 'SE' THEN 0
+							ELSE NULL
+						END
+					WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN B.fee * C.to_sek
+					WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN B.fee * C.to_sek
+					ELSE 0 --Does this not have to be NULL?
 				END AS shipping_fee
 			FROM offers_raw A
 			FULL OUTER JOIN shipping B
@@ -116,8 +123,13 @@ def add_offers_metadata(offers) :
 		-- Add retailer trust data and determine quality score
 		), offers_with_shipping_and_trust AS (
 			SELECT
-				DISTINCT ON (A.offers_raw_id)
+				DISTINCT ON (A.offer_id)
 				A.*,
+				(adj_price + shipping_fee) * 0.03 AS exchange_rate_fee,
+				(adj_price + shipping_fee) * 0.05 AS service_fee,
+				((adj_price + shipping_fee) * 0.05) * 0.25 AS vat,
+				(adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_se,
+				(adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.03) + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_int,
 				CASE
 					-- If no Trustpilot rating
 					WHEN avg_rating = 0 THEN
@@ -196,20 +208,36 @@ def add_offers_metadata(offers) :
 								(A.adj_price > (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'max_price'))
 						)
 			) C
-			ON A.offers_raw_id = C.offers_raw_id
-			WHERE C.offers_raw_id IS NULL
+			ON A.offer_id = C.offer_id
+			WHERE C.offer_id IS NULL
 			-- Blacklisted retailers
 			AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
 		), offers_complete AS (
 			SELECT
 				*,
-				((SELECT * FROM lowest_local_price) - B.adj_price) AS saving
+				--((SELECT * FROM lowest_local_price) - B.adj_price) AS saving,
+				CASE
+					WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN true
+					ELSE false
+				END AS direct_checkout,
+				CASE
+					WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
+						CASE
+							WHEN country != 'SE' THEN ((adj_price + shipping_fee + service_fee + vat + payment_fee_int + exchange_rate_fee) )
+							ELSE NULL
+						END
+					ELSE NULL
+				END AS direct_checkout_price,
+				CASE
+					WHEN quality_score > 5 THEN 5
+					WHEN quality_score < 1 THEN 1
+					ELSE quality_score::float
+				END AS quality_score_adjusted
 			FROM (
 				SELECT
 					*
 				FROM offers_filtered
 			) B
-			ORDER BY adj_price
 		)
 		SELECT
 			updated_at,
@@ -218,28 +246,28 @@ def add_offers_metadata(offers) :
 			retail_prod_name,
 			retailer_name,
 			country,
-			/*
-				API does not return price like this to the client but since
-				we will fetch from Firebase when the 2nd offer source comes
-				in and then have incoming data with two precision points
-				and compare to one without it will get wrong.
-			*/
-			adj_price * 100 AS price,
+			(adj_price * 100)::int AS price,
 			'SEK' AS currency,
 			offer_url,
-			-- TODO: Move this to some other place higher up
-			CASE
-				WHEN quality_score > 5 THEN 5
-				WHEN quality_score < 1 THEN 1
-				ELSE quality_score::float
-			END AS quality_score,
+			quality_score_adjusted AS quality_score,
 			domain,
 			ship,
-			shipping_fee,
-			saving * 100 AS saving, -- see comment above on prices
-			offers_raw_id AS offer_id
+			(shipping_fee * 100)::int AS shipping_fee,
+			(((SELECT * FROM lowest_local_price) - adj_price) * 100)::int AS saving,
+			CASE
+				WHEN direct_checkout_price IS NOT NULL THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
+				ELSE NULL
+			END AS saving_direct_checkout,
+			offer_id,
+			direct_checkout,
+			(direct_checkout_price * 100)::int AS direct_checkout_price,
+			CASE
+				WHEN direct_checkout IS FALSE AND country != 'SE' THEN TRUE
+				ELSE FALSE
+			END AS concierge
 		FROM offers_complete
-		WHERE offer_source IS NOT NULL; -- Remove the row needed for the union
+		WHERE offer_source IS NOT NULL-- Remove the row needed for the union
+		ORDER BY direct_checkout_price ASC;
 	""")
 	rows = cur_dict.fetchall()
 	'''

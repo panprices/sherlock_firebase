@@ -1,6 +1,7 @@
 import argparse
 import json
 import base64
+import glob
 
 from main import offer_search_trigger
 from main import live_search_offer_enricher
@@ -106,6 +107,19 @@ def demo_live_search_offer_enricher() :
 		            "requested_at":"2020-11-02T13:30:06Z",
 		            "match_score":None
 		        },
+				{
+					"offer_source":"pricerunner_UK",
+					"retailer_name":"Ambrose Wilson",
+					"offer_url":"/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAFGgJxbg&sig=AOD64_2k-QyMYPIfpa8KDXyEGsRjIrkfGA&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIHw&adurl=",
+					"country":"UK",
+					"retail_prod_name":"Gucci Axelremväska Dam Svart Tröja ONESIZE",
+					"price":"2263000",
+					"currency":"SEK",
+					"requested_at":"2020-11-02T13:30:06Z",
+					"match_score":None,
+					"domain": "ambrosewilson.com",
+					"offer_id": "5c18755a-8f95-4ce2-ae9c-7199e1eb5429"
+				},
 		        {
 		            "offer_source":"google_shopping_SE",
 		            "retailer_name":"miinto.se",
@@ -122,17 +136,18 @@ def demo_live_search_offer_enricher() :
 		}
 	]
 
-	for message in messages :
-		# Modify it to behave like the input in Cloud Functions
-		data = {
-			'data': base64.b64encode(json.dumps(message).encode())
-		}
-		# Define a mocked context
-		context = {
-			'event_id': '-1'
-		}
-		# Execute the function
-		live_search_offer_enricher(data, context, production=False)
+	for filepath in glob.iglob('demo_data/live_search_offer_*.json'):
+		with open(filepath) as json_offer :
+			# Modify it to behave like the input in Cloud Functions
+			data = {
+				'data': base64.b64encode(json.dumps(json.load(json_offer)).encode())
+			}
+			# Define a mocked context
+			context = {
+				'event_id': '-1'
+			}
+			# Execute the function
+			live_search_offer_enricher(data, context, production=False)
 
 def demo_product_search_trigger() :
 	# Mock a message
@@ -248,8 +263,8 @@ def demo_get_price_from_firebase() :
 	class Request:
 		def get_json(self, silent = False):
 			return {
-				'product_token': 'gAAAAABfc0wO2kObkDZp6Jus_zAjkxiG8GGyZob5O1Ha13Z2hP3mCvuJfNZVb33wEqPWzM2MnR-K_1kYvF2XUgrycKfs-pHJkA==',
-				'offer_id': 'c43e63e1-05e4-4ee1-acec-91252422d27d'
+				'product_token': 'gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw==',
+				'offer_id': '0e9930d3-39dc-47bc-b91e-be9ecf57aa20'
 			}
 
 	request = Request()

@@ -1,0 +1,51 @@
+{
+  "created_at": 1605866599645,
+  "gtin": "04960759026477",
+  "offer_fetch_complete": false,
+  "offer_urls": {
+    "geizhals_DE": "https://geizhals.de/nikon-af-s-85mm-1-8g-schwarz-jaa341da-a723246.html",
+    "google_shopping_SE": "https://www.google.com/shopping/product/6598605481248207960",
+    "pricerunner_DK": "/pl/543-2781875/Kamera-Objektiver/Nikon-AF-S-Nikkor-85mm-F1.8G-Sammenlign-Priser",
+    "pricerunner_SE": "/pl/543-2781875/Kameraobjektiv/Nikon-AF-S-Nikkor-85mm-F1.8G-priser",
+    "pricerunner_UK": "/pl/543-2781875/Camera-Lenses/Nikon-AF-S-Nikkor-85mm-F1.8G-Compare-Prices",
+    "prisjakt_SE": "1085167"
+  },
+  "product_token": "gAAAAABfmH8E_RByzwQBUz9csR4Hgu0GrTy3zOtLP2SqWZsu6pyg-bpkENsvI6pWr7BGvx-cpGtbSem1vO_wNoU3FUOO1llhhg==",
+  "triggered_from_client": true,
+  "offers": [
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Scandinavian Photo SE",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABAFGgJxbg&sig=AOD64_2uNSU-UIezmJ5Nyp-bFJfiNEfcYA&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIEw&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+      "price": "499000",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:03:23Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "CyberPhoto",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABAEGgJxbg&sig=AOD64_3yyFNtDAsNPSHuYU4DEwxxPTOu1g&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIFg&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+      "price": "526900",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:03:23Z",
+      "match_score": null
+    },
+    {
+      "offer_source": "google_shopping_SE",
+      "retailer_name": "Digitaland",
+      "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABADGgJxbg&sig=AOD64_2uNWFPIS2xvQjAj3wVEcJtmL4AVg&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIGQ&adurl=",
+      "country": "SE",
+      "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+      "price": "441083",
+      "currency": "SEK",
+      "requested_at": "2020-11-20T10:03:23Z",
+      "match_score": null
+    }
+  ],
+  "offer_source": "google_shopping_SE"
+}

@@ -1,0 +1,118 @@
+{
+  "created_at": 1605867043251,
+  "gtin": "00018208954100",
+  "offer_fetch_complete": false,
+  "offer_urls": {
+    "geizhals_DE": "https://geizhals.de/nikon-d850-schwarz-gehaeuse-vba520ae-a1677786.html",
+    "google_shopping_SE": "https://www.google.com/shopping/product/3538675375893756760",
+    "pricerunner_DK": "/pl/29-4235899/Digitalkameraer/Nikon-D850-Sammenlign-Priser",
+    "pricerunner_SE": "/pl/29-4235899/Digitalkameror/Nikon-D850-priser",
+    "pricerunner_UK": "/pl/29-4235899/Digital-Cameras/Nikon-D850-Compare-Prices",
+    "prisjakt_SE": "4430129"
+  },
+  "popular": true,
+  "product_token": "gAAAAABfeih9rkFEkM5ELLkDF1NjUq4E346-92GENbMYcHyv9BBotCi3WZQvR6q5Bs3kvGng2nNQY4igjCESn1M5hlLnmn_3NA==",
+  "triggered_from_client": true,
+  "offers": [
+    {
+      "product_id": null,
+      "offer_source": "ebay_FR",
+      "retail_prod_name": "Authentique Nikon D850 Digital SLR Camera (Body Only)",
+      "retailer_name": "eBay",
+      "country": "IE",
+      "price": 226900,
+      "currency": "EUR",
+      "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=112962462630",
+      "requested_at": "2020-11-20T10:02:52Z",
+      "match_score": null,
+      "source_unique_data": {
+        "shippingInfo": {
+          "shipping_cost": 0,
+          "currency": "EUR",
+          "shipToLocations": "Worldwide"
+        },
+        "sellerInfo": {
+          "sellerUserName": "verofantasy",
+          "feedbackScore": "6101",
+          "positiveFeedbackPercent": "99.4"
+        }
+      }
+    },
+    {
+      "product_id": null,
+      "offer_source": "ebay_FR",
+      "retail_prod_name": "NEW Nikon D850 Digital SLR Camera (Body Only)",
+      "retailer_name": "eBay",
+      "country": "IE",
+      "price": 226900,
+      "currency": "EUR",
+      "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=264548930664",
+      "requested_at": "2020-11-20T10:02:52Z",
+      "match_score": null,
+      "source_unique_data": {
+        "shippingInfo": {
+          "shipping_cost": 0,
+          "currency": "EUR",
+          "shipToLocations": "Worldwide"
+        },
+        "sellerInfo": {
+          "sellerUserName": "onewaylogistic",
+          "feedbackScore": "2719",
+          "positiveFeedbackPercent": "100.0"
+        }
+      }
+    },
+    {
+      "product_id": null,
+      "offer_source": "ebay_IT",
+      "retail_prod_name": "NEW Nikon D850 Digital SLR Camera (Body Only)",
+      "retailer_name": "eBay",
+      "country": "IE",
+      "price": 224900,
+      "currency": "EUR",
+      "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=264534010494",
+      "requested_at": "2020-11-20T10:02:52Z",
+      "match_score": null,
+      "source_unique_data": {
+        "shippingInfo": {
+          "shipping_cost": 0,
+          "currency": "EUR",
+          "shipToLocations": "Worldwide"
+        },
+        "sellerInfo": {
+          "sellerUserName": "onewaylogistic",
+          "feedbackScore": "2728",
+          "positiveFeedbackPercent": "100.0"
+        }
+      }
+    },
+    {
+      "product_id": null,
+      "offer_source": "ebay_IT",
+      "retail_prod_name": "Genuino Nikon D850 Digital SLR Camera (Body Only)",
+      "retailer_name": "eBay",
+      "country": "IE",
+      "price": 224900,
+      "currency": "EUR",
+      "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=113991564914",
+      "requested_at": "2020-11-20T10:02:52Z",
+      "match_score": null,
+      "source_unique_data": {
+        "shippingInfo": {
+          "shipping_cost": 0,
+          "currency": "EUR",
+          "shipToLocations": "Worldwide"
+        },
+        "sellerInfo": {
+          "sellerUserName": "verofantasy",
+          "feedbackScore": "6101",
+          "positiveFeedbackPercent": "99.4"
+        }
+      }
+    }
+  ],
+  "offer_source": "ebay",
+  "name": null,
+  "product_id": null,
+  "price": null
+}

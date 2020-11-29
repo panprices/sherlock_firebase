@@ -352,8 +352,11 @@ def get_price_from_firebase(request) :
 	# Get the existing offers data, on this we need to calculate savings
 	offers = search_ref.child('fetched_offers').get()
 	for offer in offers :
-		if offer.get('offer_id') == offer_id :
+		# Get the specific offer and verify that this offer is available
+		# for direct check out.
+		if offer.get('offer_id') == offer_id and offer.get('direct_checkout') is True :
+			# Grab the price from the object
 			return json.dumps(
-				int(offer['price'])
+				int(offer['direct_checkout_price'])
 			), 200, {'Content-Type': 'application/json'}
 	return ("There wasn't any price on this offer", 400)
