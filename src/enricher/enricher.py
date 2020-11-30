@@ -21,8 +21,7 @@ def offer_to_tup(offer) :
 		offer.get('currency') or None,
 		offer.get('offer_url') or None,
 		offer.get('requested_at') or None,
-		offer.get('match_score') or None,
-		offer.get('saving_direct_checkout') or None
+		offer.get('match_score') or None
 	)
 
 '''
@@ -57,8 +56,7 @@ def add_offers_metadata(offers) :
 				%s AS currency,
 				%s AS offer_url,
 				%s AS requested_at,
-				%s::int AS match_score,
-				%s AS saving_direct_checkout
+				%s::int AS match_score
 			UNION ALL
 		""", offer_to_tup(offer),
 		) for offer in offers
@@ -78,8 +76,7 @@ def add_offers_metadata(offers) :
 				NULL AS currency,
 				NULL AS offer_url,
 				NULL AS requested_at,
-				NULL AS match_score,
-				NULL AS saving_direct_checkout
+				NULL AS match_score
 		), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
 			SELECT
 				A.*,
@@ -104,6 +101,7 @@ def add_offers_metadata(offers) :
 		--		((B.min_order_val * C.to_sek) / 100)::int AS min_order_val, -- adjusted for the currency
 		--		((B.fee * C.to_sek) / 100)::int AS fee, -- adjusted for the currency
 				CASE
+					-- When we don't have shipping data => return estimation in some cases
 					WHEN fee IS NULL THEN
 						CASE
 							WHEN A.country IN ('UK', 'IT', 'ES') THEN 406
@@ -111,9 +109,11 @@ def add_offers_metadata(offers) :
 							WHEN A.country = 'SE' THEN 0
 							ELSE NULL
 						END
+					-- When we have shipping and item price is higher then min order value => return the fee
 					WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN B.fee * C.to_sek
+					-- When we have shipping and there is no min order value => return the fee
 					WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN B.fee * C.to_sek
-					ELSE 0 --Does this not have to be NULL?
+					ELSE NULL
 				END AS shipping_fee
 			FROM offers_raw A
 			FULL OUTER JOIN shipping B
@@ -251,17 +251,20 @@ def add_offers_metadata(offers) :
 			offer_url,
 			quality_score_adjusted AS quality_score,
 			domain,
-			ship,
+			CASE -- Ship should be true when direct_checkout is enabled
+				WHEN direct_checkout IS TRUE THEN TRUE
+				ELSE ship
+			END AS ship,
 			(shipping_fee * 100)::int AS shipping_fee,
 			(((SELECT * FROM lowest_local_price) - adj_price) * 100)::int AS saving,
-			CASE
-				WHEN direct_checkout_price IS NOT NULL THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
+			CASE -- Only show saving when direct_checkout is enabled
+				WHEN direct_checkout IS TRUE THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
 				ELSE NULL
-			END AS saving_direct_checkout,
+			END AS direct_checkout_saving,
 			offer_id,
 			direct_checkout,
 			(direct_checkout_price * 100)::int AS direct_checkout_price,
-			CASE
+			CASE -- Don't enable concierge on Swedish offers or when direct_checkout is enabled
 				WHEN direct_checkout IS FALSE AND country != 'SE' THEN TRUE
 				ELSE FALSE
 			END AS concierge
