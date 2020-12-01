@@ -133,8 +133,6 @@ steps:
          'europe-west1',
          '--runtime',
          'python37',
-         '--max-instances',
-         '1',
          '--allow-unauthenticated'
          ]
 
