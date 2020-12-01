@@ -21,6 +21,11 @@ def _initialize_firebase():
 	app = firebase_admin.initialize_app(cred, {
 		'databaseURL': 'https://panprices.firebaseio.com/'
 	})
+	return app
+
+# Global (instance-wide) scope, which runs at instance cold-start.
+app = _initialize_firebase()
+
 
 def offer_search_trigger(event, context, production=True):
 
@@ -82,12 +87,6 @@ def live_search_offer_enricher(event, context, production=True) :
 			'with product_token:',
 			payload['product_token']
 		)
-		# Fetch the service account key JSON file contents
-		cred = credentials.Certificate('firebase_service_account.json')
-		# Initialize the app with a service account, granting admin privileges
-		app = firebase_admin.initialize_app(cred, {
-			'databaseURL': 'https://panprices.firebaseio.com/'
-		})
 		# Open a connection to the database
 		ref = db.reference('offers')
 		# Choose the relevant search
@@ -129,8 +128,6 @@ def live_search_offer_enricher(event, context, production=True) :
 			publisher = Publisher('panprices', 'sherlock_live_offers')
 			payload['offers'] = enriched_offers
 			publisher.publish_messages([payload])
-		# Kill the connection, otherwise the next instance trying to connect will crash
-		firebase_admin.delete_app(app)
 	except Exception as e:
 		msg_string = json.dumps(payload)
 		print(f'something went wrong when handling message: {msg_string}')
@@ -183,12 +180,6 @@ def product_search_publish_result(event, context, production=True):
 			# this message come from retool update image app, skip it
 			print("No search_query found, message come from retool, skip")
 			return
-		# Fetch the service account key JSON file contents
-		cred = credentials.Certificate('firebase_service_account.json')
-		# Initialize the app with a service account, granting admin privileges
-		app = firebase_admin.initialize_app(cred, {
-			'databaseURL': 'https://panprices.firebaseio.com/'
-		})
 		# Open a connection to the database
 		ref = db.reference('product_search')
 		# Choose the relevant search
@@ -231,8 +222,6 @@ def product_search_publish_result(event, context, production=True):
 			# to grab image and product_name in the offers page
 			for prod_token in result :
 				db.reference('products/' + prod_token).set(result[prod_token])
-		# Kill the connection, otherwise the next instance trying to connect will crash
-		firebase_admin.delete_app(app)
 	except Exception as e:
 		raise e
 
@@ -246,12 +235,6 @@ def sherlock_shopping_finish_signal(event, context, production=True) :
 	"""
 	try :
 		payload = json.loads(base64.b64decode(event['data']))
-		# Fetch the service account key JSON file contents
-		cred = credentials.Certificate('firebase_service_account.json')
-		# Initialize the app with a service account, granting admin privileges
-		app = firebase_admin.initialize_app(cred, {
-			'databaseURL': 'https://panprices.firebaseio.com/'
-		})
 		# Open a connection to the database
 		ref = db.reference('product_search')
 		# Choose the relevant search
@@ -262,20 +245,12 @@ def sherlock_shopping_finish_signal(event, context, production=True) :
 			current_entry_ref.update({
 				"search_completed": True
 			})
-		# Kill the connection, otherwise the next instance trying to connect will crash
-		firebase_admin.delete_app(app)
 	except Exception as e:
 		raise e
 
 def delete_old_firebase_data(event, context) :
 	try:
 		payload = json.loads(base64.b64decode(event['data']))
-		# Fetch the service account key JSON file contents
-		cred = credentials.Certificate('firebase_service_account.json')
-		# Initialize the app with a service account, granting admin privileges
-		app = firebase_admin.initialize_app(cred, {
-			'databaseURL': 'https://panprices.firebaseio.com/'
-		})
 		print("Starting to flush product_search path of data older then 1 hour.")
 		flush_db.delete_data(
 			bucket = 'product_search',
@@ -302,7 +277,6 @@ def popular_product_search_trigger(event, context):
 		print("No popular product to fetch")
 		return
 
-	_initialize_firebase()
 	# Open a connection to the database
 	ref = db.reference('offers')
 
@@ -342,7 +316,6 @@ def get_price_from_firebase(request) :
 	if product_token is None or offer_id is None:
 		return ("expecting product_token and offer_id", 400)
 
-	_initialize_firebase()
 	# Open a connection to the database
 	ref = db.reference('offers')
 	# Choose the relevant search
@@ -368,7 +341,6 @@ def create_offer_firebase(request):
 	if 'product_token' not in offer:
 		return 'The product_token field was not provided.', 400
 	
-	_initialize_firebase()
 	product_token = offer['product_token']
 	try:
 		db.reference('offers').child(product_token).set(offer)
