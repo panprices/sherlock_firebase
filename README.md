@@ -44,6 +44,9 @@ optional arguments:
                         and update Firebase.
   -dofd, --delete_old_firebase_data
                         Publish to Realtime Firebase on productSearch.
+  -cof, --create_offer_firebase
+                        Create a test offer in at /offers/<product_token>
+
 
 Argument Parser for the demo script.
 
