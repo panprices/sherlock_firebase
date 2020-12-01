@@ -377,7 +377,7 @@ def create_offer_firebase(request):
 		return 'The request body is not serializable.', 400
 	except db.exceptions.FirebaseError as ex:
 		print(ex)
-		return 'Error when communicating with Firebase server.', 400
+		return 'Error when communicating with Firebase server.', 500
 	except Exception as ex:
 		error_message = 'Unexpected error: ' + str(ex)
 		print(error_message)
