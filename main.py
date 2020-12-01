@@ -14,6 +14,14 @@ from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_popular_product
 
+def _initialize_firebase():
+	# Fetch the service account key JSON file contents
+	cred = credentials.Certificate('firebase_service_account.json')
+	# Initialize the app with a service account, granting admin privileges
+	app = firebase_admin.initialize_app(cred, {
+		'databaseURL': 'https://panprices.firebaseio.com/'
+	})
+
 def offer_search_trigger(event, context, production=True):
 
 	"""
@@ -294,12 +302,7 @@ def popular_product_search_trigger(event, context):
 		print("No popular product to fetch")
 		return
 
-	# Fetch the service account key JSON file contents
-	cred = credentials.Certificate('firebase_service_account.json')
-	# Initialize the app with a service account, granting admin privileges
-	app = firebase_admin.initialize_app(cred, {
-		'databaseURL': 'https://panprices.firebaseio.com/'
-	})
+	_initialize_firebase()
 	# Open a connection to the database
 	ref = db.reference('offers')
 
@@ -339,12 +342,7 @@ def get_price_from_firebase(request) :
 	if product_token is None or offer_id is None:
 		return ("expecting product_token and offer_id", 400)
 
-	# Fetch the service account key JSON file contents
-	cred = credentials.Certificate('firebase_service_account.json')
-	# Initialize the app with a service account, granting admin privileges
-	app = firebase_admin.initialize_app(cred, {
-		'databaseURL': 'https://panprices.firebaseio.com/'
-	})
+	_initialize_firebase()
 	# Open a connection to the database
 	ref = db.reference('offers')
 	# Choose the relevant search
@@ -360,3 +358,29 @@ def get_price_from_firebase(request) :
 				int(offer['direct_checkout_price'])
 			), 200, {'Content-Type': 'application/json'}
 	return ("There wasn't any price on this offer", 400)
+
+def create_offer_firebase(request):
+	"""Create a new offer object at /offers/<product_token>
+	"""
+	offer = request.get_json()
+	if offer is None:
+		return 'Received an empty body request.', 400
+	if 'product_token' not in offer:
+		return 'The product_token field was not provided.', 400
+	
+	_initialize_firebase()
+	product_token = offer['product_token']
+	try:
+		db.reference('offers').child(product_token).set(offer)
+	except TypeError as ex:
+		print(ex)
+		return 'The request body is not serializable.', 400
+	except db.exceptions.FirebaseError as ex:
+		print(ex)
+		return 'Error when communicating with Firebase server.', 400
+	except Exception as ex:
+		error_message = 'Unexpected error: ' + str(ex)
+		print(error_message)
+		return error_message, 400
+	
+	return json.dumps({'success':True}), 200

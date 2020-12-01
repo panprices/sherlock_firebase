@@ -11,6 +11,7 @@ from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
 from main import popular_product_search_trigger
 from main import get_price_from_firebase
+from main import create_offer_firebase
 
 def demo_offer_search_trigger() :
 	# Mock a message
@@ -271,6 +272,18 @@ def demo_get_price_from_firebase() :
 	result = get_price_from_firebase(request)
 	print(result)
 
+def demo_create_offer_firebase():
+	class Request:
+		def get_json(self, silent=False):
+			return {
+				'product_token': 'test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw=='
+			}
+
+	print(f'Trying to create a new offer at /offers/test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw==')
+	request = Request()
+	response = create_offer_firebase(request)
+	print(response)
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -325,6 +338,12 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='Return the price from Firebase with a product token and offer id'
 	)
+	parser.add_argument(
+		'-cof',
+		'--create_offer_firebase',
+		action='store_true',
+		help='Create a test offer in at /offers/<product_token>'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -344,3 +363,5 @@ if __name__ == '__main__' :
 		demo_popular_product_search_trigger()
 	elif args.get_price_from_firebase:
 		demo_get_price_from_firebase()
+	elif args.create_offer_firebase:
+		demo_create_offer_firebase()

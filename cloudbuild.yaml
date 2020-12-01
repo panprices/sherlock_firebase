@@ -122,5 +122,21 @@ steps:
          '--allow-unauthenticated'
          ]
 
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy',
+         'create_offer_firebase',
+         '--source',
+         'https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}',
+         '--trigger-http',
+         '--region',
+         'europe-west1',
+         '--runtime',
+         'python37',
+         '--max-instances',
+         '1',
+         '--allow-unauthenticated'
+         ]
+
 images: []
 timeout: "1600s"
