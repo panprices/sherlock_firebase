@@ -12,6 +12,7 @@ from main import sherlock_shopping_finish_signal
 from main import popular_product_search_trigger
 from main import get_price_from_firebase
 from main import create_offer_firebase
+from main import create_product_search_firebase
 
 def demo_offer_search_trigger() :
 	# Mock a message
@@ -284,6 +285,20 @@ def demo_create_offer_firebase():
 	response = create_offer_firebase(request)
 	print(response)
 
+def demo_create_product_search_firebase():
+	class Request:
+		def get_json(self, silent=False):
+			return {
+				'cleaned_query': 'filco_keyboard',
+				'query': 'Filco Keyboard'
+			}
+	
+	print(f'Trying to create a new product search at /product_search/test_product_search')
+	request = Request()
+	response = create_product_search_firebase(request)
+	print(response)
+
+
 if __name__ == '__main__' :
 	# Instantiate the parser
 	parser = argparse.ArgumentParser(
@@ -344,6 +359,12 @@ if __name__ == '__main__' :
 		action='store_true',
 		help='Create a test offer in at /offers/<product_token>'
 	)
+	parser.add_argument(
+		'-cpsf',
+		'--create_product_search_firebase',
+		action='store_true',
+		help='Create a test product_search at /offers/<cleaned_query>'
+	)
 	# Parse the args
 	args = parser.parse_args()
 	# Decide on execution
@@ -365,3 +386,5 @@ if __name__ == '__main__' :
 		demo_get_price_from_firebase()
 	elif args.create_offer_firebase:
 		demo_create_offer_firebase()
+	elif args.create_product_search_firebase:
+		demo_create_product_search_firebase()
