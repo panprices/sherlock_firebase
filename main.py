@@ -333,15 +333,23 @@ def get_price_from_firebase(request) :
 	return ("There wasn't any price on this offer", 400)
 
 def create_offer_firebase(request):
-	"""Create a new offer object at /offers/<product_token>
+	"""Create a new offer object at /offers/<product_token>.
+
+	The request body should be in JSON format and contain a `product_token` field.
 	"""
-	offer = request.get_json()
-	if offer is None:
+	body = request.get_json()
+	if body is None:
 		return 'Received an empty body request.', 400
-	if 'product_token' not in offer:
+	if 'product_token' not in body:
 		return 'The product_token field was not provided.', 400
 	
-	product_token = offer['product_token']
+	product_token = body['product_token']
+	offer = {
+		'product_token': product_token,
+		'created_at':  int(time.time() * 1000),  # ms since epoch
+		'triggered_from_client': True,
+		'offer_fetch_complete': False
+	}
 	try:
 		db.reference('offers').child(product_token).set(offer)
 	except TypeError as ex:
@@ -355,4 +363,39 @@ def create_offer_firebase(request):
 		print(error_message)
 		return error_message, 400
 	
+	return json.dumps({'success':True}), 200
+
+def create_product_search_firebase(request):
+	"""Create a new product search object at /product_search/<cleaned_query>.
+
+	The request body should be in JSON format and contain a `query` and a `cleaned_query` field.
+	"""
+	body = request.get_json()
+	if body is None:
+		return 'Received an empty body request.', 400
+	if 'cleaned_query' not in body:
+		return 'The cleaned_query field was not provided.', 400
+	if 'query' not in body:
+		return 'The query field was not provided.', 400
+	
+	cleaned_query = body['cleaned_query']
+	product_search = {
+		'name': body['query'],
+		'path_name': body['cleaned_query'],
+		'created_at':  int(time.time() * 1000),  # ms since epoch
+		'search_completed': False
+	}
+	try:
+		db.reference('product_search').child(cleaned_query).set(product_search)
+	except TypeError as ex:
+		print(ex)
+		return 'The request body is not serializable.', 400
+	except db.exceptions.FirebaseError as ex:
+		print(ex)
+		return 'Error when communicating with Firebase server.', 500
+	except Exception as ex:
+		error_message = 'Unexpected error: ' + str(ex)
+		print(error_message)
+		return error_message, 400
+
 	return json.dumps({'success':True}), 200
