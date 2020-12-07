@@ -51,3 +51,11 @@ optional arguments:
 Argument Parser for the demo script.
 
 ```
+
+
+### Known/Potential issues
+#### Handling of CORS requests
+In the `create_offer_firebase` and `create_product_search_firebase`
+functions we are allowing POST requests from any origins (`Access-Control-Allow-Origin: *`).
+This seems to be a lazy yet popular approach, though there might be potential 
+securirty issues that would require further investigation.

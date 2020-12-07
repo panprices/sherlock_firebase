@@ -275,6 +275,9 @@ def demo_get_price_from_firebase() :
 
 def demo_create_offer_firebase():
 	class Request:
+		def method(self):
+			return ''
+
 		def get_json(self, silent=False):
 			return {
 				'product_token': 'test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw=='
@@ -287,6 +290,9 @@ def demo_create_offer_firebase():
 
 def demo_create_product_search_firebase():
 	class Request:
+		def method(self):
+			return ''
+
 		def get_json(self, silent=False):
 			return {
 				'cleaned_query': 'filco_keyboard',
@@ -295,6 +301,7 @@ def demo_create_product_search_firebase():
 	
 	print(f'Trying to create a new product search at /product_search/test_product_search')
 	request = Request()
+
 	response = create_product_search_firebase(request)
 	print(response)
 
