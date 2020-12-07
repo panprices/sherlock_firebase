@@ -276,9 +276,6 @@ def popular_product_search_trigger(event, context):
 		print("No popular product to fetch")
 		return
 
-	# Open a connection to the database
-	ref = db.reference('offers')
-
 	# transform a list of product token to the form we use in the firebase offers path
 	# the result is in the form:
 	# {
@@ -291,15 +288,15 @@ def popular_product_search_trigger(event, context):
 	# 	}
 	# }
 	# convert to a list of tuple (key, value), before passing to dict()
-	transformed_products = dict([(product_token, {
-		"offer_fetch_complete": False,
-		"product_token": product_token,
-		"created_at": int(round(time.time() * 1000)),
-		"triggered_from_client": True,
-		"popular": True
-	}) for product_token in product_tokens])
 
-	ref.update(transformed_products)
+	for product_token in product_tokens:
+		db.reference(f'offers/{product_token}').update({
+			"offer_fetch_complete": False,
+			"product_token": product_token,
+			"created_at": int(round(time.time() * 1000)),
+			"triggered_from_client": True,
+			"popular": True
+		})
 
 	print(f"Trigger fetching offers for {len(product_tokens)} popular products")
 
