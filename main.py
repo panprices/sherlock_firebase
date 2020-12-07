@@ -26,6 +26,7 @@ def _initialize_firebase():
 # Global (instance-wide) scope, which runs at instance cold-start.
 app = _initialize_firebase()
 
+ALLOWED_ORIGINS = ['https://panprices.com', 'https://sandbox-dot-panprices.appspot.com']
 
 def offer_search_trigger(event, context, production=True):
 
@@ -337,6 +338,17 @@ def create_offer_firebase(request):
 
 	The request body should be in JSON format and contain a `product_token` field.
 	"""
+	if request.method == 'OPTIONS':
+		# Allows POST requests from any origin with the Content-Type
+		# header and caches preflight response for an hour (3600s).
+		headers = {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'POST',
+			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Max-Age': '3600'
+		}
+		return ('', 204, headers)
+
 	body = request.get_json()
 	if body is None:
 		return 'Received an empty body request.', 400
@@ -370,6 +382,18 @@ def create_product_search_firebase(request):
 
 	The request body should be in JSON format and contain a `query` and a `cleaned_query` field.
 	"""
+	if request.method == 'OPTIONS':
+		# Allows POST requests from any origin with the Content-Type
+		# header and caches preflight response for an hour (3600s).
+		headers = {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'POST',
+			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Max-Age': '3600'
+		}
+		return ('', 204, headers)
+
+
 	body = request.get_json()
 	if body is None:
 		return 'Received an empty body request.', 400
