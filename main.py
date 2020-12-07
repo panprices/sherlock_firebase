@@ -372,8 +372,12 @@ def create_offer_firebase(request):
 		error_message = 'Unexpected error: ' + str(ex)
 		print(error_message)
 		return error_message, 400
-	
-	return json.dumps({'success':True}), 200
+		
+	# Set CORS headers for the main request
+	response_headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
+	return json.dumps({'success':True}), 200, response_headers
 
 def create_product_search_firebase(request):
 	"""Create a new product search object at /product_search/<cleaned_query>.
@@ -420,4 +424,8 @@ def create_product_search_firebase(request):
 		print(error_message)
 		return error_message, 400
 
-	return json.dumps({'success':True}), 200
+	# Set CORS headers for the main request
+	response_headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
+	return json.dumps({'success':True}), 200, response_headers
