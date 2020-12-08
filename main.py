@@ -287,10 +287,18 @@ def popular_product_search_trigger(event, context):
 	#		"popular": True ## this key is to signify the later step in the pipeline this offer is triggered from the popular product
 	# 	}
 	# }
-	# convert to a list of tuple (key, value), before passing to dict()
+
+	# Here we update the products by deleting the offers before re-create them
+	# in order to trigger offer fetching.
+
+	# Delete in bulk by updating them with empty data:
+	products_to_delete = {}
+	for product_token in product_tokens:
+		products_to_delete[product_token] = None
+	db.reference('offers').update(products_to_delete)
 
 	for product_token in product_tokens:
-		db.reference(f'offers/{product_token}').update({
+		db.reference(f'offers/{product_token}').set({
 			"offer_fetch_complete": False,
 			"product_token": product_token,
 			"created_at": int(round(time.time() * 1000)),
