@@ -342,7 +342,8 @@ def create_offer_firebase(request):
 		headers = {
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'POST',
-			'Access-Control-Allow-Headers': 'Content-Type',
+			# 'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Headers': '*',
 			'Access-Control-Max-Age': '3600'
 		}
 		return ('', 204, headers)
@@ -390,7 +391,8 @@ def create_product_search_firebase(request):
 		headers = {
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'POST',
-			'Access-Control-Allow-Headers': 'Content-Type',
+			# 'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Headers': '*',
 			'Access-Control-Max-Age': '3600'
 		}
 		return ('', 204, headers)
