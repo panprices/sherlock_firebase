@@ -2,6 +2,7 @@ import base64
 import json
 import firebase_admin
 import time
+import logging
 from firebase_admin import credentials
 from firebase_admin import db
 from flask import jsonify
@@ -350,9 +351,13 @@ def create_offer_firebase(request):
 
 	body = request.get_json()
 	if body is None:
-		return 'Received an empty body request.', 400
+		msg = 'Received an empty body request.'
+		logging.error(msg)
+		return msg, 400
 	if 'product_token' not in body:
-		return 'The product_token field was not provided.', 400
+		msg = 'The product_token field was not provided.'
+		logging.error(msg)
+		return msg, 400
 	
 	product_token = body['product_token']
 	offer = {
@@ -364,14 +369,14 @@ def create_offer_firebase(request):
 	try:
 		db.reference('offers').child(product_token).set(offer)
 	except TypeError as ex:
-		print(ex)
+		logging.error(ex)
 		return 'The request body is not serializable.', 400
 	except db.exceptions.FirebaseError as ex:
-		print(ex)
+		logging.error(ex)
 		return 'Error when communicating with Firebase server.', 500
 	except Exception as ex:
 		error_message = 'Unexpected error: ' + str(ex)
-		print(error_message)
+		logging.error(error_message)
 		return error_message, 400
 		
 	# Set CORS headers for the main request
@@ -400,11 +405,17 @@ def create_product_search_firebase(request):
 
 	body = request.get_json()
 	if body is None:
-		return 'Received an empty body request.', 400
+		msg = 'Received an empty body request.'
+		logging.error(msg)
+		return msg, 400
 	if 'cleaned_query' not in body:
-		return 'The cleaned_query field was not provided.', 400
+		msg = 'The cleaned_query field was not provided.'
+		logging.error(msg)
+		return msg, 400
 	if 'query' not in body:
-		return 'The query field was not provided.', 400
+		msg = 'The query field was not provided.'
+		logging.error(msg)
+		return msg, 400
 	
 	cleaned_query = body['cleaned_query']
 	product_search = {
@@ -416,16 +427,16 @@ def create_product_search_firebase(request):
 	try:
 		db.reference('product_search').child(cleaned_query).set(product_search)
 	except TypeError as ex:
-		print(ex)
+		logging.error(ex)
 		return 'The request body is not serializable.', 400
 	except db.exceptions.FirebaseError as ex:
-		print(ex)
+		logging.error(ex)
 		return 'Error when communicating with Firebase server.', 500
 	except Exception as ex:
-		error_message = 'Unexpected error: ' + str(ex)
-		print(error_message)
+		error_message = 'Unexpected error: ' + str(ex)		
+		logging.error(error_message)
 		return error_message, 400
-
+		
 	# Set CORS headers for the main request
 	response_headers = {
         'Access-Control-Allow-Origin': '*'
