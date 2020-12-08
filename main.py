@@ -292,19 +292,21 @@ def popular_product_search_trigger(event, context):
 	# in order to trigger offer fetching.
 
 	# Delete in bulk by updating them with empty data:
-	products_to_delete = {}
+	products = {}
 	for product_token in product_tokens:
-		products_to_delete[product_token] = None
-	db.reference('offers').update(products_to_delete)
+		products[product_token] = None
+	db.reference('offers').update(products)
 
+	# Recreate the products:
 	for product_token in product_tokens:
-		db.reference(f'offers/{product_token}').set({
+		products[product_token] = {
 			"offer_fetch_complete": False,
 			"product_token": product_token,
-			"created_at": int(round(time.time() * 1000)),
+			"created_at": int(round(time.time() * 1000)),  # ms since epoch
 			"triggered_from_client": True,
 			"popular": True
-		})
+		}
+	db.reference('offers').update(products)
 
 	print(f"Trigger fetching offers for {len(product_tokens)} popular products")
 
