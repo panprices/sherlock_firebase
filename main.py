@@ -353,7 +353,7 @@ def create_offer_firebase(request):
 		return 'Received an empty body request.', 400
 	if 'product_token' not in body:
 		return 'The product_token field was not provided.', 400
-	
+
 	product_token = body['product_token']
 	offer = {
 		'product_token': product_token,
@@ -373,7 +373,7 @@ def create_offer_firebase(request):
 		error_message = 'Unexpected error: ' + str(ex)
 		print(error_message)
 		return error_message, 400
-		
+
 	# Set CORS headers for the main request
 	response_headers = {
         'Access-Control-Allow-Origin': '*'
@@ -405,7 +405,7 @@ def create_product_search_firebase(request):
 		return 'The cleaned_query field was not provided.', 400
 	if 'query' not in body:
 		return 'The query field was not provided.', 400
-	
+
 	cleaned_query = body['cleaned_query']
 	product_search = {
 		'name': body['query'],

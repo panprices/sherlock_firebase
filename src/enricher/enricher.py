@@ -110,9 +110,9 @@ def add_offers_metadata(offers) :
 							ELSE NULL
 						END
 					-- When we have shipping and item price is higher then min order value => return the fee
-					WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN B.fee * C.to_sek
+					WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN ((B.fee * C.to_sek) / 100)::int
 					-- When we have shipping and there is no min order value => return the fee
-					WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN B.fee * C.to_sek
+					WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN ((B.fee * C.to_sek) / 100)::int
 					ELSE NULL
 				END AS shipping_fee
 			FROM offers_raw A
