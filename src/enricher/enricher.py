@@ -258,7 +258,11 @@ def add_offers_metadata(offers) :
 			(shipping_fee * 100)::int AS shipping_fee,
 			(((SELECT * FROM lowest_local_price) - adj_price) * 100)::int AS saving,
 			CASE -- Only show saving when direct_checkout is enabled
-				WHEN direct_checkout IS TRUE THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
+				WHEN direct_checkout IS TRUE THEN
+					CASE -- Only show saving when the offer is less expensive then the Swedish one
+				 		WHEN ((SELECT * FROM lowest_local_price) > direct_checkout_price) THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
+						ELSE NULL
+					END
 				ELSE NULL
 			END AS direct_checkout_saving,
 			offer_id,
