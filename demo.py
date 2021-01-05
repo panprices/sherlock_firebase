@@ -154,13 +154,12 @@ def demo_live_search_offer_enricher() :
 def demo_product_search_trigger() :
 	# Mock a message
 	message = {
-		"data": None,
-		"delta": {
-			"Google Home": {
-				"created_at": 1597938406487,
-				"updated_at": 1597938454902,
-				"results": []
-			},
+		'data': None, 
+		'delta': {
+			'created_at': 1609856765483, 
+			'name': 'a7c', 
+			'path_name': 'a7c', 
+			'search_completed': False
 		}
 	}
 	# Define a mocked context
