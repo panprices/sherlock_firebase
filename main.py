@@ -134,7 +134,10 @@ def live_search_offer_enricher(event, context, production=True) :
 		raise e
 
 def product_search_trigger(event, context, production=True):
-	"""
+	"""January 11, 2021: Function is deprecated and is replaced with 
+		sherlock_product_search() instead.
+		
+
 		Triggered whenever there is a new database entry on the
 		productSearch resource in the Firebase Realtime Database.
 		Panprices web client generates the creation of new database
@@ -144,6 +147,10 @@ def product_search_trigger(event, context, production=True):
 		on PubSub so that we trigger Google Shopping and later be able
 		to return the results back down to the client.
 	"""
+
+	return None
+
+
 	start = time.time()
 	# Print out the entire event object
 	print('Publishing the following search for a product: ', str(event))
