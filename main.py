@@ -220,8 +220,7 @@ def product_search_publish_result(event, context, production=True):
 			})
 			# Store the specific product in another data path used for the client
 			# to grab image and product_name in the offers page
-			for prod_token in result :
-				db.reference('products/' + prod_token).set(result[prod_token])
+        	db.reference('products/' + product_token).set(result[product_token])
 	except Exception as e:
 		raise e
 
