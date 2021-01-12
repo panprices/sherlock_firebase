@@ -117,13 +117,9 @@ def live_search_offer_enricher(event, context, production=True) :
 			else:
 				return []
 		enriched_offers = fetch_ref.transaction(enrich_data)
-		# Update the specific search in Firebase RTD with the newly fetched offers
+		print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
+		
 		if production:
-			search_ref.update({
-				'fetched_offers/': enriched_offers,
-				# 'fetched_sources/' + payload['offer_source']: True
-			})
-			print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
 			# Publish all data to a separate topic for writing it down in batches to PSQL.
 			publisher = Publisher('panprices', 'sherlock_live_offers')
 			payload['offers'] = enriched_offers
