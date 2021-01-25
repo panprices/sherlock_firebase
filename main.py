@@ -13,7 +13,7 @@ from src.helpers.helpers import format_search_offer_msg
 from src.enricher.enricher import add_offers_metadata
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
-from src.database.product import get_popular_product
+from src.database.product import get_popular_products
 
 def _initialize_firebase():
 	# Fetch the service account key JSON file contents
@@ -273,7 +273,9 @@ def delete_old_firebase_data(event, context) :
 		print("Delete job finished.")
 
 def popular_product_search_trigger(event, context):
-	product_tokens = get_popular_product()
+	"""Trigger live_search on popular products to keep them up-to-date.
+	"""
+	product_tokens = get_popular_products()
 
 	if len(product_tokens) <= 0:
 		print("No popular product to fetch")

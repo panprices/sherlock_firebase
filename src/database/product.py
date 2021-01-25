@@ -1,11 +1,15 @@
 from datetime import datetime
 from src.database.database import connect_to_db
 
-def get_current_minute():
+def get_popular_products():
+    cutoff_time = _get_current_minute()
+    return _get_popular_products(cutoff_time)
+
+def _get_current_minute():
     current_time = datetime.now()
     return current_time.minute + current_time.hour * 60
 
-def get_popular_product(cutoff_time = get_current_minute(), time_range = 10):
+def _get_popular_products(cutoff_time, time_range=10):
     print(f"Fetching popular product from {cutoff_time - time_range} to {cutoff_time} mins of day")
 
     cur, cur_dict, connection, pg_pool = connect_to_db()
