@@ -169,12 +169,17 @@ def product_search_trigger(event, context, production=True):
 		return pub_results
 
 def product_search_publish_result(event, context, production=True):
-	"""
+	"""January 25, 2021: Function is deprecated and is replaced with 
+		sherlock_product_search() instead.
+
 		Listens to changes on pubsub output topic from google shopping
 		and writes final results to firebase. If there are previous results
 		on the search the function appends. If a gtin appears again, it gets
 		overwritten.
 	"""
+
+	return None
+
 	try:
 		# Create a timestamp for performance logging the whole pipeline
 		start = time.time()
