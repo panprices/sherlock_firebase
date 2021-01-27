@@ -274,6 +274,7 @@ def add_offers_metadata(offers) :
 			END AS concierge
 		FROM offers_complete
 		WHERE offer_source IS NOT NULL-- Remove the row needed for the union
+		AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
 		ORDER BY direct_checkout_price ASC;
 	""")
 	rows = cur_dict.fetchall()
