@@ -40,7 +40,7 @@ pathspec==0.8.1
 pluggy==0.13.1
 proto-plus==1.18.1
 protobuf==3.15.8
-psycopg2-binary==2.8.6
+psycopg2==2.8.6
 py==1.10.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
