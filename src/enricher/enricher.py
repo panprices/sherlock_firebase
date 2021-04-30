@@ -221,20 +221,20 @@ def add_offers_metadata(offers):
             -- Blacklisted retailers
             AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
         )
-		SELECT
+        SELECT
             (SELECT * FROM lowest_local_price) AS lowest_local_price,
-			updated_at,
-			product_id,
-			offer_source,
-			retail_prod_name,
-			retailer_name,
-			country,
-			adj_price,
-			offer_url,
-			domain,
-			ship,
-			shipping_fee,
-			offer_id,
+            updated_at,
+            product_id,
+            offer_source,
+            retail_prod_name,
+            retailer_name,
+            country,
+            adj_price,
+            offer_url,
+            domain,
+            ship,
+            shipping_fee,
+            offer_id,
             CASE
                 WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
                     CASE
@@ -248,9 +248,9 @@ def add_offers_metadata(offers):
             vat,
             payment_fee_int,
             exchange_rate_fee
-		FROM offers_filtered
-		WHERE offer_source IS NOT NULL-- Remove the row needed for the union
-		AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
+        FROM offers_filtered
+        WHERE offer_source IS NOT NULL-- Remove the row needed for the union
+        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
         ORDER BY direct_checkout_price ASC;
     """
     )
@@ -268,12 +268,17 @@ def add_offers_metadata(offers):
 
 
 def _compose_enriched_row(row):
+    # ==========================================================
+    # Figure out if we should offer direct checkout
+    # and what the prices would be
+    # ==========================================================
     lowest_local_price = row["lowest_local_price"]
     direct_checkout = (
         row["shipping_fee"] is not None
         and row["offer_source"] != "google_shopping_SE"
         and row["country"] != "SE"
     )
+
     if not direct_checkout:
         direct_checkout_price = None
     else:
@@ -313,6 +318,9 @@ def _compose_enriched_row(row):
     # Ship should be true when direct_checkout is enabled
     row["ship"] = direct_checkout or row.get("ship")
 
+    # ==========================================================
+    # Calculate the prices in real SEK, not Cents
+    # ==========================================================
     if row["shipping_fee"] is not None:
         row["shipping_fee"] = round(row["shipping_fee"] * 100)
     else:
@@ -329,6 +337,9 @@ def _compose_enriched_row(row):
     row["price"] = round(row["adj_price"] * 100)
     row["currency"] = "SEK"
 
+    # ==========================================================
+    # Apply a ceiling and floor on quality_score
+    # ==========================================================
     if row["quality_score"] is None:
         row["quality_score"] = None
     elif row["quality_score"] > 5:
