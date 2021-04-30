@@ -1,3 +1,5 @@
+import json
+import pprint
 import uuid
 from src.database.database import connect_to_db
 
@@ -36,6 +38,8 @@ def offer_to_tup(offer):
     one as we do in the API with the exception that we have to plug
     in our offers data here and then get all the associated data.
 """
+
+counter = 0
 
 
 def add_offers_metadata(offers):
@@ -220,37 +224,69 @@ def add_offers_metadata(offers):
             WHERE C.offer_id IS NULL
             -- Blacklisted retailers
             AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
+        ), offers_complete AS (
+            SELECT
+                *,
+                --((SELECT * FROM lowest_local_price) - B.adj_price) AS saving,
+                CASE
+                    WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN true
+                    ELSE false
+                END AS direct_checkout,
+                CASE
+                    WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
+                        CASE
+                            WHEN country != 'SE' THEN ((adj_price + shipping_fee + service_fee + vat + payment_fee_int + exchange_rate_fee) )
+                            ELSE NULL
+                        END
+                    ELSE NULL
+                END AS direct_checkout_price,
+                CASE
+                    WHEN quality_score > 5 THEN 5
+                    WHEN quality_score < 1 THEN 1
+                    ELSE quality_score::float
+                END AS quality_score_adjusted
+            FROM (
+                SELECT
+                    *
+                FROM offers_filtered
+            ) B
         )
-		SELECT
-            (SELECT * FROM lowest_local_price) AS lowest_local_price,
-			updated_at,
-			product_id,
-			offer_source,
-			retail_prod_name,
-			retailer_name,
-			country,
-			adj_price,
-			offer_url,
-			domain,
-			ship,
-			shipping_fee,
-			offer_id,
-            CASE
-                WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
-                    CASE
-                        WHEN country != 'SE' THEN ((adj_price + shipping_fee + service_fee + vat + payment_fee_int + exchange_rate_fee) )
+        SELECT
+            updated_at,
+            product_id,
+            offer_source,
+            retail_prod_name,
+            retailer_name,
+            country,
+            (adj_price * 100)::int AS price,
+            'SEK' AS currency,
+            offer_url,
+            quality_score_adjusted AS quality_score,
+            domain,
+            CASE -- Ship should be true when direct_checkout is enabled
+                WHEN direct_checkout IS TRUE THEN TRUE
+                ELSE ship
+            END AS ship,
+            (shipping_fee * 100)::int AS shipping_fee,
+            (((SELECT * FROM lowest_local_price) - adj_price) * 100)::int AS saving,
+            CASE -- Only show saving when direct_checkout is enabled
+                WHEN direct_checkout IS TRUE THEN
+                    CASE -- Only show saving when the offer is less expensive then the Swedish one
+                         WHEN ((SELECT * FROM lowest_local_price) > direct_checkout_price) THEN (((SELECT * FROM lowest_local_price) - direct_checkout_price) * 100)::int
                         ELSE NULL
                     END
                 ELSE NULL
-            END AS direct_checkout_price,
-            quality_score,
-            service_fee,
-            vat,
-            payment_fee_int,
-            exchange_rate_fee
-		FROM offers_filtered
-		WHERE offer_source IS NOT NULL-- Remove the row needed for the union
-		AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
+            END AS direct_checkout_saving,
+            offer_id,
+            direct_checkout,
+            (direct_checkout_price * 100)::int AS direct_checkout_price,
+            CASE -- Don't enable concierge on Swedish offers or when direct_checkout is enabled
+                WHEN direct_checkout IS FALSE AND country != 'SE' THEN TRUE
+                ELSE FALSE
+            END AS concierge
+        FROM offers_complete
+        WHERE offer_source IS NOT NULL-- Remove the row needed for the union
+        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
         ORDER BY direct_checkout_price ASC;
     """
     )
@@ -260,92 +296,9 @@ def add_offers_metadata(offers):
         query_string = cur_dict.query.decode()
         print(query_string)
     """
+
+    # pp = pprint.PrettyPrinter(indent=4)
+    # pp.pprint(rows)
+
     pg_pool.putconn(connection)
-
-    rows = list(map(_strip_columns, map(_compose_enriched_row, rows)))
-
     return rows
-
-
-def _compose_enriched_row(row):
-    lowest_local_price = row["lowest_local_price"]
-    direct_checkout = (
-        row["shipping_fee"] is not None
-        and row["offer_source"] != "google_shopping_SE"
-        and row["country"] != "SE"
-    )
-    if not direct_checkout:
-        direct_checkout_price = None
-    else:
-        direct_checkout_price = float(
-            row["adj_price"]
-            + row["shipping_fee"]
-            + row["service_fee"]
-            + row["vat"]
-            + row["payment_fee_int"]
-            + row["exchange_rate_fee"]
-        )
-        row["exchange_rate_fee"] = float(row["exchange_rate_fee"])
-        row["payment_fee_int"] = float(row["payment_fee_int"])
-        row["vat"] = float(row["vat"])
-        row["service_fee"] = float(row["service_fee"])
-
-    row["direct_checkout"] = direct_checkout
-    row["direct_checkout_price"] = direct_checkout_price
-
-    # Only show saving when direct_checkout is enabled
-    if (
-        direct_checkout
-        and lowest_local_price is not None
-        and lowest_local_price > row["direct_checkout_price"]
-    ):
-        row["direct_checkout_saving"] = round(
-            (lowest_local_price - row["direct_checkout_price"]) * 100
-        )
-    else:
-        row["direct_checkout_saving"] = None
-
-    if lowest_local_price is not None:
-        row["saving"] = round((lowest_local_price - row["adj_price"]) * 100)
-    else:
-        row["saving"] = None
-
-    # Ship should be true when direct_checkout is enabled
-    row["ship"] = direct_checkout or row.get("ship")
-
-    if row["shipping_fee"] is not None:
-        row["shipping_fee"] = round(row["shipping_fee"] * 100)
-    else:
-        row["shipping_fee"] = None
-
-    if row["direct_checkout_price"] is not None:
-        row["direct_checkout_price"] = round(row["direct_checkout_price"] * 100)
-    else:
-        row["direct_checkout_price"] = None
-
-    # Don't enable concierge on Swedish offers or when direct_checkout is enabled
-    row["concierge"] = (not direct_checkout) and row["country"] != "SE"
-
-    row["price"] = round(row["adj_price"] * 100)
-    row["currency"] = "SEK"
-
-    if row["quality_score"] is None:
-        row["quality_score"] = None
-    elif row["quality_score"] > 5:
-        row["quality_score"] = 5.0
-    elif row["quality_score"] < 1:
-        row["quality_score"] = 1.0
-    else:
-        row["quality_score"] = float(row["quality_score"])
-
-    return row
-
-
-def _strip_columns(row):
-    del row["lowest_local_price"]
-    del row["adj_price"]
-    del row["exchange_rate_fee"]
-    del row["payment_fee_int"]
-    del row["vat"]
-    del row["service_fee"]
-    return row

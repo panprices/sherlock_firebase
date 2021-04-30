@@ -1,0 +1,35 @@
+[
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Scandinavian Photo SE",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABAFGgJxbg&sig=AOD64_2uNSU-UIezmJ5Nyp-bFJfiNEfcYA&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIEw&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+    "price": "499000",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T10:03:23Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "CyberPhoto",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABAEGgJxbg&sig=AOD64_3yyFNtDAsNPSHuYU4DEwxxPTOu1g&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIFg&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+    "price": "526900",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T10:03:23Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Digitaland",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjLkrOj75DtAhUK5bMKHethD9kYABADGgJxbg&sig=AOD64_2uNWFPIS2xvQjAj3wVEcJtmL4AVg&ctype=5&q=&ved=0ahUKEwjhtLCj75DtAhWmGVkFHZFVA0QQ2ikIGQ&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Nikon AF-S NIKKOR 85mm f/1.8G",
+    "price": "441083",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T10:03:23Z",
+    "match_score": null
+  }
+]

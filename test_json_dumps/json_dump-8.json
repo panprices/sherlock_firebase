@@ -1,0 +1,38 @@
+[
+  {
+    "product_id": null,
+    "offer_source": "kelkoo_NO",
+    "retail_prod_name": "Steiner Navigator Pro 7x50 Med Kompass Marinekikkert Med Innebygget Kompass",
+    "retailer_name": "Foto.no",
+    "country": "NO",
+    "price": "679500",
+    "currency": "NOK",
+    "offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605865837001&.sig=bmNYP666F5iyAcTXZEcwXVp46Jc-&affiliationId=96954748&catId=164401&comId=16109413&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=no&ecs=ok&merchantid=16109413&offerId=43b61aa630fce6f11b94d23dfb266a6a&searchId=1076992064468_1605865836994_29553&searchQuery=&service=5&wait=true",
+    "requested_at": "2020-11-20 09:50:37.009890",
+    "match_score": 1
+  },
+  {
+    "product_id": null,
+    "offer_source": "kelkoo_SE",
+    "retail_prod_name": "Steiner Navigator Pro 7x50 Compass",
+    "retailer_name": "CyberPhoto",
+    "country": "SE",
+    "price": "599000",
+    "currency": "SEK",
+    "offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605865837072&.sig=GgSpfvDdrIth5wiguYs4P9d4qxk-&affiliationId=96954747&catId=164401&comId=3375501&contextLevel=1&contextOfferPosition=1&contextPageSize=2&country=se&ecs=ok&merchantid=3375501&offerId=2bc5fbfe700d4146562cf20ba3b9692a&searchId=10769825018469_1605865837064_40800&searchQuery=&service=5&wait=true",
+    "requested_at": "2020-11-20 09:50:37.082095",
+    "match_score": 1
+  },
+  {
+    "product_id": null,
+    "offer_source": "kelkoo_SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "retailer_name": "Gofoto.se",
+    "country": "SE",
+    "price": "649000",
+    "currency": "SEK",
+    "offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605865837072&.sig=xLgFRjhvj4bDfNdDJY02oaTIJLg-&affiliationId=96954747&catId=164401&comId=15655613&contextLevel=1&contextOfferPosition=2&contextPageSize=2&country=se&ecs=ok&merchantid=15655613&offerId=89a03f43e4973575bdaaf988de4495c3&searchId=10769825018469_1605865837064_40800&searchQuery=&service=5&wait=true",
+    "requested_at": "2020-11-20 09:50:37.082124",
+    "match_score": 1
+  }
+]
