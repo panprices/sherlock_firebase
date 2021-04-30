@@ -1,0 +1,98 @@
+[
+  {
+    "product_id": null,
+    "offer_source": "ebay_FR",
+    "retail_prod_name": "Authentique Nikon D850 Digital SLR Camera (Body Only)",
+    "retailer_name": "eBay",
+    "country": "IE",
+    "price": 226900,
+    "currency": "EUR",
+    "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=112962462630",
+    "requested_at": "2020-11-20T10:02:52Z",
+    "match_score": null,
+    "source_unique_data": {
+      "shippingInfo": {
+        "shipping_cost": 0,
+        "currency": "EUR",
+        "shipToLocations": "Worldwide"
+      },
+      "sellerInfo": {
+        "sellerUserName": "verofantasy",
+        "feedbackScore": "6101",
+        "positiveFeedbackPercent": "99.4"
+      }
+    }
+  },
+  {
+    "product_id": null,
+    "offer_source": "ebay_FR",
+    "retail_prod_name": "NEW Nikon D850 Digital SLR Camera (Body Only)",
+    "retailer_name": "eBay",
+    "country": "IE",
+    "price": 226900,
+    "currency": "EUR",
+    "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=264548930664",
+    "requested_at": "2020-11-20T10:02:52Z",
+    "match_score": null,
+    "source_unique_data": {
+      "shippingInfo": {
+        "shipping_cost": 0,
+        "currency": "EUR",
+        "shipToLocations": "Worldwide"
+      },
+      "sellerInfo": {
+        "sellerUserName": "onewaylogistic",
+        "feedbackScore": "2719",
+        "positiveFeedbackPercent": "100.0"
+      }
+    }
+  },
+  {
+    "product_id": null,
+    "offer_source": "ebay_IT",
+    "retail_prod_name": "NEW Nikon D850 Digital SLR Camera (Body Only)",
+    "retailer_name": "eBay",
+    "country": "IE",
+    "price": 224900,
+    "currency": "EUR",
+    "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=264534010494",
+    "requested_at": "2020-11-20T10:02:52Z",
+    "match_score": null,
+    "source_unique_data": {
+      "shippingInfo": {
+        "shipping_cost": 0,
+        "currency": "EUR",
+        "shipToLocations": "Worldwide"
+      },
+      "sellerInfo": {
+        "sellerUserName": "onewaylogistic",
+        "feedbackScore": "2728",
+        "positiveFeedbackPercent": "100.0"
+      }
+    }
+  },
+  {
+    "product_id": null,
+    "offer_source": "ebay_IT",
+    "retail_prod_name": "Genuino Nikon D850 Digital SLR Camera (Body Only)",
+    "retailer_name": "eBay",
+    "country": "IE",
+    "price": 224900,
+    "currency": "EUR",
+    "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=113991564914",
+    "requested_at": "2020-11-20T10:02:52Z",
+    "match_score": null,
+    "source_unique_data": {
+      "shippingInfo": {
+        "shipping_cost": 0,
+        "currency": "EUR",
+        "shipToLocations": "Worldwide"
+      },
+      "sellerInfo": {
+        "sellerUserName": "verofantasy",
+        "feedbackScore": "6101",
+        "positiveFeedbackPercent": "99.4"
+      }
+    }
+  }
+]

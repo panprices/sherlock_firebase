@@ -1,0 +1,68 @@
+[
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "CyberPhoto",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABAHGgJxbg&sig=AOD64_2BS02e6034qaP3NB-6maB48b5RJQ&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIEw&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "606900",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Gunnar Olssons Foto",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABAEGgJxbg&sig=AOD64_0_-ymlxEJ1AQZgms6aUuc7uaD9pw&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIFg&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "649000",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Natur.Astrosweden.se",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABAGGgJxbg&sig=AOD64_3BhgH549taGEI9sxgzPtvp-4yQgA&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIGQ&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "681900",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Raig Se",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABAFGgJxbg&sig=AOD64_0o7Plv3Vxv5QymGtEgDC6fftJiuA&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIHA&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "554528",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Knivesandtools.com",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABAKGgJxbg&sig=AOD64_1WoiaAuobOTU8PbxphX_-ftcIdMg&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIHw&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "601367",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  },
+  {
+    "offer_source": "google_shopping_SE",
+    "retailer_name": "Watski.se",
+    "offer_url": "https://www.google.com/aclk?sa=L&ai=DChcSEwjj57O37JDtAhUK97MKHWqEDkIYABALGgJxbg&sig=AOD64_2388xRx43pH7GaiG6WtcKE2Krggw&ctype=5&q=&ved=0ahUKEwiDwLG37JDtAhXrFFkFHWVUA_8Q2ikIIw&adurl=",
+    "country": "SE",
+    "retail_prod_name": "Steiner 7x50 Navigator Pro Compass",
+    "price": "649500",
+    "currency": "SEK",
+    "requested_at": "2020-11-20T09:50:40Z",
+    "match_score": null
+  }
+]
