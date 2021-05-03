@@ -282,14 +282,24 @@ def _compose_enriched_row(row):
     if not direct_checkout:
         direct_checkout_price = None
     else:
-        direct_checkout_price = float(
-            row["adj_price"]
-            + row["shipping_fee"]
-            + row["service_fee"]
-            + row["vat"]
-            + row["payment_fee_int"]
-            + row["exchange_rate_fee"]
-        )
+        if (
+            row["adj_price"] is None
+            or row["shipping_fee"] is None
+            or row["service_fee"] is None
+            or row["vat"] is None
+            or row["payment_fee_int"] is None
+            or row["exchange_rate_fee"] is None
+        ):
+            direct_checkout_price = None
+        else:
+            direct_checkout_price = float(
+                row["adj_price"]
+                + row["shipping_fee"]
+                + row["service_fee"]
+                + row["vat"]
+                + row["payment_fee_int"]
+                + row["exchange_rate_fee"]
+            )
         row["exchange_rate_fee"] = float(row["exchange_rate_fee"])
         row["payment_fee_int"] = float(row["payment_fee_int"])
         row["vat"] = float(row["vat"])
