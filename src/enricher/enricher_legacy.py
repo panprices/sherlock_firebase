@@ -95,7 +95,8 @@ def add_offers_metadata(offers):
                 C.domain,
                 C.id AS retailer_id,
                 C.offer_source_id,
-                ((A.price::int * E.to_sek) / 100)::int AS adj_price -- the price adjusted for the currency
+                ((A.price::int * E.to_sek) / 100)::int AS adj_price, -- the price adjusted for the currency
+                ((A.price::int * E.to_eur) / 100)::int AS euro_price
             FROM offers_data A
             INNER JOIN offer_sources B
             ON A.offer_source = B.name
@@ -283,7 +284,8 @@ def add_offers_metadata(offers):
             CASE -- Don't enable concierge on Swedish offers or when direct_checkout is enabled
                 WHEN direct_checkout IS FALSE AND country != 'SE' THEN TRUE
                 ELSE FALSE
-            END AS concierge
+            END AS concierge,
+            euro_price
         FROM offers_complete
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
@@ -297,8 +299,6 @@ def add_offers_metadata(offers):
         print(query_string)
     """
 
-    # pp = pprint.PrettyPrinter(indent=4)
-    # pp.pprint(rows)
-
     pg_pool.putconn(connection)
+
     return rows
