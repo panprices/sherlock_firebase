@@ -91,7 +91,8 @@ def add_offers_metadata(offers):
                 C.domain,
                 C.id AS retailer_id,
                 C.offer_source_id,
-                ((A.price::int * E.to_sek) / 100)::int AS adj_price -- the price adjusted for the currency
+                ((A.price::int * E.to_sek) / 100)::int AS adj_price, -- the price adjusted for the currency
+                ((A.price::int * E.to_eur) / 100)::int AS euro_price
             FROM offers_data A
             INNER JOIN offer_sources B
             ON A.offer_source = B.name
@@ -247,7 +248,8 @@ def add_offers_metadata(offers):
             service_fee,
             vat,
             payment_fee_int,
-            exchange_rate_fee
+            exchange_rate_fee,
+            euro_price
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
