@@ -107,23 +107,9 @@ def add_offers_metadata(offers):
                 DISTINCT ON (A.offer_id)
                 A.*,
                 B.ship,
-        --		((B.min_order_val * C.to_sek) / 100)::int AS min_order_val, -- adjusted for the currency
-        --		((B.fee * C.to_sek) / 100)::int AS fee, -- adjusted for the currency
-                CASE
-                    -- When we don't have shipping data => return estimation in some cases
-                    WHEN fee IS NULL THEN
-                        CASE
-                            WHEN A.country IN ('UK', 'IT', 'ES') THEN 406
-                            WHEN A.country IN ('FR', 'BE', 'LU', 'DE') THEN 203
-                            WHEN A.country = 'SE' THEN 0
-                            ELSE NULL
-                        END
-                    -- When we have shipping and item price is higher then min order value => return the fee
-                    WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN ((B.fee * C.to_sek) / 100)::int
-                    -- When we have shipping and there is no min order value => return the fee
-                    WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN ((B.fee * C.to_sek) / 100)::int
-                    ELSE NULL
-                END AS shipping_fee
+                B.fee as shipping_fee,
+                B.min_order_val as shipping_min_order_val,
+                C.to_sek as shipping_to_sek
             FROM offers_raw A
             FULL OUTER JOIN shipping B
             ON A.retailer_id = B.retailer_id
@@ -134,45 +120,9 @@ def add_offers_metadata(offers):
             SELECT
                 DISTINCT ON (A.offer_id)
                 A.*,
-                (adj_price + shipping_fee) * 0.03 AS exchange_rate_fee,
-                (adj_price + shipping_fee) * 0.05 AS service_fee,
-                ((adj_price + shipping_fee) * 0.05) * 0.25 AS vat,
-                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_se,
-                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.03) + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_int,
-                CASE
-                    -- If no Trustpilot rating
-                    WHEN avg_rating = 0 THEN
-                        CASE
-                            WHEN site_rank < 15000 	THEN 5
-                            WHEN site_rank < 25000 	THEN 4.5
-                            WHEN site_rank < 50000 	THEN 4
-                            WHEN site_rank < 75000 	THEN 3
-                            WHEN site_rank < 100000 THEN 2
-                            WHEN site_rank < 300000 THEN 1.5
-                            WHEN site_rank < 500000 THEN 1
-                        END
-                    -- If we have Truspilot rating, start with that rating and then credit or discredit it
-                    WHEN avg_rating != 0 THEN (
-                        SELECT (
-                            avg_rating +
-                            CASE
-                                WHEN num_ratings < 50 THEN -1
-                                WHEN num_ratings < 100 THEN -0.5
-                                WHEN num_ratings > 1000 THEN 0.5
-                                WHEN num_ratings > 5000 THEN 1
-                                ELSE 0
-                            END +
-                            CASE WHEN num_ratings < 100 THEN -0.5 ELSE 0 END +
-                            CASE
-                                WHEN site_rank < 15000 THEN 1
-                                WHEN site_rank < 25000 THEN 0.5
-                                WHEN site_rank > 100000 THEN -0.5
-                                WHEN (site_rank > 300000) OR (site_rank IS NULL) THEN -1
-                                ELSE 0
-                            END
-                        )
-                    )
-                END AS quality_score
+                B.site_rank as alexa_site_rank,
+                C.num_ratings as trustpilot_num_rating,
+                C.avg_rating as trustpilot_avg_rating
             FROM offers_with_shipping A
             FULL OUTER JOIN alexa B
             ON A.domain = B.retailer_domain
@@ -191,8 +141,6 @@ def add_offers_metadata(offers):
         */
         ), offers_filtered AS (
             SELECT
-                -- Filter out when we from different sources have gotten the same offer
-                DISTINCT ON (A.retail_prod_name, A.domain, A.adj_price)
                 A.*
             FROM offers_with_shipping_and_trust A
             LEFT JOIN (
@@ -223,6 +171,9 @@ def add_offers_metadata(offers):
             AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
         )
         SELECT
+            -- Filter out when we from different sources have gotten the same offer
+            DISTINCT ON (retail_prod_name, domain, adj_price)
+
             (SELECT * FROM lowest_local_price) AS lowest_local_price,
             updated_at,
             product_id,
@@ -235,25 +186,16 @@ def add_offers_metadata(offers):
             domain,
             ship,
             shipping_fee,
+            shipping_min_order_val,
+            shipping_to_sek,
             offer_id,
-            CASE
-                WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
-                    CASE
-                        WHEN country != 'SE' THEN ((adj_price + shipping_fee + service_fee + vat + payment_fee_int + exchange_rate_fee) )
-                        ELSE NULL
-                    END
-                ELSE NULL
-            END AS direct_checkout_price,
-            quality_score,
-            service_fee,
-            vat,
-            payment_fee_int,
-            exchange_rate_fee,
-            euro_price
+            euro_price,
+            trustpilot_num_rating,
+            trustpilot_avg_rating,
+            alexa_site_rank
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
-        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
-        ORDER BY direct_checkout_price ASC;
+        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
     """
     )
     rows = cur_dict.fetchall()
@@ -266,10 +208,70 @@ def add_offers_metadata(offers):
 
     rows = list(map(_strip_columns, map(_compose_enriched_row, rows)))
 
+    rows = sorted(
+        rows,
+        key=lambda x: (x["direct_checkout_price"] is None, x["direct_checkout_price"]),
+    )
+
     return rows
 
 
 def _compose_enriched_row(row):
+    # ==========================================================
+    # Calculate Shipping Fee
+    # ==========================================================
+
+    if row["shipping_fee"] is None:
+        # When we don't have shipping data => return estimation in some cases
+        if row["country"] in {"UK", "IT", "ES"}:
+            row["shipping_fee"] = 406
+        elif row["country"] in {"FR", "BE", "LU", "DE"}:
+            row["shipping_fee"] = 203
+        elif row["country"] == "SE":
+            row["shipping_fee"] = 0
+        else:
+            row["shipping_fee"] = None
+    elif row["shipping_min_order_val"] is None and row["shipping_fee"] is not None:
+        # When we have shipping and there is no min order value => return the fee
+        row["shipping_fee"] = round(
+            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
+        )
+    elif ((row["shipping_min_order_val"] * row["shipping_to_sek"]) / 100) > row[
+        "adj_price"
+    ]:
+        # When we have shipping and item price is higher then min order value => return the fee
+        row["shipping_fee"] = round(
+            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
+        )
+    else:
+        row["shipping_fee"] = None
+
+    # ==========================================================
+    # Calculate different costs
+    # ==========================================================
+    adj_price = row["adj_price"]
+    shipping_fee = row["shipping_fee"]
+    if adj_price is None or shipping_fee is None:
+        exchange_rate_fee = None
+        service_fee = None
+        vat = None
+        payment_fee_se = None
+        payment_fee_int = None
+    else:
+        exchange_rate_fee = (adj_price + shipping_fee) * 0.03
+        service_fee = (adj_price + shipping_fee) * 0.05
+        vat = service_fee * 0.25
+        payment_fee_se = (adj_price + shipping_fee + service_fee + vat) * 0.014
+        payment_fee_int = (
+            adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
+        ) * 0.014
+
+    row["exchange_rate_fee"] = exchange_rate_fee
+    row["service_fee"] = service_fee
+    row["vat"] = vat
+    row["payment_fee_se"] = payment_fee_se
+    row["payment_fee_int"] = payment_fee_int
+
     # ==========================================================
     # Figure out if we should offer direct checkout
     # and what the prices would be
@@ -350,6 +352,15 @@ def _compose_enriched_row(row):
     row["currency"] = "SEK"
 
     # ==========================================================
+    # Calculate quality_score
+    # ==========================================================
+    row["quality_score"] = _calculate_quality_score(
+        row["trustpilot_avg_rating"],
+        row["trustpilot_num_rating"],
+        row["alexa_site_rank"],
+    )
+
+    # ==========================================================
     # Apply a ceiling and floor on quality_score
     # ==========================================================
     if row["quality_score"] is None:
@@ -364,6 +375,62 @@ def _compose_enriched_row(row):
     return row
 
 
+def _calculate_quality_score(
+    trustpilot_avg_rating, trustpilot_num_rating, alexa_site_rank
+):
+
+    if trustpilot_avg_rating is None:
+        return None
+
+    # No trustpilot rating
+    if trustpilot_avg_rating == 0:
+        if alexa_site_rank is None:
+            return None
+
+        if alexa_site_rank < 15000:
+            return 5
+        elif alexa_site_rank < 25000:
+            return 4.5
+        elif alexa_site_rank < 50000:
+            return 4
+        elif alexa_site_rank < 75000:
+            return 3
+        elif alexa_site_rank < 100000:
+            return 2
+        elif alexa_site_rank < 300000:
+            return 1.5
+        elif alexa_site_rank < 500000:
+            return 1
+    # If we have Truspilot rating, start with that rating and then credit
+    # or discredit it
+    else:
+        quality_score = trustpilot_avg_rating
+
+        if trustpilot_num_rating is None:
+            quality_score = quality_score
+        elif trustpilot_num_rating < 50:
+            quality_score = quality_score - 1.5
+        elif trustpilot_num_rating < 100:
+            quality_score = quality_score - 1
+        elif trustpilot_num_rating > 1000:
+            quality_score = quality_score + 0.5
+        elif trustpilot_num_rating > 5000:
+            quality_score = quality_score + 1
+
+        if alexa_site_rank is None:
+            quality_score = quality_score - 1
+        elif alexa_site_rank < 15000:
+            quality_score = quality_score + 1
+        elif alexa_site_rank < 25000:
+            quality_score = quality_score + 0.5
+        elif alexa_site_rank > 100000:
+            quality_score = quality_score - 0.5
+        elif alexa_site_rank > 300000:
+            quality_score = quality_score - 1
+
+        return quality_score
+
+
 def _strip_columns(row):
     del row["lowest_local_price"]
     del row["adj_price"]
@@ -371,4 +438,10 @@ def _strip_columns(row):
     del row["payment_fee_int"]
     del row["vat"]
     del row["service_fee"]
+    del row["trustpilot_num_rating"]
+    del row["trustpilot_avg_rating"]
+    del row["alexa_site_rank"]
+    del row["payment_fee_se"]
+    del row["shipping_min_order_val"]
+    del row["shipping_to_sek"]
     return row
