@@ -136,12 +136,7 @@ def add_offers_metadata(offers):
                 A.*,
                 B.site_rank as alexa_site_rank,
                 C.num_ratings as trustpilot_num_rating,
-                C.avg_rating as trustpilot_avg_rating,
-                (adj_price + shipping_fee) * 0.03 AS exchange_rate_fee,
-                (adj_price + shipping_fee) * 0.05 AS service_fee,
-                ((adj_price + shipping_fee) * 0.05) * 0.25 AS vat,
-                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_se,
-                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.03) + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_int
+                C.avg_rating as trustpilot_avg_rating
             FROM offers_with_shipping A
             FULL OUTER JOIN alexa B
             ON A.domain = B.retailer_domain
@@ -206,10 +201,6 @@ def add_offers_metadata(offers):
             ship,
             shipping_fee,
             offer_id,
-            service_fee,
-            vat,
-            payment_fee_int,
-            exchange_rate_fee,
             euro_price,
             trustpilot_num_rating,
             trustpilot_avg_rating,
@@ -238,6 +229,32 @@ def add_offers_metadata(offers):
 
 
 def _compose_enriched_row(row):
+    # ==========================================================
+    # Calculate different costs
+    # ==========================================================
+    adj_price = row["adj_price"]
+    shipping_fee = row["shipping_fee"]
+    if adj_price is None or shipping_fee is None:
+        exchange_rate_fee = None
+        service_fee = None
+        vat = None
+        payment_fee_se = None
+        payment_fee_int = None
+    else:
+        exchange_rate_fee = (adj_price + shipping_fee) * 0.03
+        service_fee = (adj_price + shipping_fee) * 0.05
+        vat = service_fee * 0.25
+        payment_fee_se = (adj_price + shipping_fee + service_fee + vat) * 0.014
+        payment_fee_int = (
+            adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
+        ) * 0.014
+
+    row["exchange_rate_fee"] = exchange_rate_fee
+    row["service_fee"] = service_fee
+    row["vat"] = vat
+    row["payment_fee_se"] = payment_fee_se
+    row["payment_fee_int"] = payment_fee_int
+
     # ==========================================================
     # Figure out if we should offer direct checkout
     # and what the prices would be
@@ -407,4 +424,5 @@ def _strip_columns(row):
     del row["trustpilot_num_rating"]
     del row["trustpilot_avg_rating"]
     del row["alexa_site_rank"]
+    del row["payment_fee_se"]
     return row
