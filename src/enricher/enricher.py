@@ -236,14 +236,6 @@ def add_offers_metadata(offers):
             ship,
             shipping_fee,
             offer_id,
-            CASE
-                WHEN shipping_fee IS NOT NULL AND offer_source != 'google_shopping_SE' AND country != 'SE' THEN
-                    CASE
-                        WHEN country != 'SE' THEN ((adj_price + shipping_fee + service_fee + vat + payment_fee_int + exchange_rate_fee) )
-                        ELSE NULL
-                    END
-                ELSE NULL
-            END AS direct_checkout_price,
             quality_score,
             service_fee,
             vat,
@@ -252,8 +244,7 @@ def add_offers_metadata(offers):
             euro_price
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
-        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING
-        ORDER BY direct_checkout_price ASC;
+        AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
     """
     )
     rows = cur_dict.fetchall()
@@ -265,6 +256,11 @@ def add_offers_metadata(offers):
     pg_pool.putconn(connection)
 
     rows = list(map(_strip_columns, map(_compose_enriched_row, rows)))
+
+    rows = sorted(
+        rows,
+        key=lambda x: (x["direct_checkout_price"] is None, x["direct_checkout_price"]),
+    )
 
     return rows
 
