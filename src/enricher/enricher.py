@@ -107,23 +107,9 @@ def add_offers_metadata(offers):
                 DISTINCT ON (A.offer_id)
                 A.*,
                 B.ship,
-        --		((B.min_order_val * C.to_sek) / 100)::int AS min_order_val, -- adjusted for the currency
-        --		((B.fee * C.to_sek) / 100)::int AS fee, -- adjusted for the currency
-                CASE
-                    -- When we don't have shipping data => return estimation in some cases
-                    WHEN fee IS NULL THEN
-                        CASE
-                            WHEN A.country IN ('UK', 'IT', 'ES') THEN 406
-                            WHEN A.country IN ('FR', 'BE', 'LU', 'DE') THEN 203
-                            WHEN A.country = 'SE' THEN 0
-                            ELSE NULL
-                        END
-                    -- When we have shipping and item price is higher then min order value => return the fee
-                    WHEN (((B.min_order_val * C.to_sek) / 100) > A.adj_price) THEN ((B.fee * C.to_sek) / 100)::int
-                    -- When we have shipping and there is no min order value => return the fee
-                    WHEN (min_order_val IS NULL AND fee IS NOT NULL) THEN ((B.fee * C.to_sek) / 100)::int
-                    ELSE NULL
-                END AS shipping_fee
+                B.fee as shipping_fee,
+                B.min_order_val as shipping_min_order_val,
+                C.to_sek as shipping_to_sek
             FROM offers_raw A
             FULL OUTER JOIN shipping B
             ON A.retailer_id = B.retailer_id
@@ -200,6 +186,8 @@ def add_offers_metadata(offers):
             domain,
             ship,
             shipping_fee,
+            shipping_min_order_val,
+            shipping_to_sek,
             offer_id,
             euro_price,
             trustpilot_num_rating,
@@ -229,6 +217,35 @@ def add_offers_metadata(offers):
 
 
 def _compose_enriched_row(row):
+    # ==========================================================
+    # Calculate Shipping Fee
+    # ==========================================================
+
+    if row["shipping_fee"] is None:
+        # When we don't have shipping data => return estimation in some cases
+        if row["country"] in {"UK", "IT", "ES"}:
+            row["shipping_fee"] = 406
+        elif row["country"] in {"FR", "BE", "LU", "DE"}:
+            row["shipping_fee"] = 203
+        elif row["country"] == "SE":
+            row["shipping_fee"] = 0
+        else:
+            row["shipping_fee"] = None
+    elif row["shipping_min_order_val"] is None and row["shipping_fee"] is not None:
+        # When we have shipping and there is no min order value => return the fee
+        row["shipping_fee"] = round(
+            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
+        )
+    elif ((row["shipping_min_order_val"] * row["shipping_to_sek"]) / 100) > row[
+        "adj_price"
+    ]:
+        # When we have shipping and item price is higher then min order value => return the fee
+        row["shipping_fee"] = round(
+            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
+        )
+    else:
+        row["shipping_fee"] = None
+
     # ==========================================================
     # Calculate different costs
     # ==========================================================
@@ -425,4 +442,6 @@ def _strip_columns(row):
     del row["trustpilot_avg_rating"]
     del row["alexa_site_rank"]
     del row["payment_fee_se"]
+    del row["shipping_min_order_val"]
+    del row["shipping_to_sek"]
     return row
