@@ -134,45 +134,14 @@ def add_offers_metadata(offers):
             SELECT
                 DISTINCT ON (A.offer_id)
                 A.*,
+                B.site_rank as alexa_site_rank,
+                C.num_ratings as trustpilot_num_rating,
+                C.avg_rating as trustpilot_avg_rating,
                 (adj_price + shipping_fee) * 0.03 AS exchange_rate_fee,
                 (adj_price + shipping_fee) * 0.05 AS service_fee,
                 ((adj_price + shipping_fee) * 0.05) * 0.25 AS vat,
                 (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_se,
-                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.03) + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_int,
-                CASE
-                    -- If no Trustpilot rating
-                    WHEN avg_rating = 0 THEN
-                        CASE
-                            WHEN site_rank < 15000 	THEN 5
-                            WHEN site_rank < 25000 	THEN 4.5
-                            WHEN site_rank < 50000 	THEN 4
-                            WHEN site_rank < 75000 	THEN 3
-                            WHEN site_rank < 100000 THEN 2
-                            WHEN site_rank < 300000 THEN 1.5
-                            WHEN site_rank < 500000 THEN 1
-                        END
-                    -- If we have Truspilot rating, start with that rating and then credit or discredit it
-                    WHEN avg_rating != 0 THEN (
-                        SELECT (
-                            avg_rating +
-                            CASE
-                                WHEN num_ratings < 50 THEN -1
-                                WHEN num_ratings < 100 THEN -0.5
-                                WHEN num_ratings > 1000 THEN 0.5
-                                WHEN num_ratings > 5000 THEN 1
-                                ELSE 0
-                            END +
-                            CASE WHEN num_ratings < 100 THEN -0.5 ELSE 0 END +
-                            CASE
-                                WHEN site_rank < 15000 THEN 1
-                                WHEN site_rank < 25000 THEN 0.5
-                                WHEN site_rank > 100000 THEN -0.5
-                                WHEN (site_rank > 300000) OR (site_rank IS NULL) THEN -1
-                                ELSE 0
-                            END
-                        )
-                    )
-                END AS quality_score
+                (adj_price + shipping_fee + ((adj_price + shipping_fee) * 0.03) + ((adj_price + shipping_fee) * 0.05) + (((adj_price + shipping_fee) * 0.05) * 0.25)) * 0.014 AS payment_fee_int
             FROM offers_with_shipping A
             FULL OUTER JOIN alexa B
             ON A.domain = B.retailer_domain
@@ -191,8 +160,6 @@ def add_offers_metadata(offers):
         */
         ), offers_filtered AS (
             SELECT
-                -- Filter out when we from different sources have gotten the same offer
-                DISTINCT ON (A.retail_prod_name, A.domain, A.adj_price)
                 A.*
             FROM offers_with_shipping_and_trust A
             LEFT JOIN (
@@ -223,6 +190,9 @@ def add_offers_metadata(offers):
             AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
         )
         SELECT
+            -- Filter out when we from different sources have gotten the same offer
+            DISTINCT ON (retail_prod_name, domain, adj_price)
+
             (SELECT * FROM lowest_local_price) AS lowest_local_price,
             updated_at,
             product_id,
@@ -236,12 +206,14 @@ def add_offers_metadata(offers):
             ship,
             shipping_fee,
             offer_id,
-            quality_score,
             service_fee,
             vat,
             payment_fee_int,
             exchange_rate_fee,
-            euro_price
+            euro_price,
+            trustpilot_num_rating,
+            trustpilot_avg_rating,
+            alexa_site_rank
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
@@ -346,6 +318,15 @@ def _compose_enriched_row(row):
     row["currency"] = "SEK"
 
     # ==========================================================
+    # Calculate quality_score
+    # ==========================================================
+    row["quality_score"] = _calculate_quality_score(
+        row["trustpilot_avg_rating"],
+        row["trustpilot_num_rating"],
+        row["alexa_site_rank"],
+    )
+
+    # ==========================================================
     # Apply a ceiling and floor on quality_score
     # ==========================================================
     if row["quality_score"] is None:
@@ -360,6 +341,62 @@ def _compose_enriched_row(row):
     return row
 
 
+def _calculate_quality_score(
+    trustpilot_avg_rating, trustpilot_num_rating, alexa_site_rank
+):
+
+    if trustpilot_avg_rating is None:
+        return None
+
+    # No trustpilot rating
+    if trustpilot_avg_rating == 0:
+        if alexa_site_rank is None:
+            return None
+
+        if alexa_site_rank < 15000:
+            return 5
+        elif alexa_site_rank < 25000:
+            return 4.5
+        elif alexa_site_rank < 50000:
+            return 4
+        elif alexa_site_rank < 75000:
+            return 3
+        elif alexa_site_rank < 100000:
+            return 2
+        elif alexa_site_rank < 300000:
+            return 1.5
+        elif alexa_site_rank < 500000:
+            return 1
+    # If we have Truspilot rating, start with that rating and then credit
+    # or discredit it
+    else:
+        quality_score = trustpilot_avg_rating
+
+        if trustpilot_num_rating is None:
+            quality_score = quality_score
+        elif trustpilot_num_rating < 50:
+            quality_score = quality_score - 1.5
+        elif trustpilot_num_rating < 100:
+            quality_score = quality_score - 1
+        elif trustpilot_num_rating > 1000:
+            quality_score = quality_score + 0.5
+        elif trustpilot_num_rating > 5000:
+            quality_score = quality_score + 1
+
+        if alexa_site_rank is None:
+            quality_score = quality_score - 1
+        elif alexa_site_rank < 15000:
+            quality_score = quality_score + 1
+        elif alexa_site_rank < 25000:
+            quality_score = quality_score + 0.5
+        elif alexa_site_rank > 100000:
+            quality_score = quality_score - 0.5
+        elif alexa_site_rank > 300000:
+            quality_score = quality_score - 1
+
+        return quality_score
+
+
 def _strip_columns(row):
     del row["lowest_local_price"]
     del row["adj_price"]
@@ -367,4 +404,7 @@ def _strip_columns(row):
     del row["payment_fee_int"]
     del row["vat"]
     del row["service_fee"]
+    del row["trustpilot_num_rating"]
+    del row["trustpilot_avg_rating"]
+    del row["alexa_site_rank"]
     return row
