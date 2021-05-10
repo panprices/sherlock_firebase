@@ -92,30 +92,24 @@ def add_offers_metadata(offers):
                 C.id AS retailer_id,
                 C.offer_source_id,
                 ((A.price::int * E.to_sek) / 100)::int AS adj_price, -- the price adjusted for the currency
-                (A.price::int * E.to_eur)::int AS euro_price
+                (A.price::int * E.to_eur)::int AS euro_price,
+                F.ship,
+                F.fee as shipping_fee,
+                F.min_order_val as shipping_min_order_val,
+                G.to_sek as shipping_to_sek
             FROM offers_data A
             INNER JOIN offer_sources B
-            ON A.offer_source = B.name
+                ON A.offer_source = B.name
             FULL OUTER JOIN retailers C
-            ON A.retailer_name = C.name AND B.id = C.offer_source_id
+                ON A.retailer_name = C.name AND B.id = C.offer_source_id
             INNER JOIN currency E
-            ON A.currency = E.name
+                ON A.currency = E.name
+            FULL OUTER JOIN shipping F
+                ON C.id = F.retailer_id
+            FULL OUTER JOIN currency G
+                ON F.currency = G.name
             WHERE COALESCE(C.blacklisted, FALSE) IS FALSE -- Remove blacklisted retailers
         -- Add shipping data (where we have it) to the raw offers rows
-        ), offers_with_shipping AS (
-            SELECT
-                DISTINCT ON (A.offer_id)
-                A.*,
-                B.ship,
-                B.fee as shipping_fee,
-                B.min_order_val as shipping_min_order_val,
-                C.to_sek as shipping_to_sek
-            FROM offers_raw A
-            FULL OUTER JOIN shipping B
-            ON A.retailer_id = B.retailer_id
-            FULL OUTER JOIN currency C
-            ON B.currency = C.name
-        -- Add retailer trust data and determine quality score
         ), offers_with_shipping_and_trust AS (
             SELECT
                 DISTINCT ON (A.offer_id)
@@ -123,7 +117,7 @@ def add_offers_metadata(offers):
                 B.site_rank as alexa_site_rank,
                 C.num_ratings as trustpilot_num_rating,
                 C.avg_rating as trustpilot_avg_rating
-            FROM offers_with_shipping A
+            FROM offers_raw A
             FULL OUTER JOIN alexa B
             ON A.domain = B.retailer_domain
             FULL OUTER JOIN trustpilot C
