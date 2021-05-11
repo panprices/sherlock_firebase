@@ -1,5 +1,7 @@
 import uuid
 from src.database.database import connect_to_db
+from pipetools import pipe, maybe
+
 
 """
     This is necessary since Firebase does not sture keys with
@@ -200,7 +202,7 @@ def add_offers_metadata(offers):
     """
     pg_pool.putconn(connection)
 
-    rows = list(map(_strip_columns, map(_compose_enriched_row, rows)))
+    rows = rows > pipe | (map, _compose_enriched_row) | (map, _strip_columns)
 
     rows = sorted(
         rows,
@@ -210,105 +212,86 @@ def add_offers_metadata(offers):
     return rows
 
 
+def _calculate_direct_checkout(row):
+    shipping_fee = row["shipping_fee"]
+    offer_source = row["offer_source"]
+    country = row["country"]
+
+    if shipping_fee is None:
+        return False
+    if offer_source == "google_shopping_SE":
+        return False
+    if country == "SE":
+        return False
+
+    return True
+
+
+def _calculate_direct_checkout_price(row):
+    direct_checkout = row["direct_checkout"]
+    adj_price = row["adj_price"]
+    shipping_fee = row["shipping_fee"]
+
+    if adj_price is None or shipping_fee is None or not direct_checkout:
+        return None
+
+    exchange_rate_fee = (adj_price + shipping_fee) * 0.03
+    service_fee = (adj_price + shipping_fee) * 0.05
+    vat = service_fee * 0.25
+    payment_fee_int = (
+        adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
+    ) * 0.014
+
+    return float(
+        adj_price
+        + shipping_fee
+        + service_fee
+        + vat
+        + payment_fee_int
+        + exchange_rate_fee
+    )
+
+
 def _compose_enriched_row(row):
+    adj_price = row["adj_price"]
+    lowest_local_price = row["lowest_local_price"]
+
+    # ==========================================================
+    # Calculate quality_score
+    #
+    # It is clamped between 1 and 5
+    # ==========================================================
+    row["quality_score"] = (
+        _calculate_quality_score(
+            row["trustpilot_avg_rating"],
+            row["trustpilot_num_rating"],
+            row["alexa_site_rank"],
+        )
+        > maybe | (min, 5) | (max, 1) | float
+    )
+
+    # ==========================================================
+    # Calculate saving
+    # ==========================================================
+    if lowest_local_price is not None:
+        row["saving"] = round((lowest_local_price - adj_price) * 100)
+    else:
+        row["saving"] = None
+
     # ==========================================================
     # Calculate Shipping Fee
     # ==========================================================
-
-    if row["shipping_fee"] is None:
-        # When we don't have shipping data => return estimation in some cases
-        if row["country"] in {"UK", "IT", "ES"}:
-            row["shipping_fee"] = 406
-        elif row["country"] in {"FR", "BE", "LU", "DE"}:
-            row["shipping_fee"] = 203
-        elif row["country"] == "SE":
-            row["shipping_fee"] = 0
-        else:
-            row["shipping_fee"] = None
-    elif row["shipping_min_order_val"] is None and row["shipping_fee"] is not None:
-        # When we have shipping and there is no min order value => return the fee
-        row["shipping_fee"] = round(
-            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
-        )
-    elif ((row["shipping_min_order_val"] * row["shipping_to_sek"]) / 100) > row[
-        "adj_price"
-    ]:
-        # When we have shipping and item price is higher then min order value => return the fee
-        row["shipping_fee"] = round(
-            (row["shipping_fee"] * row["shipping_to_sek"]) / 100
-        )
-    else:
-        row["shipping_fee"] = None
+    row["shipping_fee"] = _calculate_shipping_fee(row)
 
     # ==========================================================
-    # Calculate different costs
+    # Calculate Direct Checkout, DC Price, and DC Saving
     # ==========================================================
-    adj_price = row["adj_price"]
-    shipping_fee = row["shipping_fee"]
-    if adj_price is None or shipping_fee is None:
-        exchange_rate_fee = None
-        service_fee = None
-        vat = None
-        payment_fee_se = None
-        payment_fee_int = None
-    else:
-        exchange_rate_fee = (adj_price + shipping_fee) * 0.03
-        service_fee = (adj_price + shipping_fee) * 0.05
-        vat = service_fee * 0.25
-        payment_fee_se = (adj_price + shipping_fee + service_fee + vat) * 0.014
-        payment_fee_int = (
-            adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
-        ) * 0.014
-
-    row["exchange_rate_fee"] = exchange_rate_fee
-    row["service_fee"] = service_fee
-    row["vat"] = vat
-    row["payment_fee_se"] = payment_fee_se
-    row["payment_fee_int"] = payment_fee_int
-
-    # ==========================================================
-    # Figure out if we should offer direct checkout
-    # and what the prices would be
-    # ==========================================================
-    lowest_local_price = row["lowest_local_price"]
-    direct_checkout = (
-        row["shipping_fee"] is not None
-        and row["offer_source"] != "google_shopping_SE"
-        and row["country"] != "SE"
-    )
-
-    if not direct_checkout:
-        direct_checkout_price = None
-    else:
-        if (
-            row["adj_price"] is None
-            or row["shipping_fee"] is None
-            or row["service_fee"] is None
-            or row["vat"] is None
-            or row["payment_fee_int"] is None
-            or row["exchange_rate_fee"] is None
-        ):
-            direct_checkout_price = None
-        else:
-            direct_checkout_price = float(
-                row["adj_price"]
-                + row["shipping_fee"]
-                + row["service_fee"]
-                + row["vat"]
-                + row["payment_fee_int"]
-                + row["exchange_rate_fee"]
-            )
-        row["exchange_rate_fee"] = float(row["exchange_rate_fee"])
-        row["payment_fee_int"] = float(row["payment_fee_int"])
-        row["vat"] = float(row["vat"])
-        row["service_fee"] = float(row["service_fee"])
-
-    row["direct_checkout"] = direct_checkout
-    row["direct_checkout_price"] = direct_checkout_price
+    row["direct_checkout"] = _calculate_direct_checkout(row)
+    row["direct_checkout_price"] = _calculate_direct_checkout_price(row)
 
     # Only show saving when direct_checkout is enabled
     if (
-        direct_checkout
+        row["direct_checkout"]
         and lowest_local_price is not None
         and lowest_local_price > row["direct_checkout_price"]
     ):
@@ -318,13 +301,12 @@ def _compose_enriched_row(row):
     else:
         row["direct_checkout_saving"] = None
 
-    if lowest_local_price is not None:
-        row["saving"] = round((lowest_local_price - row["adj_price"]) * 100)
-    else:
-        row["saving"] = None
-
+    # ==========================================================
+    # Calculate if we ship
+    #
     # Ship should be true when direct_checkout is enabled
-    row["ship"] = direct_checkout or row.get("ship")
+    # ==========================================================
+    row["ship"] = row["direct_checkout"] or row.get("ship")
 
     # ==========================================================
     # Calculate the prices in real SEK, not Cents
@@ -340,31 +322,10 @@ def _compose_enriched_row(row):
         row["direct_checkout_price"] = None
 
     # Don't enable concierge on Swedish offers or when direct_checkout is enabled
-    row["concierge"] = (not direct_checkout) and row["country"] != "SE"
+    row["concierge"] = (not row["direct_checkout"]) and row["country"] != "SE"
 
     row["price"] = round(row["adj_price"] * 100)
     row["currency"] = "SEK"
-
-    # ==========================================================
-    # Calculate quality_score
-    # ==========================================================
-    row["quality_score"] = _calculate_quality_score(
-        row["trustpilot_avg_rating"],
-        row["trustpilot_num_rating"],
-        row["alexa_site_rank"],
-    )
-
-    # ==========================================================
-    # Apply a ceiling and floor on quality_score
-    # ==========================================================
-    if row["quality_score"] is None:
-        row["quality_score"] = None
-    elif row["quality_score"] > 5:
-        row["quality_score"] = 5.0
-    elif row["quality_score"] < 1:
-        row["quality_score"] = 1.0
-    else:
-        row["quality_score"] = float(row["quality_score"])
 
     return row
 
@@ -382,19 +343,19 @@ def _calculate_quality_score(
             return None
 
         if alexa_site_rank < 15000:
-            return 5
+            return 5.0
         elif alexa_site_rank < 25000:
             return 4.5
         elif alexa_site_rank < 50000:
-            return 4
+            return 4.0
         elif alexa_site_rank < 75000:
-            return 3
+            return 3.0
         elif alexa_site_rank < 100000:
-            return 2
+            return 2.0
         elif alexa_site_rank < 300000:
             return 1.5
         elif alexa_site_rank < 500000:
-            return 1
+            return 1.0
     # If we have Truspilot rating, start with that rating and then credit
     # or discredit it
     else:
@@ -425,17 +386,39 @@ def _calculate_quality_score(
         return quality_score
 
 
+def _calculate_shipping_fee(row):
+    shipping_min_order_val = row["shipping_min_order_val"]
+    shipping_to_sek = row["shipping_to_sek"]
+    shipping_fee = row["shipping_fee"]
+    adj_price = row["adj_price"]
+    country = row["country"]
+
+    # When we don't have shipping data => return estimation in some cases
+    if shipping_fee is None:
+        if country in {"UK", "IT", "ES"}:
+            return 406
+        elif country in {"FR", "BE", "LU", "DE"}:
+            return 203
+        elif country == "SE":
+            return 0
+        else:
+            return None
+    # When we have shipping and there is no min order value => return the fee
+    elif shipping_min_order_val is None:
+        return round((shipping_fee * shipping_to_sek) / 100)
+    # When we have shipping and item price is higher then min order value => return the fee
+    elif ((shipping_min_order_val * shipping_to_sek) / 100) > adj_price:
+        return round((shipping_fee * shipping_to_sek) / 100)
+    else:
+        return None
+
+
 def _strip_columns(row):
     del row["lowest_local_price"]
     del row["adj_price"]
-    del row["exchange_rate_fee"]
-    del row["payment_fee_int"]
-    del row["vat"]
-    del row["service_fee"]
     del row["trustpilot_num_rating"]
     del row["trustpilot_avg_rating"]
     del row["alexa_site_rank"]
-    del row["payment_fee_se"]
     del row["shipping_min_order_val"]
     del row["shipping_to_sek"]
     return row
