@@ -241,9 +241,6 @@ def _strip_columns(row):
 
 
 def _compose_enriched_row(row):
-    adj_price = row["adj_price"]
-    lowest_local_price = row["lowest_local_price"]
-
     # ==========================================================
     # Calculate quality_score
     #
@@ -261,10 +258,7 @@ def _compose_enriched_row(row):
     # ==========================================================
     # Calculate saving
     # ==========================================================
-    if lowest_local_price is not None:
-        row["saving"] = round((lowest_local_price - adj_price) * 100)
-    else:
-        row["saving"] = None
+    row["saving"] = _calculate_saving(row)
 
     # ==========================================================
     # Calculate Shipping Fee
@@ -276,18 +270,7 @@ def _compose_enriched_row(row):
     # ==========================================================
     row["direct_checkout"] = _calculate_direct_checkout(row)
     row["direct_checkout_price"] = _calculate_direct_checkout_price(row)
-
-    # Only show saving when direct_checkout is enabled
-    if (
-        row["direct_checkout"]
-        and lowest_local_price is not None
-        and lowest_local_price > row["direct_checkout_price"]
-    ):
-        row["direct_checkout_saving"] = round(
-            (lowest_local_price - row["direct_checkout_price"]) * 100
-        )
-    else:
-        row["direct_checkout_saving"] = None
+    row["direct_checkout_saving"] = _calculate_direct_checkout_saving(row)
 
     # ==========================================================
     # Calculate if we ship
@@ -309,6 +292,16 @@ def _compose_enriched_row(row):
     return row
 
 
+def _calculate_saving(row):
+    adj_price = row["adj_price"]
+    lowest_local_price = row["lowest_local_price"]
+
+    if lowest_local_price is None:
+        return None
+    else:
+        return round((lowest_local_price - adj_price) * 100)
+
+
 def _calculate_direct_checkout(row):
     shipping_fee = row["shipping_fee"]
     offer_source = row["offer_source"]
@@ -322,6 +315,22 @@ def _calculate_direct_checkout(row):
         return False
 
     return True
+
+
+def _calculate_direct_checkout_saving(row):
+    lowest_local_price = row["lowest_local_price"]
+    direct_checkout = row["direct_checkout"]
+    direct_checkout_price = row["direct_checkout_price"]
+
+    # Only show saving when direct_checkout is enabled
+    if (
+        direct_checkout
+        and lowest_local_price is not None
+        and lowest_local_price > direct_checkout_price
+    ):
+        return round((lowest_local_price - direct_checkout_price) * 100)
+    else:
+        return None
 
 
 def _calculate_direct_checkout_price(row):
