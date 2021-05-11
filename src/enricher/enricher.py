@@ -1,6 +1,7 @@
 import uuid
+
 from src.database.database import connect_to_db
-from pipetools import pipe, maybe
+from pipetools import pipe, maybe, X
 
 
 """
@@ -202,7 +203,11 @@ def add_offers_metadata(offers):
     """
     pg_pool.putconn(connection)
 
-    rows = rows > pipe | (map, _compose_enriched_row) | (map, _strip_columns)
+    enrich_row = (
+        pipe | _compose_enriched_row | _translate_subunits_to_units | _strip_columns
+    )
+
+    rows = map(enrich_row, rows)
 
     rows = sorted(
         rows,
@@ -212,44 +217,27 @@ def add_offers_metadata(offers):
     return rows
 
 
-def _calculate_direct_checkout(row):
-    shipping_fee = row["shipping_fee"]
-    offer_source = row["offer_source"]
-    country = row["country"]
+def _translate_subunits_to_units(row):
+    translate_to_units = maybe | X * 100 | round
 
-    if shipping_fee is None:
-        return False
-    if offer_source == "google_shopping_SE":
-        return False
-    if country == "SE":
-        return False
+    row["shipping_fee"] = translate_to_units(row["shipping_fee"])
+    row["direct_checkout_price"] = translate_to_units(row["direct_checkout_price"])
+    row["adj_price"] = translate_to_units(row["adj_price"])
 
-    return True
+    return row
 
 
-def _calculate_direct_checkout_price(row):
-    direct_checkout = row["direct_checkout"]
-    adj_price = row["adj_price"]
-    shipping_fee = row["shipping_fee"]
+def _strip_columns(row):
+    row["price"] = row["adj_price"]
 
-    if adj_price is None or shipping_fee is None or not direct_checkout:
-        return None
-
-    exchange_rate_fee = (adj_price + shipping_fee) * 0.03
-    service_fee = (adj_price + shipping_fee) * 0.05
-    vat = service_fee * 0.25
-    payment_fee_int = (
-        adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
-    ) * 0.014
-
-    return float(
-        adj_price
-        + shipping_fee
-        + service_fee
-        + vat
-        + payment_fee_int
-        + exchange_rate_fee
-    )
+    del row["lowest_local_price"]
+    del row["adj_price"]
+    del row["trustpilot_num_rating"]
+    del row["trustpilot_avg_rating"]
+    del row["alexa_site_rank"]
+    del row["shipping_min_order_val"]
+    del row["shipping_to_sek"]
+    return row
 
 
 def _compose_enriched_row(row):
@@ -309,25 +297,64 @@ def _compose_enriched_row(row):
     row["ship"] = row["direct_checkout"] or row.get("ship")
 
     # ==========================================================
-    # Calculate the prices in real SEK, not Cents
+    # Calculate Concierge
     # ==========================================================
-    if row["shipping_fee"] is not None:
-        row["shipping_fee"] = round(row["shipping_fee"] * 100)
-    else:
-        row["shipping_fee"] = None
+    row["concierge"] = _calculate_concierge(row)
 
-    if row["direct_checkout_price"] is not None:
-        row["direct_checkout_price"] = round(row["direct_checkout_price"] * 100)
-    else:
-        row["direct_checkout_price"] = None
-
-    # Don't enable concierge on Swedish offers or when direct_checkout is enabled
-    row["concierge"] = (not row["direct_checkout"]) and row["country"] != "SE"
-
-    row["price"] = round(row["adj_price"] * 100)
+    # ==========================================================
+    # Set currency
+    # ==========================================================
     row["currency"] = "SEK"
 
     return row
+
+
+def _calculate_direct_checkout(row):
+    shipping_fee = row["shipping_fee"]
+    offer_source = row["offer_source"]
+    country = row["country"]
+
+    if shipping_fee is None:
+        return False
+    if offer_source == "google_shopping_SE":
+        return False
+    if country == "SE":
+        return False
+
+    return True
+
+
+def _calculate_direct_checkout_price(row):
+    direct_checkout = row["direct_checkout"]
+    adj_price = row["adj_price"]
+    shipping_fee = row["shipping_fee"]
+
+    if adj_price is None or shipping_fee is None or not direct_checkout:
+        return None
+
+    exchange_rate_fee = (adj_price + shipping_fee) * 0.03
+    service_fee = (adj_price + shipping_fee) * 0.05
+    vat = service_fee * 0.25
+    payment_fee_int = (
+        adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
+    ) * 0.014
+
+    return float(
+        adj_price
+        + shipping_fee
+        + service_fee
+        + vat
+        + payment_fee_int
+        + exchange_rate_fee
+    )
+
+
+def _calculate_concierge(row):
+    direct_checkout = row["direct_checkout"]
+    country = row["country"]
+
+    # Don't enable concierge on Swedish offers or when direct_checkout is enabled
+    return (not direct_checkout) and country != "SE"
 
 
 def _calculate_quality_score(
@@ -411,14 +438,3 @@ def _calculate_shipping_fee(row):
         return round((shipping_fee * shipping_to_sek) / 100)
     else:
         return None
-
-
-def _strip_columns(row):
-    del row["lowest_local_price"]
-    del row["adj_price"]
-    del row["trustpilot_num_rating"]
-    del row["trustpilot_avg_rating"]
-    del row["alexa_site_rank"]
-    del row["shipping_min_order_val"]
-    del row["shipping_to_sek"]
-    return row
