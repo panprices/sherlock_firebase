@@ -96,7 +96,7 @@ def add_offers_metadata(offers):
                 C.id AS retailer_id,
                 C.offer_source_id,
                 ((A.price::int * E.to_sek) / 100)::int AS adj_price, -- the price adjusted for the currency
-                ((A.price::int * E.to_eur) / 100)::int AS euro_price
+                (A.price::int * E.to_eur)::int AS euro_price
             FROM offers_data A
             INNER JOIN offer_sources B
             ON A.offer_source = B.name
