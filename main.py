@@ -47,8 +47,8 @@ def offer_search_trigger(event, context, production=True):
 
     try:
         print("Context: " + str(context))
-        print("Resource: " + str(context["resource"]))
-        print("Resource Name: " + str(context["resource"]["name"]))
+        print("Resource: " + str(context.resource))
+        print("Resource Name: " + str(context.resource.name))
     except:
         print("oops")
 
