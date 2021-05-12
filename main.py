@@ -385,8 +385,20 @@ def create_offer_firebase(request):
         msg = "The product_token field was not provided."
         logging.error(msg)
         return msg, 400
+    # TODO: Include this when everything is adapted for multiregion support
+    # if "user_country" not in body:
+    #     msg = "The user_country field was not provided."
+    #     logging.error(msg)
+    #     return msg, 400
+
+    user_country = body.get("user_country", "SE")
+    if user_country not in ["SE", "FI"]:
+        msg = f"The user_country field has to be SE or FI. It was: '{user_country}'"
+        logging.error(msg)
+        return msg, 400
 
     product_token = body["product_token"]
+
     offer = {
         "product_token": product_token,
         "created_at": int(time.time() * 1000),  # ms since epoch
@@ -394,7 +406,8 @@ def create_offer_firebase(request):
         "offer_fetch_complete": False,
     }
     try:
-        db.reference("offers").child(product_token).set(offer)
+        db.reference(f"offers").child(product_token).set(offer)
+        db.reference(f"offers/{user_country}").child(product_token).set(offer)
     except TypeError as ex:
         logging.error(ex)
         return "The request body is not serializable.", 400
