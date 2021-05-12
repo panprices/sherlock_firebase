@@ -27,8 +27,8 @@ def demo_offer_search_trigger() :
 	}
 	# Define a mocked context
 	context = {
-		'event_id': '-1',
-		'resource': 'projects/_/instances/panprices/refs/offerSearch/'
+        "event_id": "-1",
+        "resource": "projects/_/instances/panprices/refs/offers/SE",
 	}
 	# Execute the function
 	result = offer_search_trigger(

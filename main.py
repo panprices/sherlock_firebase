@@ -5,11 +5,10 @@ import time
 import logging
 from firebase_admin import credentials
 from firebase_admin import db
-from flask import jsonify
 
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
-from src.helpers.helpers import format_search_offer_msg
+from src.helpers.helpers import get_user_country_from_fb_context
 from src.enricher.enricher import add_offers_metadata
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
@@ -47,8 +46,8 @@ def offer_search_trigger(event, context, production=True):
 
     try:
         print("Context: " + str(context))
+        print("Resource (not string): " + context.resource)
         print("Resource: " + str(context.resource))
-        print("Resource Name: " + str(context.resource.name))
     except:
         print("oops")
 
@@ -74,6 +73,8 @@ def offer_search_trigger(event, context, production=True):
             # Enrich the data with the GTIN
             payload["delta"]["gtin"] = gtin
             payload["delta"]["offer_urls"] = offer_urls
+            # Enrich the data with user_country
+            payload["delta"]["user_country"] = get_user_country_from_fb_context(context)
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
             publisher.publish_messages([payload["delta"]])
