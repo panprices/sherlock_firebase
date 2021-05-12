@@ -44,6 +44,14 @@ def offer_search_trigger(event, context, production=True):
 
     # Print out the entire event object
     print("Publishing the following live search for product: ", str(event))
+
+    try:
+        print("Context: " + str(context))
+        print("Resource: " + str(context["resource"]))
+        print("Resource Name: " + str(context["resource"]["name"]))
+    except:
+        print("oops")
+
     # Publish the event to the sherlock_products Pubsub topic
     if production:
         # We do not have to decode since this function is triggered via
