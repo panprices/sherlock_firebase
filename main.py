@@ -44,13 +44,6 @@ def offer_search_trigger(event, context, production=True):
     # Print out the entire event object
     print("Publishing the following live search for product: ", str(event))
 
-    try:
-        print("Context: " + str(context))
-        print("Resource (not string): " + context.resource)
-        print("Resource: " + str(context.resource))
-    except:
-        print("oops")
-
     # Publish the event to the sherlock_products Pubsub topic
     if production:
         # We do not have to decode since this function is triggered via
@@ -74,14 +67,10 @@ def offer_search_trigger(event, context, production=True):
             payload["delta"]["gtin"] = gtin
             payload["delta"]["offer_urls"] = offer_urls
 
-            try:
-                # Enrich the data with user_country
-                payload["delta"]["user_country"] = get_user_country_from_fb_context(
-                    context
-                )
-                print(f"user_country detected: {payload['delta']['user_country']}")
-            except:
-                print("Could not extract the user_country from context")
+            # Enrich the data with user_country
+            user_country = get_user_country_from_fb_context(context)
+            print(f"user_country detected: {user_country}")
+            payload["delta"]["user_country"] = user_country
 
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
@@ -113,19 +102,16 @@ def live_search_offer_enricher(event, context, production=True):
             payload["product_token"],
         )
         # Open a connection to the database
-        ref = db.reference("offers")
         if "user_country" in payload.keys():
             print(f"Key user_country is {payload['user_country']}")
         else:
             print("Key user_country is not specified in payload. Defaulting to 'SE'.")
         user_country = payload.get("user_country", "SE")
-        se_ref = db.reference(f"offers/{user_country}")
+        ref = db.reference(f"offers/{user_country}")
         # Choose the relevant search
         search_ref = ref.child(str(payload["product_token"]))
-        se_search_ref = se_ref.child(str(payload["product_token"]))
         # Get the existing offers data, on this we need to calculate savings
         fetch_ref = search_ref.child("fetched_offers")
-        se_fetch_ref = se_search_ref.child("fetched_offers")
         # Join existing and new offers together to a list (if existing data exists)
         """
             CASES TO CHECK FOR HERE:
@@ -152,9 +138,6 @@ def live_search_offer_enricher(event, context, production=True):
 
         enriched_offers = fetch_ref.transaction(enrich_data)
         print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
-
-        se_enriched_offers = se_fetch_ref.transaction(enrich_data)
-        print(f"SE-Enriched {len(se_enriched_offers)} offers/{payload['gtin']}")
 
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
@@ -388,7 +371,7 @@ def get_price_from_firebase(request):
 
 
 def create_offer_firebase(request):
-    """Create a new offer object at /offers/<product_token>.
+    """Create a new offer object at /offers/<country_code>/<product_token>.
 
     The request body should be in JSON format and contain a `product_token` field.
     """
@@ -413,11 +396,10 @@ def create_offer_firebase(request):
         msg = "The product_token field was not provided."
         logging.error(msg)
         return msg, 400
-    # TODO: Include this when everything is adapted for multiregion support
-    # if "user_country" not in body:
-    #     msg = "The user_country field was not provided."
-    #     logging.error(msg)
-    #     return msg, 400
+    if "user_country" not in body:
+        msg = "The user_country field was not provided."
+        logging.error(msg)
+        return msg, 400
 
     user_country = body.get("user_country", "SE")
     if user_country not in ["SE", "FI"]:
