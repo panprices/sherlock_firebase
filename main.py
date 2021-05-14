@@ -113,10 +113,14 @@ def live_search_offer_enricher(event, context, production=True):
         )
         # Open a connection to the database
         ref = db.reference("offers")
+        user_country = payload.get("user_country", "SE")
+        se_ref = db.reference(f"offers/{user_country}")
         # Choose the relevant search
         search_ref = ref.child(str(payload["product_token"]))
+        se_search_ref = se_ref.child(str(payload["product_token"]))
         # Get the existing offers data, on this we need to calculate savings
         fetch_ref = search_ref.child("fetched_offers")
+        se_fetch_ref = se_search_ref.child("fetched_offers")
         # Join existing and new offers together to a list (if existing data exists)
         """
             CASES TO CHECK FOR HERE:
@@ -143,6 +147,9 @@ def live_search_offer_enricher(event, context, production=True):
 
         enriched_offers = fetch_ref.transaction(enrich_data)
         print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
+
+        se_enriched_offers = se_fetch_ref.transaction(enrich_data)
+        print(f"SE-Enriched {len(se_enriched_offers)} offers/{payload['gtin']}")
 
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
