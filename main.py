@@ -113,6 +113,8 @@ def live_search_offer_enricher(event, context, production=True):
         )
         # Open a connection to the database
         ref = db.reference("offers")
+        if "user_country" not in payload.keys():
+            print("Key user_country is not specified in payload. Defaulting to 'SE'.")
         user_country = payload.get("user_country", "SE")
         se_ref = db.reference(f"offers/{user_country}")
         # Choose the relevant search
