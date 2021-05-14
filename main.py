@@ -137,7 +137,9 @@ def live_search_offer_enricher(event, context, production=True):
                 return []
 
         enriched_offers = fetch_ref.transaction(enrich_data)
-        print(f"Enriched {len(enriched_offers)} offers/{payload['gtin']}")
+        print(
+            f"Enriched {len(enriched_offers)} offers/{user_country}/{payload['gtin']}"
+        )
 
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
