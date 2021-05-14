@@ -418,7 +418,6 @@ def create_offer_firebase(request):
         "offer_fetch_complete": False,
     }
     try:
-        db.reference(f"offers").child(product_token).set(offer)
         db.reference(f"offers/{user_country}").child(product_token).set(offer)
     except TypeError as ex:
         logging.error(ex)
