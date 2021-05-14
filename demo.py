@@ -29,7 +29,7 @@ def demo_offer_search_trigger():
     # Define a mocked context
     context = {
         "event_id": "-1",
-        "resource": "projects/_/instances/panprices/refs/offers/SE",
+        "resource": "projects/_/instances/panprices/refs/offers/SE/gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
     }
     # Execute the function
     result = offer_search_trigger(

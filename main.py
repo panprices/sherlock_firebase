@@ -79,6 +79,7 @@ def offer_search_trigger(event, context, production=True):
                 payload["delta"]["user_country"] = get_user_country_from_fb_context(
                     context
                 )
+                print(f"user_country detected: {payload['delta']['user_country']}")
             except:
                 print("Could not extract the user_country from context")
 
