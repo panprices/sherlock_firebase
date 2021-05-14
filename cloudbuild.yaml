@@ -10,7 +10,7 @@ steps:
         "--trigger-event",
         "providers/google.firebase.database/eventTypes/ref.create",
         "--trigger-resource",
-        "projects/_/instances/panprices/refs/offers/{country_code}/{searchID}",
+        "projects/_/instances/panprices/refs/offers/SE/{searchID}",
         "--region",
         "europe-west1",
         "--runtime",
