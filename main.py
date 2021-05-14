@@ -73,8 +73,15 @@ def offer_search_trigger(event, context, production=True):
             # Enrich the data with the GTIN
             payload["delta"]["gtin"] = gtin
             payload["delta"]["offer_urls"] = offer_urls
-            # Enrich the data with user_country
-            payload["delta"]["user_country"] = get_user_country_from_fb_context(context)
+
+            try:
+                # Enrich the data with user_country
+                payload["delta"]["user_country"] = get_user_country_from_fb_context(
+                    context
+                )
+            except:
+                print("Could not extract the user_country from context")
+
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
             publisher.publish_messages([payload["delta"]])
