@@ -296,7 +296,7 @@ def _calculate_saving(row):
     adj_price = row["adj_price"]
     lowest_local_price = row["lowest_local_price"]
 
-    if lowest_local_price is None:
+    if lowest_local_price is None or adj_price is None:
         return None
     else:
         return round((lowest_local_price - adj_price) * 100)
