@@ -41,7 +41,12 @@ def offer_to_tup(offer):
 """
 
 
-def add_offers_metadata(offers):
+def add_offers_metadata(offers, user_country="SE"):
+    if user_country != "SE" and user_country != "FI":
+        raise ValueError("user_country has to be 'SE' or 'FI'")
+
+    currency_translation = "to_sek" if user_country == "SE" else "to_eur"
+
     # Open a connection to the database
     cur, cur_dict, connection, pg_pool = connect_to_db()
     # Concatinate the input data to a long string
@@ -74,7 +79,7 @@ def add_offers_metadata(offers):
         WITH offers_data AS (
             """
         + offers_str
-        + b"""
+        + f"""
             SELECT
                 NULL AS offer_id,
                 NULL AS updated_at,
@@ -94,12 +99,12 @@ def add_offers_metadata(offers):
                 C.domain,
                 C.id AS retailer_id,
                 C.offer_source_id,
-                ((A.price::int * E.to_sek) / 100)::int AS adj_price, -- the price adjusted for the currency
-                (A.price::int * E.to_eur)::int AS euro_price,
+                ((A.price::int * E.{currency_translation}) / 100)::int AS adj_price, -- the price adjusted for the currency
+                (A.price::int * E.to_eur)::int AS euro_price, -- TODO: REMOVE
                 F.ship,
                 F.fee as shipping_fee,
                 F.min_order_val as shipping_min_order_val,
-                G.to_sek as shipping_to_sek
+                G.{currency_translation} as shipping_to_local_currency
             FROM offers_data A
             INNER JOIN offer_sources B
                 ON A.offer_source = B.name
@@ -129,7 +134,7 @@ def add_offers_metadata(offers):
             SELECT
                 MIN(adj_price)
             FROM offers_with_shipping_and_trust
-            WHERE country = 'SE' -- Change this when we launch another country
+            WHERE country = '{user_country}' -- Change this when we launch another country
         /*
             Filter out offers:
                 1. That do not pass the string matching test.
@@ -184,7 +189,7 @@ def add_offers_metadata(offers):
             ship,
             shipping_fee,
             shipping_min_order_val,
-            shipping_to_sek,
+            shipping_to_local_currency,
             offer_id,
             euro_price,
             trustpilot_num_rating,
@@ -193,7 +198,7 @@ def add_offers_metadata(offers):
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
-    """
+    """.encode()
     )
     rows = cur_dict.fetchall()
     """
@@ -204,7 +209,10 @@ def add_offers_metadata(offers):
     pg_pool.putconn(connection)
 
     enrich_row = (
-        pipe | _compose_enriched_row | _translate_subunits_to_units | _strip_columns
+        pipe
+        | (_compose_enriched_row, user_country)
+        | _translate_subunits_to_units
+        | _strip_columns
     )
 
     rows = map(enrich_row, rows)
@@ -236,11 +244,11 @@ def _strip_columns(row):
     del row["trustpilot_avg_rating"]
     del row["alexa_site_rank"]
     del row["shipping_min_order_val"]
-    del row["shipping_to_sek"]
+    del row["shipping_to_local_currency"]
     return row
 
 
-def _compose_enriched_row(row):
+def _compose_enriched_row(user_country, row):
     # ==========================================================
     # Calculate quality_score
     #
@@ -263,12 +271,12 @@ def _compose_enriched_row(row):
     # ==========================================================
     # Calculate Shipping Fee
     # ==========================================================
-    row["shipping_fee"] = _calculate_shipping_fee(row)
+    row["shipping_fee"] = _calculate_shipping_fee(user_country, row)
 
     # ==========================================================
     # Calculate Direct Checkout, DC Price, and DC Saving
     # ==========================================================
-    row["direct_checkout"] = _calculate_direct_checkout(row)
+    row["direct_checkout"] = _calculate_direct_checkout(user_country, row)
     row["direct_checkout_price"] = _calculate_direct_checkout_price(row)
     row["direct_checkout_saving"] = _calculate_direct_checkout_saving(row)
 
@@ -282,12 +290,12 @@ def _compose_enriched_row(row):
     # ==========================================================
     # Calculate Concierge
     # ==========================================================
-    row["concierge"] = _calculate_concierge(row)
+    row["concierge"] = _calculate_concierge(user_country, row)
 
     # ==========================================================
     # Set currency
     # ==========================================================
-    row["currency"] = "SEK"
+    row["currency"] = "SEK" if user_country == "SE" else "EUR"
 
     return row
 
@@ -302,16 +310,17 @@ def _calculate_saving(row):
         return round((lowest_local_price - adj_price) * 100)
 
 
-def _calculate_direct_checkout(row):
+def _calculate_direct_checkout(user_country, row):
     shipping_fee = row["shipping_fee"]
     offer_source = row["offer_source"]
     country = row["country"]
 
     if shipping_fee is None:
         return False
-    if offer_source == "google_shopping_SE":
+    # If offer source is google_shopping_SE etc.
+    if offer_source == f"google_shopping_{user_country}":
         return False
-    if country == "SE":
+    if country == user_country:
         return False
 
     return True
@@ -358,12 +367,12 @@ def _calculate_direct_checkout_price(row):
     )
 
 
-def _calculate_concierge(row):
+def _calculate_concierge(user_country, row):
     direct_checkout = row["direct_checkout"]
     country = row["country"]
 
-    # Don't enable concierge on Swedish offers or when direct_checkout is enabled
-    return (not direct_checkout) and country != "SE"
+    # Don't enable concierge on offers from the users country or when direct_checkout is enabled
+    return (not direct_checkout) and country != user_country
 
 
 def _calculate_quality_score(
@@ -422,9 +431,9 @@ def _calculate_quality_score(
         return quality_score
 
 
-def _calculate_shipping_fee(row):
+def _calculate_shipping_fee(user_country, row):
     shipping_min_order_val = row["shipping_min_order_val"]
-    shipping_to_sek = row["shipping_to_sek"]
+    shipping_to_local_currency = row["shipping_to_local_currency"]
     shipping_fee = row["shipping_fee"]
     adj_price = row["adj_price"]
     country = row["country"]
@@ -435,15 +444,15 @@ def _calculate_shipping_fee(row):
             return 406
         elif country in {"FR", "BE", "LU", "DE"}:
             return 203
-        elif country == "SE":
+        elif country == user_country:
             return 0
         else:
             return None
     # When we have shipping and there is no min order value => return the fee
     elif shipping_min_order_val is None:
-        return round((shipping_fee * shipping_to_sek) / 100)
+        return round((shipping_fee * shipping_to_local_currency) / 100)
     # When we have shipping and item price is higher then min order value => return the fee
-    elif ((shipping_min_order_val * shipping_to_sek) / 100) > adj_price:
-        return round((shipping_fee * shipping_to_sek) / 100)
+    elif ((shipping_min_order_val * shipping_to_local_currency) / 100) > adj_price:
+        return round((shipping_fee * shipping_to_local_currency) / 100)
     else:
         return None
