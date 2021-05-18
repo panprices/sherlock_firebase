@@ -324,11 +324,16 @@ def popular_product_search_trigger(event, context):
     # Here we update the products by deleting the offers before re-create them
     # in order to trigger offer fetching.
 
+    country_codes = db.reference("offers").get(shallow=True)
+    country_codes = [c for c in country_codes]
+
     # Delete in bulk by updating them with empty data:
     products = {}
     for product_token in product_tokens:
         products[product_token] = None
-    db.reference("offers").update(products)
+
+    for country in country_codes:
+        db.reference(f"offers/{country}").update(products)
 
     # Recreate the products:
     for product_token in product_tokens:
@@ -339,7 +344,9 @@ def popular_product_search_trigger(event, context):
             "triggered_from_client": True,
             "popular": True,
         }
-    db.reference("offers").update(products)
+
+    for country in country_codes:
+        db.reference(f"offers/{country}").update(products)
 
     print(f"Trigger fetching offers for {len(product_tokens)} popular products")
 
