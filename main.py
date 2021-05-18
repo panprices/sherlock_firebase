@@ -352,6 +352,13 @@ def popular_product_search_trigger(event, context):
 
 
 def get_price_from_firebase(request):
+    user_country = request.headers.get("Panprices-User-Country")
+    if user_country is None:
+        return ("expecting header Panprices-User-Country", 400)
+
+    if user_country != "SE" and user_country != "FI":
+        return ("Panprices-User-Country has to be 'SE' or 'FI'", 400)
+
     request_json = request.get_json(silent=True)
     print("The function was triggered with the following data: ", request_json)
     product_token = request_json.get("product_token")
@@ -361,11 +368,15 @@ def get_price_from_firebase(request):
         return ("expecting product_token and offer_id", 400)
 
     # Open a connection to the database
-    ref = db.reference("offers")
+    ref = db.reference(f"offers/{user_country}")
     # Choose the relevant search
     search_ref = ref.child(product_token)
     # Get the existing offers data, on this we need to calculate savings
     offers = search_ref.child("fetched_offers").get()
+
+    if offers is None:
+        return ("There wasn't any price on this offer", 400)
+
     for offer in offers:
         # Get the specific offer and verify that this offer is available
         # for direct check out.

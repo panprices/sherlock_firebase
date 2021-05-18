@@ -254,6 +254,8 @@ def demo_get_price_from_firebase():
                 "offer_id": "0e9930d3-39dc-47bc-b91e-be9ecf57aa20",
             }
 
+        headers = {"Panprices-User-Country": "SE"}
+
     request = Request()
     result = get_price_from_firebase(request)
     print(result)
