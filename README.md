@@ -34,11 +34,6 @@ optional arguments:
   -oe, --offer_enricher
                         Enrich offer output and update Firebase Realtime
                         Database.
-  -pst, --product_search_trigger
-                        Listen to Realtime Firebase Triggers on productSearch
-                        and trigger to PubSub.
-  -pspr, --product_search_publish_result
-                        Publish to Realtime Firebase on productSearch.
   -ssfs, --sherlock_shopping_finish_signal
                         Consume finished message from Sherlock Google Shopping
                         and update Firebase.
@@ -52,9 +47,10 @@ Argument Parser for the demo script.
 
 ```
 
-
 ### Known/Potential issues
+
 #### Handling of CORS requests
+
 In the `create_offer_firebase` and `create_product_search_firebase`
 functions we are allowing POST requests from any origins (`Access-Control-Allow-Origin: *`).
 This seems to be a lazy yet popular approach, though there might be potential

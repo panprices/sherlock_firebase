@@ -5,8 +5,6 @@ import glob
 
 from main import offer_search_trigger
 from main import live_search_offer_enricher
-from main import product_search_trigger
-from main import product_search_publish_result
 from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
 from main import popular_product_search_trigger
@@ -152,74 +150,6 @@ def demo_live_search_offer_enricher():
             live_search_offer_enricher(data, context, production=False)
 
 
-def demo_product_search_trigger():
-    # Mock a message
-    message = {
-        "data": None,
-        "delta": {
-            "created_at": 1609856765483,
-            "name": "a7c",
-            "path_name": "a7c",
-            "search_completed": False,
-        },
-    }
-    # Define a mocked context
-    context = {
-        "event_id": "-1",
-        "resource": "projects/_/instances/panprices/refs/productSearch/",
-    }
-    # Execute the function
-    result = product_search_trigger(message, context, production=False)
-    print(result)
-
-
-def demo_product_search_publish_result():
-    # Mock a message
-    message = {
-        "created_at": 1598977013859,
-        "name": "Sony Alpha A7",
-        "path_name": "sony_alpha_a7",
-        "search_completed": False,
-        "source": "google_shopping",
-        "product_name": "Sony A7 III Kamerahus ",
-        "gtin": "04548736079656",
-        "price": 2399000,
-        "currency": "SEK",
-        "img_encoded": "",
-        "img_url": "https://storage.googleapis.com/panprices/products/c04357ec-aa55-3579-bbc6-0265983a5e78.jpg",
-        "country": "SE",
-        "product_url": "https://www.google.com/shopping/product/17082225217934858373",
-        "product_description": "Sony A7 Mark III systemkameranar  utrustad med flera av A9 och A7R lll kamerornas specialfunktioner. Jämfört med A7 ll kameran har A7 lll modellen bl.a. en ny bakbelyst 24.2MP:s Exmor R CMOS sensor och ny Bionz X –prosessor. 693 autofokuspunkter, 10fps AF/AE seriebildstagning, 4K-videofilmning samt ett batteri med högre kapacitet. Fantastisk bildkvalitet samt suverän färgåtergivning har varit undantag. Lagring av  svåra vinklar.",
-        "search_query": "sony_alpha_a7",
-        "bundle_result": False,
-        "performance": {
-            "product_search_trigger": {
-                "start": 1600779213989.5525,
-                "end": 1600779214358.9958,
-                "exeTime": 369.443416595459,
-            },
-            "sherlock_google_shopping": {
-                "start": 1600779779701.9631,
-                "end": 1600779782203.0269,
-                "exeTime": 2501.063585281372,
-                "delay_from_product_search_trigger": 647646.1186523438,
-            },
-            "sherlock_upload_image": {
-                "start": 1600780764941.1404,
-                "end": 1600780765311.0593,
-                "exeTime": 369.9188232421875,
-                "delay_from_sherlock_google_shopping": 982738.1135253906,
-            },
-        },
-    }
-    data = {"data": base64.b64encode(json.dumps(message).encode())}
-    # Define a mocked context
-    context = {"event_id": "-1"}
-    # Execute the function
-    result = product_search_publish_result(data, context, production=True)
-    print(result)
-
-
 def demo_sherlock_shopping_finish_signal():
     # Mock a message
     message = {"search_query": "foo_bar"}
@@ -317,18 +247,6 @@ if __name__ == "__main__":
         help="Enrich offer output and update Firebase Realtime Database.",
     )
     parser.add_argument(
-        "-pst",
-        "--product_search_trigger",
-        action="store_true",
-        help="Listen to Realtime Firebase Triggers on productSearch and trigger to PubSub.",
-    )
-    parser.add_argument(
-        "-pspr",
-        "--product_search_publish_result",
-        action="store_true",
-        help="Publish to Realtime Firebase on productSearch.",
-    )
-    parser.add_argument(
         "-ssfs",
         "--sherlock_shopping_finish_signal",
         action="store_true",
@@ -371,10 +289,6 @@ if __name__ == "__main__":
         demo_offer_search_trigger()
     elif args.offer_enricher:
         demo_live_search_offer_enricher()
-    elif args.product_search_trigger:
-        demo_product_search_trigger()
-    elif args.product_search_publish_result:
-        demo_product_search_publish_result()
     elif args.delete_old_firebase_data:
         demo_delete_old_firebase_data()
     elif args.sherlock_shopping_finish_signal:
