@@ -372,12 +372,22 @@ def create_product_search_firebase(request):
         logging.error(msg)
         return msg, 400
 
+    batch_id = body.get("batch_id")
+    if batch_id is not None and not isinstance(batch_id, str):
+        return "batch_id should be a string"
+
+    triggered_by = {
+        "source": "client" if batch_id is None else "batch",
+        "batch_id": batch_id,
+    }
+
     cleaned_query = body["cleaned_query"]
     product_search = {
         "name": body["query"],
         "path_name": body["cleaned_query"],
         "created_at": int(time.time() * 1000),  # ms since epoch
         "search_completed": False,
+        "triggered_by": triggered_by,
     }
     try:
         db.reference("product_search").child(cleaned_query).set(product_search)
