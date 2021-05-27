@@ -156,7 +156,7 @@ def sherlock_shopping_finish_signal(event, context, production=True):
     """
     Listens to changes on pubsub finish topic from google shopping
     and updates the firebase object for the specific search query.
-    This way the client will now when to render a message saying
+    This way the client will know when to render a message saying
     that the search never resulted in any valid matches with GTIN
     which is important for the user experience.
     """
