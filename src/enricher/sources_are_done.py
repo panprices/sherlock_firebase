@@ -14,7 +14,7 @@ def mark_source_as_done(user_country, product_token, offer_source):
     offer_sources_ref.child(offer_source).set(True)
 
     # Check if all offer sources are done
-    offer_sources_done = offer_sources_ref.get()
+    offer_sources_done = offer_sources_ref.get() or {}
 
     all_sources_done = True
     for source in get_offer_sources():
