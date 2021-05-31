@@ -334,11 +334,21 @@ def create_offer_firebase(request):
 
     product_token = body["product_token"]
 
+    batch_id = body.get("batch_id")
+    if batch_id is not None and not isinstance(batch_id, str):
+        return "batch_id should be a string"
+
+    triggered_by = {
+        "source": "client" if batch_id is None else "batch",
+        "batch_id": batch_id,
+    }
+
     offer = {
         "product_token": product_token,
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
         "offer_fetch_complete": False,
+        "triggered_by": triggered_by,
     }
     try:
         db.reference(f"offers/{user_country}").child(product_token).set(offer)
