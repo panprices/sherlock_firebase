@@ -150,6 +150,14 @@ def live_search_offer_enricher(event, context, production=True):
             print(f"Offer fetch for token {str(payload['product_token'])} is complete")
             search_ref.child("offer_fetch_complete").set(True)
 
+            search_complete_payload = {
+                "triggered_by": None,
+                "product_token": payload["product_token"],
+            }
+
+            search_complete_publisher = Publisher("panprices", "offer_search_complete")
+            search_complete_publisher.publish_messages([search_complete_payload])
+
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
             publisher = Publisher("panprices", "sherlock_live_offers")
