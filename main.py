@@ -10,6 +10,7 @@ import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import get_user_country_from_fb_context
 from src.enricher.enricher import add_offers_metadata
+from src.enricher.sources_are_done import mark_source_as_done
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_popular_products
@@ -141,9 +142,13 @@ def live_search_offer_enricher(event, context, production=True):
             f"Enriched {len(enriched_offers)} offers/{user_country}/{payload['gtin']}"
         )
 
-        offer_source = payload["offer_source"]
-        offer_sources_ref = search_ref.child("offer_sources_done")
-        offer_sources_ref.child(offer_source).set(True)
+        all_sources_done = mark_source_as_done(
+            user_country, str(payload["product_token"]), payload["offer_source"]
+        )
+
+        if all_sources_done:
+            print(f"Offer fetch for token {str(payload['product_token'])} is complete")
+            search_ref.child("offer_fetch_complete").set(True)
 
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
