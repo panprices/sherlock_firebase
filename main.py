@@ -141,6 +141,10 @@ def live_search_offer_enricher(event, context, production=True):
             f"Enriched {len(enriched_offers)} offers/{user_country}/{payload['gtin']}"
         )
 
+        offer_source = payload["offer_source"]
+        offer_sources_ref = search_ref.child("offer_sources_done")
+        offer_sources_ref.child(offer_source).set(True)
+
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
             publisher = Publisher("panprices", "sherlock_live_offers")
