@@ -18,6 +18,6 @@ def mark_source_as_done(user_country, product_token, offer_source):
 
     all_sources_done = True
     for source in get_offer_sources():
-        all_sources_done = all_sources_done and offer_sources_done[source]
+        all_sources_done = all_sources_done and offer_sources_done.get(source, False)
 
     return all_sources_done
