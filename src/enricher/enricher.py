@@ -335,6 +335,7 @@ def _calculate_direct_checkout_saving(row):
     if (
         direct_checkout
         and lowest_local_price is not None
+        and direct_checkout_price is not None
         and lowest_local_price > direct_checkout_price
     ):
         return round((lowest_local_price - direct_checkout_price) * 100)
