@@ -335,7 +335,7 @@ def create_offer_firebase(request):
     product_token = body["product_token"]
 
     # search_key = str(uuid4())
-    search_key = product_token
+    search_key = str(product_token)
 
     batch_id = body.get("batch_id")
     if batch_id is not None and not isinstance(batch_id, str):
