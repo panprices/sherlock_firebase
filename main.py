@@ -334,6 +334,9 @@ def create_offer_firebase(request):
 
     product_token = body["product_token"]
 
+    # search_key = str(uuid4())
+    search_key = product_token
+
     batch_id = body.get("batch_id")
     if batch_id is not None and not isinstance(batch_id, str):
         return "batch_id should be a string"
@@ -344,6 +347,7 @@ def create_offer_firebase(request):
     }
 
     offer = {
+        "search_key": search_key,
         "product_token": product_token,
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
@@ -351,7 +355,7 @@ def create_offer_firebase(request):
         "triggered_by": triggered_by,
     }
     try:
-        db.reference(f"offers/{user_country}").child(product_token).set(offer)
+        db.reference(f"offers/{user_country}").child(search_key).set(offer)
     except TypeError as ex:
         logging.error(ex)
         return "The request body is not serializable.", 400
@@ -365,7 +369,16 @@ def create_offer_firebase(request):
 
     # Set CORS headers for the main request
     response_headers = {"Access-Control-Allow-Origin": "*"}
-    return json.dumps({"success": True}), 200, response_headers
+    return (
+        json.dumps(
+            {
+                "success": True,
+                "search_key": search_key,
+            }
+        ),
+        200,
+        response_headers,
+    )
 
 
 def create_product_search_firebase(request):
