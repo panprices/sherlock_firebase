@@ -101,7 +101,12 @@ def live_search_offer_enricher(event, context, production=True):
             payload["offer_source"],
             "with product_token:",
             payload["product_token"],
+            "and search_key:",
+            payload["search_key"],
         )
+
+        search_key = payload["search_key"]
+
         # Open a connection to the database
         if "user_country" in payload.keys():
             print(f"Key user_country is {payload['user_country']}")
@@ -110,7 +115,7 @@ def live_search_offer_enricher(event, context, production=True):
         user_country = payload.get("user_country", "SE")
         ref = db.reference(f"offers/{user_country}")
         # Choose the relevant search
-        search_ref = ref.child(str(payload["product_token"]))
+        search_ref = ref.child(search_key)
         # Get the existing offers data, on this we need to calculate savings
         fetch_ref = search_ref.child("fetched_offers")
         # Join existing and new offers together to a list (if existing data exists)
@@ -143,7 +148,7 @@ def live_search_offer_enricher(event, context, production=True):
         )
 
         all_sources_done = mark_source_as_done(
-            user_country, str(payload["product_token"]), payload["offer_source"]
+            user_country, search_key, payload["offer_source"]
         )
 
         if all_sources_done:
@@ -152,7 +157,7 @@ def live_search_offer_enricher(event, context, production=True):
 
             search_complete_payload = {
                 "triggered_by": None,
-                "product_token": payload["product_token"],
+                "search_key": search_key,
             }
 
             search_complete_publisher = Publisher("panprices", "offer_search_complete")

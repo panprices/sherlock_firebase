@@ -5,8 +5,8 @@ def get_offer_sources():
     return ["ebay", "kelkoo", "pricerunner", "prisjakt"]
 
 
-def mark_source_as_done(user_country, product_token, offer_source):
-    search_ref = db.reference("offers").child(user_country).child(product_token)
+def mark_source_as_done(user_country, search_key, offer_source):
+    search_ref = db.reference("offers").child(user_country).child(search_key)
 
     # Mark offer source as done
     offer_source = offer_source
