@@ -152,12 +152,31 @@ def demo_live_search_offer_enricher():
 
 def demo_sherlock_shopping_finish_signal():
     # Mock a message
-    message = {"search_query": "foo_bar"}
-    data = {"data": base64.b64encode(json.dumps(message).encode())}
+    message_client = {
+        "search_query": "foo_bar",
+        "triggered_by": {"source": "client"},
+        "result_size": 3,
+    }
+    data = {"data": base64.b64encode(json.dumps(message_client).encode())}
     # Define a mocked context
     context = {"event_id": "-1"}
     # Execute the function
     result = sherlock_shopping_finish_signal(data, context, production=False)
+    print("Client result:")
+    print(result)
+
+    message_batch = {
+        "search_query": "foo_bar",
+        "triggered_by": {
+            "source": "batch",
+            "batch_id": "demo_batch_id____sherlock_finish_signal",
+        },
+        "result_size": 35,
+    }
+    data = {"data": base64.b64encode(json.dumps(message_batch).encode())}
+    context = {"event_id": "-1"}
+    result = sherlock_shopping_finish_signal(data, context, production=False)
+    print("Batch result:")
     print(result)
 
 
