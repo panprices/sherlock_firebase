@@ -184,14 +184,32 @@ def sherlock_shopping_finish_signal(event, context, production=True):
     """
     try:
         payload = json.loads(base64.b64decode(event["data"]))
-        # Open a connection to the database
-        ref = db.reference("product_search")
-        # Choose the relevant search
-        current_entry_ref = ref.child(str(payload["search_query"]))
+        triggered_by = payload["triggered_by"]
+        result_size = payload["result_size"]
+        search_query = str(payload["search_query"])
+
         # Only publish if we are running in production
         if production:
             # Update the specific search in Firebase RTD with the newly fetched offers
-            current_entry_ref.update({"search_completed": True})
+            db.reference("product_search").child(search_query).update(
+                {"search_completed": True}
+            )
+
+            if triggered_by.get("source") == "batch":
+                batch_id = triggered_by["batch_id"]
+                (
+                    db.reference("batch_search")
+                    .child(batch_id)
+                    .child("products")
+                    .child(search_query)
+                    .update(
+                        {
+                            "expected_result_size": result_size,
+                            "sherlock_product_search_done": True,
+                        }
+                    )
+                )
+
     except Exception as e:
         raise e
 
