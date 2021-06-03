@@ -101,11 +101,7 @@ def live_search_offer_enricher(event, context, production=True):
             payload["offer_source"],
             "with product_token:",
             payload["product_token"],
-            "and search_key:",
-            payload["search_key"],
         )
-
-        search_key = payload["search_key"]
 
         # Open a connection to the database
         if "user_country" in payload.keys():
@@ -115,7 +111,7 @@ def live_search_offer_enricher(event, context, production=True):
         user_country = payload.get("user_country", "SE")
         ref = db.reference(f"offers/{user_country}")
         # Choose the relevant search
-        search_ref = ref.child(search_key)
+        search_ref = ref.child(str(payload["product_token"]))
         # Get the existing offers data, on this we need to calculate savings
         fetch_ref = search_ref.child("fetched_offers")
         # Join existing and new offers together to a list (if existing data exists)
@@ -148,7 +144,7 @@ def live_search_offer_enricher(event, context, production=True):
         )
 
         all_sources_done = mark_source_as_done(
-            user_country, search_key, payload["offer_source"]
+            user_country, str(payload["product_token"]), payload["offer_source"]
         )
 
         if all_sources_done:
@@ -157,7 +153,7 @@ def live_search_offer_enricher(event, context, production=True):
 
             search_complete_payload = {
                 "triggered_by": None,
-                "search_key": search_key,
+                "product_token": str(payload["product_token"]),
             }
 
             search_complete_publisher = Publisher("panprices", "offer_search_complete")
@@ -263,6 +259,9 @@ def popular_product_search_trigger(event, context):
     for country in country_codes:
         db.reference(f"offers/{country}").update(products)
 
+        if len(products) > 0:
+            db.reference(f"offers/{country}").update(products)
+
     # Recreate the products:
     for product_token in product_tokens:
         products[product_token] = {
@@ -357,9 +356,6 @@ def create_offer_firebase(request):
 
     product_token = body["product_token"]
 
-    # search_key = str(uuid4())
-    search_key = str(product_token)
-
     batch_id = body.get("batch_id")
     if batch_id is not None and not isinstance(batch_id, str):
         return "batch_id should be a string"
@@ -370,7 +366,6 @@ def create_offer_firebase(request):
     }
 
     offer = {
-        "search_key": search_key,
         "product_token": product_token,
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
@@ -378,7 +373,7 @@ def create_offer_firebase(request):
         "triggered_by": triggered_by,
     }
     try:
-        db.reference(f"offers/{user_country}").child(search_key).set(offer)
+        db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
     except TypeError as ex:
         logging.error(ex)
         return "The request body is not serializable.", 400
@@ -393,12 +388,7 @@ def create_offer_firebase(request):
     # Set CORS headers for the main request
     response_headers = {"Access-Control-Allow-Origin": "*"}
     return (
-        json.dumps(
-            {
-                "success": True,
-                "search_key": search_key,
-            }
-        ),
+        json.dumps({"success": True}),
         200,
         response_headers,
     )
