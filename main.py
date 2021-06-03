@@ -255,22 +255,37 @@ def popular_product_search_trigger(event, context):
     country_codes = db.reference("offers").get(shallow=True)
     country_codes = [c for c in country_codes]
 
-    # Delete in bulk by updating them with empty data:
-    products = {}
-    for product_token in product_tokens:
-        products[product_token] = None
-
+    search_paths = {}
     for country in country_codes:
+        search_paths[country] = []
+        for product_token in product_tokens:
+            snapshot = (
+                db.reference(f"offers/{country}")
+                .order_by_child("product_token")
+                .equal_to(product_token)
+                .get()
+            )
+            for product in snapshot.values():
+                if product["triggered_by"]["source"] != "batch":
+                    search_key = product["search_key"]
+                    search_paths[country].append((search_key, product_token))
+
+        products = {}
+        for (search_key, product_token) in search_paths[country]:
+            products[search_key] = None
         db.reference(f"offers/{country}").update(products)
 
     # Recreate the products:
     for product_token in product_tokens:
-        products[product_token] = {
+        search_key = uuid.uuid4()
+        products[search_key] = {
+            "search_key": search_key,
             "offer_fetch_complete": False,
             "product_token": product_token,
             "created_at": int(round(time.time() * 1000)),  # ms since epoch
             "triggered_from_client": True,
             "popular": True,
+            "triggered_by": {"source", "popular_product_search_trigger"},
         }
 
     for country in country_codes:
