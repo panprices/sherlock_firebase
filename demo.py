@@ -218,7 +218,7 @@ def demo_create_offer_firebase():
         def get_json(self, silent=False):
             return {
                 "product_token": "test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw==",
-                # "user_country": "SE",
+                "user_country": "SE",
             }
 
     print(
