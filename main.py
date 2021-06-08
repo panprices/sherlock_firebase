@@ -361,6 +361,12 @@ def create_offer_firebase(request):
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
         "offer_fetch_complete": False,
+        "offer_sources_done": {
+            "ebay": False,
+            "kelkoo": False,
+            "pricerunner": False,
+            "prisjakt": False,
+        },
     }
     try:
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
