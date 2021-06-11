@@ -94,7 +94,8 @@ def add_offers_metadata(offers, user_country="SE"):
                 NULL AS currency,
                 NULL AS offer_url,
                 NULL AS requested_at,
-                NULL AS match_score
+                NULL AS match_score,
+                NULL AS in_stock
         ), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
             SELECT
                 A.*,
@@ -299,6 +300,11 @@ def _compose_enriched_row(user_country, row):
     # Set currency
     # ==========================================================
     row["currency"] = "SEK" if user_country == "SE" else "EUR"
+
+    # ==========================================================
+    # Set in_stock
+    # ==========================================================
+    row["in_stock"] = row.get("in_stock") or 'unknown'
 
     return row
 

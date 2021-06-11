@@ -23,7 +23,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3851711771&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118803",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -35,7 +36,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3871347893&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118828",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -47,7 +49,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3913341015&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118834",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -59,7 +62,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3766433773&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118839",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -71,7 +75,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3917529153&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118844",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -83,7 +88,8 @@
          "currency":"SEK",
          "offer_url":"https://www.prisjakt.nu/redirect.php?prisid=3256502059&api_client=1331",
          "requested_at":"2020-12-08 16:02:30.118852",
-         "match_score":null
+         "match_score":null,
+         "in_stock": "unknown"
       }
    ],
    "offer_source":"prisjakt",

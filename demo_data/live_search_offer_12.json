@@ -23,7 +23,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348226&.sig=Bw86NQ8F6A5fOZ6E1WHwpV5ODfo-&affiliationId=96954745&catId=100020213&comId=100512653&contextLevel=1&contextOfferPosition=1&contextPageSize=9&country=de&ecs=ok&merchantid=100512653&offerId=2cb0395d45a989fb58b1f428ae0c452b&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276035",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -35,7 +36,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348226&.sig=1Sf_tI3Lkch_6UaaJIGGL71gDC4-&affiliationId=96954745&catId=100020213&comId=3454923&contextLevel=1&contextOfferPosition=2&contextPageSize=9&country=de&ecs=ok&merchantid=3454923&offerId=9b5cb6190f793c6e1ca4759b5614e022&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276063",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -47,7 +49,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=ExieQqRAc3f2QTVyjqgbyyNw6cA-&affiliationId=96954745&catId=100020213&comId=100474979&contextLevel=1&contextOfferPosition=3&contextPageSize=9&country=de&ecs=ok&merchantid=100474979&offerId=c29be6adc097a2c990d243de9357dd94&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276069",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -59,7 +62,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=osEB4FUO1ircCOZv7ETycp8eV7Y-&affiliationId=96954745&catId=100020213&comId=100454454&contextLevel=1&contextOfferPosition=4&contextPageSize=9&country=de&ecs=ok&merchantid=100454454&offerId=4a22a3f9b91f4640fdadbee4bb175c15&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276073",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -71,7 +75,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=46t520i99Bfr2vtR5FNohjmIbzM-&affiliationId=96954745&catId=100020213&comId=100510929&contextLevel=1&contextOfferPosition=5&contextPageSize=9&country=de&ecs=ok&merchantid=100510929&offerId=0f09f79f121dced84ac041ec3c416740&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276078",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -83,7 +88,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=YoUoCmUTb_hsLw1ncjuU0vsQlPU-&affiliationId=96954745&catId=100020213&comId=100510912&contextLevel=1&contextOfferPosition=6&contextPageSize=9&country=de&ecs=ok&merchantid=100510912&offerId=ac806fcf2252d482a50a5a693e2145e7&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276082",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -95,7 +101,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=QvwFYfwEveih8u2eba549SKTDWo-&affiliationId=96954745&catId=100020213&comId=100512653&contextLevel=1&contextOfferPosition=7&contextPageSize=9&country=de&ecs=ok&merchantid=100512653&offerId=7a23ab3008cb780dc4269677620f8eb2&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276086",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -107,7 +114,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=3S70oF0O9xe8VmTz7WuklbXv270-&affiliationId=96954745&catId=100020213&comId=100474979&contextLevel=1&contextOfferPosition=8&contextPageSize=9&country=de&ecs=ok&merchantid=100474979&offerId=9b0374ae8074b883801a91b27834c425&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276090",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -119,7 +127,8 @@
          "currency":"EUR",
          "offer_url":"https://de-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348227&.sig=gzMTHJoxN2wgvdjmDQjRK_7BJLA-&affiliationId=96954745&catId=100020213&comId=100474979&contextLevel=1&contextOfferPosition=9&contextPageSize=9&country=de&ecs=ok&merchantid=100474979&offerId=4a35c9617975a6ec75160c917f499e23&searchId=1076992015568_1607443348219_204587&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.276095",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -131,7 +140,8 @@
          "currency":"EUR",
          "offer_url":"https://fr-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348321&.sig=p.VpwJK4IxvN4RvuVbG3x9wUUsM-&affiliationId=96954746&catId=100020213&comId=100478128&contextLevel=1&contextOfferPosition=1&contextPageSize=4&country=fr&ecs=ok&merchantid=100478128&offerId=1611af3cdb8a2b25a1a76023bb6f7351&searchId=10769920723309_1607443348317_1086875&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.340573",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -143,7 +153,8 @@
          "currency":"EUR",
          "offer_url":"https://fr-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348321&.sig=dlBTjl3L8i1xKZ5O1XmJzMhblg8-&affiliationId=96954746&catId=100020213&comId=100508043&contextLevel=1&contextOfferPosition=2&contextPageSize=4&country=fr&ecs=ok&merchantid=100508043&offerId=c6bd1f844fe6868824cb337bb7cb55a8&searchId=10769920723309_1607443348317_1086875&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.340599",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -155,7 +166,8 @@
          "currency":"EUR",
          "offer_url":"https://fr-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348322&.sig=JvxZKvHQjrWgC.rzFc0QqZCV9I8-&affiliationId=96954746&catId=100020213&comId=100508043&contextLevel=1&contextOfferPosition=3&contextPageSize=4&country=fr&ecs=ok&merchantid=100508043&offerId=fa4b74ac24fc0a10c3509dde01cf5dc8&searchId=10769920723309_1607443348317_1086875&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.340604",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -167,7 +179,8 @@
          "currency":"EUR",
          "offer_url":"https://fr-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348322&.sig=4cvgsecgv0fLA4qSefqEgvLrPrI-&affiliationId=96954746&catId=100020213&comId=100508043&contextLevel=1&contextOfferPosition=4&contextPageSize=4&country=fr&ecs=ok&merchantid=100508043&offerId=38ccfe38b0f2e53f794bad43202083b8&searchId=10769920723309_1607443348317_1086875&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.340609",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -179,7 +192,8 @@
          "currency":"GBP",
          "offer_url":"https://uk-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348629&.sig=1G4y1iSSY4wJPfO4XeclX1lLZKg-&affiliationId=96954752&catId=100020213&comId=100508457&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=uk&ecs=ok&merchantid=100508457&offerId=38ce4d0a72c633fd2ad1394d21ab6cd9&searchId=1076981991630_1607443348626_131429&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.637400",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -191,7 +205,8 @@
          "currency":"EUR",
          "offer_url":"https://nl-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1607443348685&.sig=4M4s5G2REPIpRLh1z_bL6nPd0Bc-&affiliationId=96954751&catId=100020213&comId=100472987&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=nl&ecs=ok&merchantid=100472987&offerId=faef7ee40ce12839276b28a78fe11619&searchId=10769920127600_1607443348682_45674&searchQuery=&service=5&wait=true",
          "requested_at":"2020-12-08 16:02:28.692815",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       }
    ],
    "offer_source":"kelkoo",
