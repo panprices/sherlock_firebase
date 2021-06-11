@@ -2,9 +2,11 @@
 *.pyc
 .DS_Store
 __pycache__
+.mypy_cache
 .cache
 env/
 venv/
+*.csv
 
 # Keys
 fernet_key.env

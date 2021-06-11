@@ -3,8 +3,8 @@ from psycopg2.pool import SimpleConnectionPool
 import psycopg2.extras
 
 pg_config = {
-	'user': 'postgres',
-	'password': '3pP49KAMpd0HefyA',
+	'user': 'readonly',
+	'password': 'eU9atUaH8S2yvWCXynnigiAbM3RVfWHj9S4gEO0sYyI',
 	'dbname': 'prices_prod'
 }
 

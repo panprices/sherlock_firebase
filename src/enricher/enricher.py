@@ -25,6 +25,7 @@ def offer_to_tup(offer):
         offer.get("offer_url") or None,
         offer.get("requested_at") or None,
         offer.get("match_score") or None,
+        offer.get("in_stock") or None
     )
 
 
@@ -67,7 +68,8 @@ def add_offers_metadata(offers, user_country="SE"):
                 %s AS currency,
                 %s AS offer_url,
                 %s AS requested_at,
-                %s::int AS match_score
+                %s::int AS match_score,
+                %s AS in_stock
             UNION ALL
         """,
             offer_to_tup(offer),
@@ -194,7 +196,8 @@ def add_offers_metadata(offers, user_country="SE"):
             euro_price,
             trustpilot_num_rating,
             trustpilot_avg_rating,
-            alexa_site_rank
+            alexa_site_rank,
+            in_stock
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
