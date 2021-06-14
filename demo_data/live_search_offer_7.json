@@ -23,7 +23,8 @@
       "price": "2892900",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -34,7 +35,8 @@
       "price": "2885000",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -45,7 +47,8 @@
       "price": "2234710",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -56,7 +59,8 @@
       "price": "2650178",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -67,7 +71,8 @@
       "price": "2914000",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -78,7 +83,8 @@
       "price": "2179682",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -89,7 +95,8 @@
       "price": "3084900",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -100,7 +107,8 @@
       "price": "2959551",
       "currency": "SEK",
       "requested_at": "2020-11-20T10:10:48Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     }
   ],
   "offer_source": "google_shopping_SE"
