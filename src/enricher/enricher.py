@@ -69,7 +69,7 @@ def add_offers_metadata(offers, user_country="SE"):
                 %s AS offer_url,
                 %s AS requested_at,
                 %s::int AS match_score,
-                %s AS in_stock
+                %s AS stock_status
             UNION ALL
         """,
             offer_to_tup(offer),
@@ -95,7 +95,7 @@ def add_offers_metadata(offers, user_country="SE"):
                 NULL AS offer_url,
                 NULL AS requested_at,
                 NULL AS match_score,
-                NULL AS in_stock
+                NULL AS stock_status
         ), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
             SELECT
                 A.*,
@@ -198,7 +198,7 @@ def add_offers_metadata(offers, user_country="SE"):
             trustpilot_num_rating,
             trustpilot_avg_rating,
             alexa_site_rank,
-            in_stock
+            stock_status
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
@@ -302,9 +302,9 @@ def _compose_enriched_row(user_country, row):
     row["currency"] = "SEK" if user_country == "SE" else "EUR"
 
     # ==========================================================
-    # Set in_stock
+    # Set stock_status
     # ==========================================================
-    row["in_stock"] = row.get("in_stock") or 'unknown'
+    row["stock_status"] = row.get("stock_status") or 'unknown'
 
     return row
 
