@@ -23,7 +23,8 @@
       "currency": "NOK",
       "offer_url": "https://no-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605866603018&.sig=fF1F_v5wGMQ3cNNnJ6jbUd0AtFc-&affiliationId=96954748&catId=124701&comId=16109413&contextLevel=1&contextOfferPosition=1&contextPageSize=1&country=no&ecs=ok&merchantid=16109413&offerId=46b55d9a833ba2eb94634788471fdd88&searchId=10769920429900_1605866603009_21144&searchQuery=&service=5&wait=true",
       "requested_at": "2020-11-20 10:03:23.028599",
-      "match_score": 1
+      "match_score": 1,
+      "in_stock": "in_stock"
     },
     {
       "product_id": null,
@@ -35,7 +36,8 @@
       "currency": "SEK",
       "offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605866603081&.sig=Z91Y1el2IJO6lF_nB2UcIqYz9vM-&affiliationId=96954747&catId=124701&comId=3375501&contextLevel=1&contextOfferPosition=1&contextPageSize=2&country=se&ecs=ok&merchantid=3375501&offerId=738332405b6535bccacaf099a6ed99de&searchId=10769825018469_1605866603074_42889&searchQuery=&service=5&wait=true",
       "requested_at": "2020-11-20 10:03:23.092546",
-      "match_score": 1
+      "match_score": 1,
+      "in_stock": "in_stock"
     },
     {
       "product_id": null,
@@ -47,7 +49,8 @@
       "currency": "SEK",
       "offer_url": "https://se-go.kelkoogroup.net/ctl/go/sitesearchGo?.ts=1605866603082&.sig=1fxWUfQ2XDcUJmYDmqxMX1OTT7k-&affiliationId=96954747&catId=124701&comId=10189823&contextLevel=1&contextOfferPosition=2&contextPageSize=2&country=se&ecs=ok&merchantid=10189823&offerId=df8f37e9da206e5e570cd58be8a2d128&searchId=10769825018469_1605866603074_42889&searchQuery=&service=5&wait=true",
       "requested_at": "2020-11-20 10:03:23.092571",
-      "match_score": 1
+      "match_score": 1,
+      "in_stock": "unknown"
     }
   ],
   "offer_source": "kelkoo",

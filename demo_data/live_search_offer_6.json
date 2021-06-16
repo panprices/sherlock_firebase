@@ -24,6 +24,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/710-53481-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229508&item=184170194709",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -48,6 +49,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=202897435888",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -72,6 +74,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=323766898038",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -96,6 +99,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=352675631691",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -120,6 +124,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=193278448044",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -144,6 +149,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=123987788240",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -168,6 +174,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=264534015263",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -192,6 +199,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=123991472016",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -216,6 +224,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=233776061804",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -240,6 +249,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=202682009759",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -264,6 +274,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=264534010395",
       "requested_at": "2020-11-20T10:02:52Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,

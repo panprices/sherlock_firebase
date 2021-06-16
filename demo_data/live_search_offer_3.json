@@ -25,6 +25,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/710-53481-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229508&item=221540161455",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -49,6 +50,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=202910552744",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -73,6 +75,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=360930249730",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -97,6 +100,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/707-53477-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229487&item=323152447382",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -121,6 +125,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=353148359439",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 1590,
@@ -145,6 +150,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=221540161455",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 1675,
@@ -169,6 +175,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=360930249730",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -193,6 +200,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/709-53476-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229480&item=232702989653",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -217,6 +225,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=353148359439",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "in_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -241,6 +250,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=221540161455",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 1675,
@@ -265,6 +275,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=360930249730",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "out_of_stock",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
@@ -289,6 +300,7 @@
       "offer_url": "https://rover.ebay.com/rover/1/724-53478-19255-0/1?ff3=2&toolid=10044&campid=5338271690&customid=&lgeo=1&vectorid=229494&item=223379481742",
       "requested_at": "2020-11-20T09:50:37Z",
       "match_score": null,
+      "in_stock": "unknown",
       "source_unique_data": {
         "shippingInfo": {
           "shipping_cost": 0,
