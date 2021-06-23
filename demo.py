@@ -211,19 +211,18 @@ def demo_get_price_from_firebase():
 
 
 def demo_create_offer_firebase():
+    product_token = "gAAAAABf6hhzN9p1LcmGNtmLilI_Olq1g98g-o27p_7O_cA6KFqN8n3RbhlNRcB_mH3LAGNJK8ufoguy37aSqakO8Ki_1r8inQ=="
+
     class Request:
-        def method(self):
-            return ""
+        method = ""
 
         def get_json(self, silent=False):
             return {
-                "product_token": "test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw==",
+                "product_token": product_token,
                 "user_country": "SE",
             }
 
-    print(
-        f"Trying to create a new offer at /offers/SE/test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw=="
-    )
+    print(f"Trying to create a new offer at /offers/SE/{product_token}")
     request = Request()
     response = create_offer_firebase(request)
     print(response)
