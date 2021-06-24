@@ -23,7 +23,8 @@
       "price": "606900",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -34,7 +35,8 @@
       "price": "649000",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -45,7 +47,8 @@
       "price": "681900",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -56,7 +59,8 @@
       "price": "554528",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -67,7 +71,8 @@
       "price": "601367",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     },
     {
       "offer_source": "google_shopping_SE",
@@ -78,7 +83,8 @@
       "price": "649500",
       "currency": "SEK",
       "requested_at": "2020-11-20T09:50:40Z",
-      "match_score": null
+      "match_score": null,
+      "in_stock": "unknown"
     }
   ],
   "offer_source": "google_shopping_SE"

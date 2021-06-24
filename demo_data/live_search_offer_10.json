@@ -23,7 +23,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/76745_KNA-TEL-704669?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -35,7 +36,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6428223?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -47,7 +49,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/76745_KNA-ELK-1298068?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -59,7 +62,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/21055_217529-VAR?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -71,7 +75,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6630507?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -83,7 +88,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/76745_KNA-ACC-307571?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -95,7 +101,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/1829_54020646?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "In_stock"
       },
       {
          "product_id":null,
@@ -107,7 +114,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6428222?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -119,7 +127,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/2265_59109?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -131,7 +140,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/76745_KNA-8806090307379?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -143,7 +153,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6139310?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -155,7 +166,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/1829_52047968?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -167,7 +179,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/1829_54022384?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -179,7 +192,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/40076_2832288?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -191,7 +205,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/53120_SM-G985FZKDEUB?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -203,7 +218,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6657386?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -215,7 +231,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6392337?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -227,7 +244,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/60608_8800?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -239,7 +257,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/1829_52862350?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -251,7 +270,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/39428_SAMSUNG-S20Plus-ds-black?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -263,7 +283,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/95107_6662389?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -275,7 +296,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/111533_smartphone-samsung-galaxy-s20-sm-g985fzkdeub-6-7-octa-core-8-gb-ram-128-gb-svart?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -287,7 +309,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/112488_B084DQ6FS6?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -299,7 +322,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/1829_53681922?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -311,7 +335,8 @@
          "currency":"SEK",
          "offer_url":"https://www.pricerunner.se/gotostore/v1/SE/26811_p1000689455?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -323,7 +348,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/68095_17451613384?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -335,7 +361,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084LFKLFJ?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -347,7 +374,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084LFT861?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -359,7 +387,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/111447_32529415340113?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -371,7 +400,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084LFG1DW?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -383,7 +413,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084J4Y4LJ?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -395,7 +426,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/109750_Samsung%20S20%20Plus%208%20%2B128GB%204G%20Black?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -407,7 +439,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/60210_samsung-galaxy-s20-plus-4g?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -419,7 +452,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084J4KB2B?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -431,7 +465,8 @@
          "currency":"GBP",
          "offer_url":"https://www.pricerunner.com/gotostore/v1/UK/2137_B084J4GVHR?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -443,7 +478,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/102752_SM-G985FZADEUB?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -455,7 +491,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/58986_8786757433434545?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -467,7 +504,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/1325_995776887?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -479,7 +517,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/1325_995776888?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -491,7 +530,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/30852_1000689455?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -503,7 +543,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/589_6084279?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -515,7 +556,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/589_6630507?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -527,7 +569,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/50742_141717923365974?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -539,7 +582,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/19678_Samsung%20Galaxy%20S20%20Plus%208GB%204G%20%28128GB%2FCosmic%20Grey%29?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -551,7 +595,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/19678_Samsung%20Galaxy%20S20%20Plus%208GB%204G%20%28128GB%2FCosmic%20Black%29?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -563,7 +608,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/1325_996072783?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -575,7 +621,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/34682_1000689457?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -587,7 +634,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/108211_45671?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -599,7 +647,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/50742_141717923365953?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -611,7 +660,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/589_6139310?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -623,7 +673,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/19687_1000689460?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -635,7 +686,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/108211_45672?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -647,7 +699,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/2957_2832290?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -659,7 +712,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/3092_F21086899?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -671,7 +725,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/3092_F21086891?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -683,7 +738,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/3092_F21086896?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -695,7 +751,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/589_6836096?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       },
       {
          "product_id":null,
@@ -707,7 +764,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/104555_1000689457?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "unknown"
       },
       {
          "product_id":null,
@@ -719,7 +777,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/69119_DEL3008023?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "out_of_stock"
       },
       {
          "product_id":null,
@@ -731,7 +790,8 @@
          "currency":"DKK",
          "offer_url":"https://www.pricerunner.dk/gotostore/v1/DK/589_6100697?productId=5158332",
          "requested_at":"2020-12-08T14:50:14Z",
-         "match_score":1
+         "match_score":1,
+         "in_stock": "in_stock"
       }
    ],
    "offer_source":"pricerunner",

@@ -18,24 +18,26 @@ def demo_offer_search_trigger():
     message = {
         "data": None,
         "delta": {
-            "offer_fetch_complete": False,
-            "product_token": "gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
-            "created_at": 1600961105031,
+            "created_at": 1623244478117,
+            "offerFetchComplete": False,
+            "product_token": "gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw==",
             "triggered_from_client": True,
         },
     }
-    # Define a mocked context
-    context = {
-        "event_id": "-1",
-        "resource": "projects/_/instances/panprices/refs/offers/SE/gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
-    }
+
+    class Context:
+        def __init__(self) -> None:
+            self.event_id = "-1"
+            self.resource = "projects/_/instances/panprices/refs/offers/SE/gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw=="
+
+    context = Context()
     # Execute the function
     result = offer_search_trigger(
         # We do not encode this to byte since Firebase input value
         # from trigger is different then that from PubSub.
         message,
         context,
-        production=False,
+        production=True,
     )
     print(result)
 
