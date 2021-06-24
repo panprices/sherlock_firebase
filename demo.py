@@ -41,7 +41,6 @@ def demo_offer_search_trigger():
 
 
 def demo_live_search_offer_enricher():
-    # Mock two messages
     for filepath in glob.iglob("demo_data/live_search_offer_*.json"):
         with open(filepath) as json_offer:
             # Modify it to behave like the input in Cloud Functions
