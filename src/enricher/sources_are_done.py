@@ -11,6 +11,4 @@ def mark_source_as_done(user_country, product_token, offer_source):
 
     # Check if all offer sources are done
     offer_sources_done = offer_sources_done_ref.get().values()
-    if False in offer_sources_done:
-        return False
-    return True
+    return all(offer_sources_done)
