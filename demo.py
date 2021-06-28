@@ -16,35 +16,21 @@ from main import create_product_search_firebase
 def demo_offer_search_trigger():
     # Mock a message
     message = {
-        # {
-        #     "data": None,
-        #     "delta": {
-        #         "offer_fetch_complete": False,
-        #         "product_token": "gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
-        #         "created_at": 1600961105031,
-        #         "triggered_from_client": True,
-        #     }
-        # },
-
-        'data': None, 
-        'delta': {
-            'created_at': 1623244478117, 
-            'offerFetchComplete': False, 
-            'product_token': 'gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw==', 
-            'triggered_from_client': True
-        }
-
+        "data": None,
+        "delta": {
+            "created_at": 1623244478117,
+            "offerFetchComplete": False,
+            "product_token": "gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw==",
+            "triggered_from_client": True,
+        },
     }
-          
-    # # Define a mocked context
-    # context = {
-    #     "event_id": "-1",
-    #     "resource": "projects/_/instances/panprices/refs/offers/SE/gAAAAABfkqs-sXrHEkUNLW6-jK7tM2o7QZzg1NsJqywqxnpREDNCV-ZO3DeXsMffG4siqL6S6HwhO9nZeMRXaGdynG3UxlqbzA==",
-    # }
-    context = {
-        "event_id": "-1",
-        "resource": "projects/_/instances/panprices/refs/offers/SE/gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw==",
-    }
+
+    class Context:
+        def __init__(self) -> None:
+            self.event_id = "-1"
+            self.resource = "projects/_/instances/panprices/refs/offers/SE/gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw=="
+
+    context = Context()
     # Execute the function
     result = offer_search_trigger(
         # We do not encode this to byte since Firebase input value
@@ -57,103 +43,6 @@ def demo_offer_search_trigger():
 
 
 def demo_live_search_offer_enricher():
-    # # Mock two messages
-    # messages = [
-    #     {
-    #         "created_at": 1604323264073,
-    #         "gtin": "03616131072020",
-    #         "offer_fetch_complete": False,
-    #         "offer_urls": {
-    #             "geizhals_DE": "https://geizhals.de/1898461540",
-    #             "google_shopping_SE": "https://www.google.com/shopping/product/10166805956347853825",
-    #             "pricerunner_DK": None,
-    #             "pricerunner_SE": None,
-    #             "pricerunner_UK": None,
-    #             "prisjakt_SE": None,
-    #         },
-    #         "product_token": "gAAAAABfn-KcweQ0JV0a0Husf-SXT3aihO4X-v6MogqtBhCzuaRNsb9ERKPvAMYTo22KJOnERl9leC5L_kK4ITtacmXKofB3wQ==",
-    #         "triggered_from_client": True,
-    #         "offers": [
-    #             {
-    #                 "offer_source": "google_shopping_SE",
-    #                 "retailer_name": "GUCCI",
-    #                 "offer_url": "/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAGGgJxbg&sig=AOD64_1Vz5b3cmOsSJJlKl29zyVl0M4zsA&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIEw&adurl=",
-    #                 "country": "SE",
-    #                 "retail_prod_name": "Gucci Axelremväska Dam Svart Tröja ONESIZE",
-    #                 "price": "2174990",
-    #                 "currency": "SEK",
-    #                 "requested_at": "2020-11-02T13:30:06Z",
-    #                 "match_score": None,
-    #             },
-    #             {
-    #                 "offer_source": "google_shopping_SE",
-    #                 "retailer_name": "farfetch.com",
-    #                 "offer_url": "/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAEGgJxbg&sig=AOD64_3V-myZeuudAeiObIEQz_aCpUk92w&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIFw&adurl=",
-    #                 "country": "SE",
-    #                 "retail_prod_name": "Gucci Axelremväska Dam Svart Tröja ONESIZE",
-    #                 "price": "2185800",
-    #                 "currency": "SEK",
-    #                 "requested_at": "2020-11-02T13:30:06Z",
-    #                 "match_score": None,
-    #             },
-    #         ],
-    #         "offer_source": "google_shopping_SE",
-    #     },
-    #     {
-    #         "created_at": 1604323264073,
-    #         "gtin": "03616131072020",
-    #         "offer_fetch_complete": False,
-    #         "offer_urls": {
-    #             "geizhals_DE": "https://geizhals.de/1898461540",
-    #             "google_shopping_SE": "https://www.google.com/shopping/product/10166805956347853825",
-    #             "pricerunner_DK": None,
-    #             "pricerunner_SE": None,
-    #             "pricerunner_UK": None,
-    #             "prisjakt_SE": None,
-    #         },
-    #         "product_token": "gAAAAABfn-KcweQ0JV0a0Husf-SXT3aihO4X-v6MogqtBhCzuaRNsb9ERKPvAMYTo22KJOnERl9leC5L_kK4ITtacmXKofB3wQ==",
-    #         "triggered_from_client": True,
-    #         "offers": [
-    #             {
-    #                 "offer_source": "google_shopping_SE",
-    #                 "retailer_name": "Mytheresa Sweden",
-    #                 "offer_url": "/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAHGgJxbg&sig=AOD64_28ELgD21tpk59rVqmMfCjLUpJt7A&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIGg&adurl=",
-    #                 "country": "SE",
-    #                 "retail_prod_name": "Gucci Axelremväska Dam Svart Tröja ONESIZE",
-    #                 "price": "2174990",
-    #                 "currency": "SEK",
-    #                 "requested_at": "2020-11-02T13:30:06Z",
-    #                 "match_score": None,
-    #             },
-    #             {
-    #                 "offer_source": "pricerunner_UK",
-    #                 "retailer_name": "Ambrose Wilson",
-    #                 "offer_url": "/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAFGgJxbg&sig=AOD64_2k-QyMYPIfpa8KDXyEGsRjIrkfGA&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIHw&adurl=",
-    #                 "country": "UK",
-    #                 "retail_prod_name": "Gucci Axelremväska Dam Svart Tröja ONESIZE",
-    #                 "price": "2263000",
-    #                 "currency": "SEK",
-    #                 "requested_at": "2020-11-02T13:30:06Z",
-    #                 "match_score": None,
-    #                 "domain": "ambrosewilson.com",
-    #                 "offer_id": "5c18755a-8f95-4ce2-ae9c-7199e1eb5429",
-    #             },
-    #             {
-    #                 "offer_source": "google_shopping_SE",
-    #                 "retailer_name": "miinto.se",
-    #                 "offer_url": "/aclk?sa=L&ai=DChcSEwjk_PL0--PsAhVICIgJHa8aC-sYABAFGgJxbg&sig=AOD64_2k-QyMYPIfpa8KDXyEGsRjIrkfGA&ctype=5&q=&ved=0ahUKEwiz_PD0--PsAhWYoXIEHUhBCekQ2ikIHw&adurl=",
-    #                 "country": "SE",
-    #                 "retail_prod_name": "Gucci Axelremväska Dam Svart Tröja ONESIZE",
-    #                 "price": "2200800",
-    #                 "currency": "SEK",
-    #                 "requested_at": "2020-11-02T13:30:06Z",
-    #                 "match_score": None,
-    #             },
-    #         ],
-    #         "offer_source": "google_shopping_SE",
-    #     },
-    # ]
-
     for filepath in glob.iglob("demo_data/live_search_offer_*.json"):
         with open(filepath) as json_offer:
             # Modify it to behave like the input in Cloud Functions
@@ -227,19 +116,18 @@ def demo_get_price_from_firebase():
 
 
 def demo_create_offer_firebase():
+    product_token = "gAAAAABf6hhzN9p1LcmGNtmLilI_Olq1g98g-o27p_7O_cA6KFqN8n3RbhlNRcB_mH3LAGNJK8ufoguy37aSqakO8Ki_1r8inQ=="
+
     class Request:
-        def method(self):
-            return ""
+        method = ""
 
         def get_json(self, silent=False):
             return {
-                "product_token": "test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw==",
-                # "user_country": "SE",
+                "product_token": product_token,
+                "user_country": "SE",
             }
 
-    print(
-        f"Trying to create a new offer at /offers/SE/test_gAAAAABfdHhqiYnhuHLsD4V-O3q2hc7NnPrvOVf92OP5fpUnrNwraQzPgS3hMI5KLBFD0LR5JT9py5IZ4b2VZ5UQJRJQypJPdw=="
-    )
+    print(f"Trying to create a new offer at /offers/SE/{product_token}")
     request = Request()
     response = create_offer_firebase(request)
     print(response)

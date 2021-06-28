@@ -25,7 +25,7 @@ def offer_to_tup(offer):
         offer.get("offer_url") or None,
         offer.get("requested_at") or None,
         offer.get("match_score") or None,
-        offer.get("in_stock") or None
+        offer.get("stock_status") or None
     )
 
 

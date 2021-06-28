@@ -9,6 +9,7 @@ from firebase_admin import db
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import get_user_country_from_fb_context
+from src.helpers import helpers
 from src.enricher.enricher import add_offers_metadata
 from src.enricher.sources_are_done import mark_source_as_done
 from src.firebase import flush_db
@@ -80,7 +81,9 @@ def offer_search_trigger(event, context, production=True):
                 "panprices", "sherlock_popular_products"
             )
             publisher_popular_products.publish_messages([payload["delta"]])
-            print("Trigger offer fetching for: " + gtin)
+            print(
+                f"Trigger offer fetching for gtin {gtin}, published message: {payload['delta']}"
+            )
         else:
             print(f"Empty gtin encountered: {gtin}")
 
@@ -357,11 +360,13 @@ def create_offer_firebase(request):
 
     product_token = body["product_token"]
 
+    offer_sources = helpers.get_offer_sources()
     offer = {
         "product_token": product_token,
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
         "offer_fetch_complete": False,
+        "offer_sources_done": {source: False for source in offer_sources},
     }
     try:
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
