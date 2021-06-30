@@ -22,6 +22,7 @@ def _get_popular_products(cutoff_time, time_range=10):
         WHERE popularity_idx IS NOT NULL
         AND rand_min_in_day >= {0}
         AND rand_min_in_day < {1}
+        AND product_token IS NOT NULL
         -- Grab the products which we are doing campaigns on
         UNION ALL
         SELECT
@@ -31,6 +32,7 @@ def _get_popular_products(cutoff_time, time_range=10):
                 ON A.id::text = B.product_id
         WHERE A.rand_min_in_day >= {0}
         AND A.rand_min_in_day < {1}
+        AND product_token IS NOT NULL
         -- Grab the products from store offers
         UNION ALL
         SELECT 
@@ -40,6 +42,7 @@ def _get_popular_products(cutoff_time, time_range=10):
                 ON A.id = B.product_id
         WHERE A.rand_min_in_day >= {0}
         AND A.rand_min_in_day < {1}
+        AND product_token IS NOT NULL
     """.format(cutoff_time - time_range, cutoff_time))
     rows = cur.fetchall()
 
