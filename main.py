@@ -215,13 +215,20 @@ def sherlock_shopping_finish_signal(event, context, production=True):
 
 
 def delete_old_firebase_data(event, context):
+    country_codes = db.reference("offers").get(shallow=True)
+    country_codes = [c for c in country_codes]
+
     try:
-        payload = json.loads(base64.b64decode(event["data"]))
         print("Starting to flush product_search path of data older then 1 hour.")
         flush_db.delete_data(bucket="product_search", hours_cutoff=1, firebase_db=db)
-        # Flush offers path of data older then 24 hour
-        print("Starting to flush offers path of data older then 24 hour.")
-        flush_db.delete_data(bucket="offers", hours_cutoff=24, firebase_db=db)
+        for country in country_codes:
+            # Flush offers path of data older then 24 hour
+            print(
+                f"Starting to flush offers path of data older then 24 hour for {country}."
+            )
+            flush_db.delete_data(
+                bucket=f"offers/{country}", hours_cutoff=24, firebase_db=db
+            )
     except Exception as e:
         print("There was an error: ", e)
         raise e
