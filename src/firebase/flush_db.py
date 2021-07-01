@@ -1,7 +1,6 @@
-from firebase_admin import db
 from datetime import datetime, timedelta
 
-import firebase_admin
+from firebase_admin import db
 
 
 def delete_data(bucket, hours_cutoff, firebase_db):
