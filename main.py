@@ -182,21 +182,36 @@ def sherlock_shopping_finish_signal(event, context, production=True):
     that the search never resulted in any valid matches with GTIN
     which is important for the user experience.
     """
-    try:
+    # Only publish if we are running in production
+    if production:
         payload = json.loads(base64.b64decode(event["data"]))
         triggered_by = payload["triggered_by"]
-        result_size = payload["result_size"]
         search_query = str(payload["search_query"])
+        failed = payload.get("failed", False)
+        result_size = payload.get("result_size")
 
-        # Only publish if we are running in production
-        if production:
-            # Update the specific search in Firebase RTD with the newly fetched offers
-            db.reference("product_search").child(search_query).update(
-                {"search_completed": True}
-            )
+        # Update the specific search in Firebase RTD with the newly fetched offers
+        db.reference("product_search").child(search_query).update(
+            {"search_completed": True}
+        )
 
-            if triggered_by.get("source") == "batch":
-                batch_id = triggered_by["batch_id"]
+        if triggered_by.get("source") == "batch":
+            batch_id = triggered_by["batch_id"]
+
+            if failed:
+                (
+                    db.reference("batch_search")
+                    .child(batch_id)
+                    .child("products")
+                    .child(search_query)
+                    .update(
+                        {
+                            "expected_result_size": 0,
+                            "sherlock_product_search_done": True,
+                        }
+                    )
+                )
+            else:
                 (
                     db.reference("batch_search")
                     .child(batch_id)
@@ -209,9 +224,6 @@ def sherlock_shopping_finish_signal(event, context, production=True):
                         }
                     )
                 )
-
-    except Exception as e:
-        raise e
 
 
 def delete_old_firebase_data(event, context):
