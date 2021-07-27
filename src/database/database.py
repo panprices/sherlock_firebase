@@ -14,13 +14,9 @@ def connect(host):
     return SimpleConnectionPool(1, 1, **pg_config)
 
 
-def connect_to_db(use_pgbouncer=False):
+def connect_to_db():
     try:
-        # pg_pool = connect('/cloudsql/panprices:europe-west1:panprices-psql')
-        if use_pgbouncer:
-            pg_pool = connect("34.77.105.192")
-        else:
-            pg_pool = connect("/cloudsql/panprices:europe-west1:panprices-core")
+        pg_pool = connect("34.77.105.192")
             
     except OperationalError as e:
         # If production settings fail, use local development ones

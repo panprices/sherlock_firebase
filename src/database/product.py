@@ -17,7 +17,7 @@ def _get_popular_products(cutoff_time, time_range=10):
         f"Fetching popular product from {cutoff_time - time_range} to {cutoff_time} mins of day"
     )
 
-    cur, cur_dict, connection, pg_pool = connect_to_db(True)
+    cur, cur_dict, connection, pg_pool = connect_to_db()
 
     cur.execute(
         """
