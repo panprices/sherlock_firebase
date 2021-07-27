@@ -25,7 +25,7 @@ def offer_to_tup(offer):
         offer.get("offer_url") or None,
         offer.get("requested_at") or None,
         offer.get("match_score") or None,
-        offer.get("stock_status") or None
+        offer.get("stock_status") or None,
     )
 
 
@@ -292,11 +292,6 @@ def _compose_enriched_row(user_country, row):
     row["ship"] = row["direct_checkout"] or row.get("ship")
 
     # ==========================================================
-    # Calculate Concierge
-    # ==========================================================
-    row["concierge"] = _calculate_concierge(user_country, row)
-
-    # ==========================================================
     # Set currency
     # ==========================================================
     row["currency"] = "SEK" if user_country == "SE" else "EUR"
@@ -304,7 +299,7 @@ def _compose_enriched_row(user_country, row):
     # ==========================================================
     # Set stock_status
     # ==========================================================
-    row["stock_status"] = row.get("stock_status") or 'unknown'
+    row["stock_status"] = row.get("stock_status") or "unknown"
 
     return row
 
@@ -375,14 +370,6 @@ def _calculate_direct_checkout_price(row):
         + payment_fee_int
         + exchange_rate_fee
     )
-
-
-def _calculate_concierge(user_country, row):
-    direct_checkout = row["direct_checkout"]
-    country = row["country"]
-
-    # Don't enable concierge on offers from the users country or when direct_checkout is enabled
-    return (not direct_checkout) and country != user_country
 
 
 def _calculate_quality_score(
@@ -461,7 +448,7 @@ def _calculate_shipping_fee(user_country, row):
     # When we have shipping and there is no min order value => return the fee
     elif shipping_min_order_val is None:
         return round((shipping_fee * shipping_to_local_currency) / 100)
-    # When we have shipping and item price is higher then min order value => return the fee
+    # When we have shipping and item price is higher than min order value => return the fee
     elif ((shipping_min_order_val * shipping_to_local_currency) / 100) > adj_price:
         return round((shipping_fee * shipping_to_local_currency) / 100)
     else:
