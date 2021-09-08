@@ -388,6 +388,7 @@ def create_offer_firebase(request):
         "offer_sources_done": {source: False for source in offer_sources},
     }
     try:
+        db.reference(f"offers/{user_country}").child(str(product_token)).delete()
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
     except TypeError as ex:
         logging.error(ex)
