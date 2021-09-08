@@ -18,5 +18,5 @@ def get_user_country_from_fb_context(context):
 def get_offer_sources() -> List[str]:
     """Get a list of offer sources that are working stably."""
     # TODO: change this to `select * from offer_sources after fixing all scrapers`
-    offer_sources = ["ebay", "prisjakt", "kelkoo", "pricerunner", "idealo"]
+    offer_sources = ["prisjakt", "kelkoo", "pricerunner", "idealo"]
     return offer_sources
