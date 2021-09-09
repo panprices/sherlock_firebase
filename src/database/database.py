@@ -16,7 +16,7 @@ def connect(host):
 
 def connect_to_db():
     try:
-        pg_pool = connect("/cloudsql/panprices:europe-west1:panprices-core")
+        pg_pool = connect("pg-bouncer.panprices-k8s.production")
     except OperationalError as e:
         # If production settings fail, use local development ones
         pg_pool = connect("localhost")
