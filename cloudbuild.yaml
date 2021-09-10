@@ -16,7 +16,7 @@ steps:
         "europe-west1",
         "--runtime",
         "python37",
-        '--vpc-connector=k8s-connector'
+        "--vpc-connector=k8s-connector",
         "--set-env-vars",
         "_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}",
       ]
@@ -36,7 +36,7 @@ steps:
         "europe-west1",
         "--runtime",
         "python37",
-        '--vpc-connector=k8s-connector'
+        "--vpc-connector=k8s-connector",
         "--max-instances",
         "50",
       ]
@@ -94,7 +94,7 @@ steps:
         "europe-west1",
         "--runtime",
         "python37",
-        '--vpc-connector=k8s-connector'
+        "--vpc-connector=k8s-connector",
         "--timeout",
         "540s",
       ]
