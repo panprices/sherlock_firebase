@@ -318,7 +318,12 @@ def _calculate_direct_checkout(user_country, row):
     shipping_fee = row["shipping_fee"]
     offer_source = row["offer_source"]
     country = row["country"]
+    adj_price = row["adj_price"]
 
+    # Don't allow checkout on products cheaper than 1500 SEK (or 150 EUR)
+    # Note: we assume that adj_price is in SEK here
+    if adj_price < 1500:
+        return False
     if shipping_fee is None:
         return False
     # If offer source is google_shopping_SE etc.
