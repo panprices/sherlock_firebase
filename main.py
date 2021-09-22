@@ -46,19 +46,20 @@ def offer_search_trigger(event, context, production=True):
     # Print out the entire event object
     print("Publishing the following live search for product: ", str(event))
 
+    # There are some few edge cases where a property is updated just
+    # after the offer search object is deleted. That triggers this function.
+    if event["delta"].get("product_token") is None:
+        # Delete the "broken" entry
+        db.reference(context.resource).delete()
+        return
+
     # Publish the event to the sherlock_products Pubsub topic
     if production:
         # We do not have to decode since this function is triggered via
         # Firebase trigger and not PubSub where we need to decode.
         payload = event
         # Get the product_token which is the only key in the incoming dict
-        try:
-            product_token = payload["delta"]["product_token"]
-        except Exception as e:
-            logging.error(
-                f"The product_token could not be read from: {context.resource}"
-            )
-            raise e
+        product_token = payload["delta"]["product_token"]
         # Decrypt the GTIN from the product_token
         # take the first GTIN if there are multiple one
         gtin = encryption.fernet_decrypt(product_token)
