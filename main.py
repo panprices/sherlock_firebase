@@ -52,7 +52,13 @@ def offer_search_trigger(event, context, production=True):
         # Firebase trigger and not PubSub where we need to decode.
         payload = event
         # Get the product_token which is the only key in the incoming dict
-        product_token = payload["delta"]["product_token"]  # * generates list of keys
+        try:
+            product_token = payload["delta"]["product_token"]
+        except Exception as e:
+            logging.error(
+                f"The product_token could not be read from: {context.resource}"
+            )
+            raise e
         # Decrypt the GTIN from the product_token
         # take the first GTIN if there are multiple one
         gtin = encryption.fernet_decrypt(product_token)
