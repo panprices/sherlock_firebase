@@ -362,7 +362,7 @@ def _calculate_direct_checkout_price(row):
         return None
 
     exchange_rate_fee = (adj_price + shipping_fee) * 0.03
-    service_fee = (adj_price + shipping_fee) * 0.05
+    service_fee = (adj_price + shipping_fee) * 0.06
     vat = service_fee * 0.25
     payment_fee_int = (
         adj_price + shipping_fee + exchange_rate_fee + service_fee + vat
