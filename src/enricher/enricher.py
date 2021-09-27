@@ -75,6 +75,7 @@ def add_offers_metadata(offers, user_country="SE"):
             offer_to_tup(offer),
         )
         for offer in offers
+        if offer.get("price") is not None
     )
     cur_dict.execute(
         b"""
@@ -166,9 +167,9 @@ def add_offers_metadata(offers, user_country="SE"):
                         )
                 )
                 AND (
-                                (A.adj_price < (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'min_price')) OR
-                                (A.adj_price > (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'max_price'))
-                        )
+                    (A.adj_price < (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'min_price')) OR
+                    (A.adj_price > (SELECT * FROM lowest_local_price) *  (SELECT value FROM offer_filters WHERE name = 'max_price'))
+                )
             ) C
             ON A.offer_id = C.offer_id
             WHERE C.offer_id IS NULL
