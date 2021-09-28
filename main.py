@@ -514,6 +514,9 @@ def store_finished_offers(event, context):
             {schema.name: offer.get(schema.name) for schema in table.schema}
         )
 
+    if len(offer_rows) == 0:
+        return
+
     errors = bigquery_client.insert_rows(table, offer_rows)
     if errors != []:
         logging.error(str(errors))
