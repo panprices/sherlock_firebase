@@ -168,6 +168,8 @@ def live_search_offer_enricher(event, context, production=True):
 
             search_complete_payload = {
                 "product_token": str(payload["product_token"]),
+                "gtin": payload["gtin"],
+                "user_country": user_country,
             }
 
             search_complete_publisher = Publisher("panprices", "offer_search_complete")
