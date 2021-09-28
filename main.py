@@ -388,6 +388,7 @@ def create_offer_firebase(request):
     offer_sources = helpers.get_offer_sources()
     offer = {
         "product_token": product_token,
+        "product_id": body.get("product_id"),
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
         "offer_fetch_complete": False,
