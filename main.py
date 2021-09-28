@@ -5,6 +5,8 @@ import time
 import logging
 from firebase_admin import credentials
 from firebase_admin import db
+from google.cloud import bigquery
+
 
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
@@ -15,6 +17,8 @@ from src.enricher.sources_are_done import mark_source_as_done
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_popular_products
+
+logging.basicConfig(level=logging.INFO)
 
 
 def _initialize_firebase():
@@ -485,6 +489,23 @@ def create_product_search_firebase(request):
 
 def store_finished_offers(event, context):
     payload = json.loads(base64.b64decode(event["data"]))
-
     product_token = payload.get("product_token")
-    print(product_token)
+    logging.info(f"Storing offers for product with product_token: {product_token}")
+
+    offer_search = db.reference("offers/SE").child(product_token).get()
+    if not offer_search.get("offer_fetch_complete"):
+        raise Exception("Trying to store an offer search that is incomplete")
+
+    fetched_offers = offer_search.get("fetched_offers", [])
+
+    product_id = offer_search.get("product_id")
+    for offer in fetched_offers:
+        offer["product_id"] = product_id
+        offer["product_token"] = product_token
+
+    bigquery_client = bigquery.Client()
+    table_ref = bigquery_client.dataset("offers").table("offers")
+    errors = bigquery_client.insert_rows(table_ref, fetched_offers)
+    if errors != []:
+        logging.error(str(errors))
+        raise Exception(str(errors))
