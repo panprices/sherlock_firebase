@@ -507,7 +507,15 @@ def store_finished_offers(event, context):
 
     bigquery_client = bigquery.Client()
     table_ref = bigquery_client.dataset("offers").table("offers")
-    errors = bigquery_client.insert_rows(table_ref, fetched_offers)
+    table = bigquery_client.get_table(table_ref)
+
+    offer_rows = []
+    for offer in fetched_offers:
+        offer_rows.append(
+            {schema.name: offer.get(schema.name) for schema in table.schema}
+        )
+
+    errors = bigquery_client.insert_rows(table_ref, offer_rows)
     if errors != []:
         logging.error(str(errors))
         raise Exception(str(errors))
