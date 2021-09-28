@@ -503,19 +503,18 @@ def store_finished_offers(event, context):
         offer["product_id"] = product_id
         offer["product_token"] = product_token
 
-    print(fetched_offers[0])
-
     bigquery_client = bigquery.Client()
     table_ref = bigquery_client.dataset("offers").table("offers")
     table = bigquery_client.get_table(table_ref)
 
+    # Remove all properties that have no corresponding table column
     offer_rows = []
     for offer in fetched_offers:
         offer_rows.append(
             {schema.name: offer.get(schema.name) for schema in table.schema}
         )
 
-    errors = bigquery_client.insert_rows(table_ref, offer_rows)
+    errors = bigquery_client.insert_rows(table, offer_rows)
     if errors != []:
         logging.error(str(errors))
         raise Exception(str(errors))

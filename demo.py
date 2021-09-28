@@ -3,7 +3,7 @@ import json
 import base64
 import glob
 
-from main import offer_search_trigger
+from main import offer_search_trigger, store_finished_offers
 from main import live_search_offer_enricher
 from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
@@ -150,6 +150,19 @@ def demo_create_product_search_firebase():
     print(response)
 
 
+def demo_store_finished_offers():
+    # Mock a message
+    message = {
+        "product_token": "gAAAAABgJGp1h1n-UQuexdHCMzmnmr40NauwhV9RRjWl7NFqPy-0aUuufCdG2WCHGSsnza1TdzJp4xfoxnCb4ikC5LaESIiFWA=="
+    }
+    data = {"data": base64.b64encode(json.dumps(message).encode())}
+    # Define a mocked context
+    context = {"event_id": "-1"}
+    # Execute the function
+    result = store_finished_offers(data, context)
+    print(result)
+
+
 if __name__ == "__main__":
     # Instantiate the parser
     parser = argparse.ArgumentParser(
@@ -205,6 +218,12 @@ if __name__ == "__main__":
         action="store_true",
         help="Create a test product_search at /offers/<cleaned_query>",
     )
+    parser.add_argument(
+        "-sfo",
+        "--store_finished_offers",
+        action="store_true",
+        help="Store an offer search in big query",
+    )
     # Parse the args
     args = parser.parse_args()
     # Decide on execution
@@ -224,3 +243,5 @@ if __name__ == "__main__":
         demo_create_offer_firebase()
     elif args.create_product_search_firebase:
         demo_create_product_search_firebase()
+    elif args.store_finished_offers:
+        demo_store_finished_offers()
