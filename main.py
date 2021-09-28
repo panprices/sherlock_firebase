@@ -503,6 +503,8 @@ def store_finished_offers(event, context):
         offer["product_id"] = product_id
         offer["product_token"] = product_token
 
+    print(fetched_offers[0])
+
     bigquery_client = bigquery.Client()
     table_ref = bigquery_client.dataset("offers").table("offers")
     errors = bigquery_client.insert_rows(table_ref, fetched_offers)
