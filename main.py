@@ -163,7 +163,6 @@ def live_search_offer_enricher(event, context, production=True):
             search_ref.child("offer_fetch_complete").set(True)
 
             search_complete_payload = {
-                "triggered_by": None,
                 "product_token": str(payload["product_token"]),
             }
 
@@ -481,3 +480,10 @@ def create_product_search_firebase(request):
     # Set CORS headers for the main request
     response_headers = {"Access-Control-Allow-Origin": "*"}
     return json.dumps({"success": True}), 200, response_headers
+
+
+def store_finished_offers(event, context):
+    payload = json.loads(base64.b64decode(event["data"]))
+
+    product_token = payload.get("product_token")
+    print(product_token)
