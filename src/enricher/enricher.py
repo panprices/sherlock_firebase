@@ -2,6 +2,11 @@ import uuid
 
 from src.database.database import connect_to_db
 from pipetools import pipe, maybe, X
+from workalendar.europe import Sweden as SwedishCalendar
+from datetime import date
+
+
+_calendar = SwedishCalendar()
 
 
 """
@@ -108,6 +113,8 @@ def add_offers_metadata(offers, user_country="SE"):
                 F.ship,
                 F.fee as shipping_fee,
                 F.min_order_val as shipping_min_order_val,
+                COALESCE(F.min_delivery_time, 5) AS min_delivery_time,
+                COALESCE(F.max_delivery_time, 15) AS max_delivery_time,
                 G.{currency_translation} as shipping_to_local_currency
             FROM offers_data A
             INNER JOIN offer_sources B
@@ -279,6 +286,12 @@ def _compose_enriched_row(user_country, row):
     row["shipping_fee"] = _calculate_shipping_fee(user_country, row)
 
     # ==========================================================
+    # Calculate Delivery Dates
+    # ==========================================================
+    row["min_delivery_date"] = _calculate_delivery_date(row["min_delivery_time"])
+    row["max_delivery_date"] = _calculate_delivery_date(row["max_delivery_time"])
+
+    # ==========================================================
     # Calculate Direct Checkout, DC Price, and DC Saving
     # ==========================================================
     row["direct_checkout"] = _calculate_direct_checkout(user_country, row)
@@ -303,6 +316,16 @@ def _compose_enriched_row(user_country, row):
     row["stock_status"] = row.get("stock_status") or "unknown"
 
     return row
+
+
+def _calculate_delivery_date(delivery_time):
+    # Add 1 day margin for ops to place the order
+    ops_placement_margin = 1
+
+    return _calendar.add_working_days(
+        date.today(),
+        delivery_time + ops_placement_margin,
+    )
 
 
 def _calculate_saving(row):
