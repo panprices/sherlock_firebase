@@ -290,8 +290,12 @@ def _compose_enriched_row(user_country, row):
     # ==========================================================
     # Calculate Delivery Dates
     # ==========================================================
-    row["min_delivery_date"] = _calculate_delivery_date(row["min_delivery_time"])
-    row["max_delivery_date"] = _calculate_delivery_date(row["max_delivery_time"])
+    row["min_delivery_date_with_margin"] = _calculate_delivery_date(
+        row["min_delivery_time"]
+    )
+    row["max_delivery_date_with_margin"] = _calculate_delivery_date(
+        row["max_delivery_time"]
+    )
 
     # ==========================================================
     # Calculate Direct Checkout, DC Price, and DC Saving
