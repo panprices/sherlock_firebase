@@ -201,6 +201,8 @@ def add_offers_metadata(offers, user_country="SE"):
             shipping_fee,
             shipping_min_order_val,
             shipping_to_local_currency,
+            min_delivery_time,
+            max_delivery_time,
             offer_id,
             euro_price,
             trustpilot_num_rating,
