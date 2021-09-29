@@ -153,7 +153,9 @@ def demo_create_product_search_firebase():
 def demo_store_finished_offers():
     # Mock a message
     message = {
-        "product_token": "gAAAAABgJGp1h1n-UQuexdHCMzmnmr40NauwhV9RRjWl7NFqPy-0aUuufCdG2WCHGSsnza1TdzJp4xfoxnCb4ikC5LaESIiFWA=="
+        "product_token": "gAAAAABgJGp1h1n-UQuexdHCMzmnmr40NauwhV9RRjWl7NFqPy-0aUuufCdG2WCHGSsnza1TdzJp4xfoxnCb4ikC5LaESIiFWA==",
+        "gtin": "00194276341971",
+        "user_country": "SE",
     }
     data = {"data": base64.b64encode(json.dumps(message).encode())}
     # Define a mocked context

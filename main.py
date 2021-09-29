@@ -1,5 +1,7 @@
 import base64
 import json
+from src.store_offers.best_offers_db import get_best_offer, store_best_offer_in_db
+from src.store_offers.bigquery import store_offers_in_bq
 import firebase_admin
 import time
 import logging
@@ -492,6 +494,8 @@ def create_product_search_firebase(request):
 def store_finished_offers(event, context):
     payload = json.loads(base64.b64decode(event["data"]))
     product_token = payload.get("product_token")
+    user_country = payload.get("user_country")
+    gtin = payload.get("gtin")
     logging.info(f"Storing offers for product with product_token: {product_token}")
 
     offer_search = db.reference("offers/SE").child(product_token).get()
@@ -499,27 +503,13 @@ def store_finished_offers(event, context):
         raise Exception("Trying to store an offer search that is incomplete")
 
     fetched_offers = offer_search.get("fetched_offers", [])
-
     product_id = offer_search.get("product_id")
-    for offer in fetched_offers:
-        offer["product_id"] = product_id
-        offer["product_token"] = product_token
 
-    bigquery_client = bigquery.Client()
-    table_ref = bigquery_client.dataset("offers").table("offers")
-    table = bigquery_client.get_table(table_ref)
+    store_offers_in_bq(product_id, product_token, fetched_offers)
 
-    # Remove all properties that have no corresponding table column
-    offer_rows = []
-    for offer in fetched_offers:
-        offer_rows.append(
-            {schema.name: offer.get(schema.name) for schema in table.schema}
-        )
+    best_offer = get_best_offer(fetched_offers)
 
-    if len(offer_rows) == 0:
-        return
+    if best_offer is None:
+        return None
 
-    errors = bigquery_client.insert_rows(table, offer_rows)
-    if errors != []:
-        logging.error(str(errors))
-        raise Exception(str(errors))
+    store_best_offer_in_db(product_id, product_token, gtin, user_country, best_offer)
