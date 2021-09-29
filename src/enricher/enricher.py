@@ -327,7 +327,7 @@ def _calculate_delivery_date(delivery_time):
     return _calendar.add_working_days(
         date.today(),
         delivery_time + ops_placement_margin,
-    )
+    ).strftime("%Y-%m-%d")
 
 
 def _calculate_saving(row):
