@@ -163,6 +163,7 @@ steps:
       - --trigger-topic=offer_search_complete
       - --region=europe-west1
       - --runtime=python37
+      - --vpc-connector=k8s-connector
 
 images: []
 timeout: "1600s"
