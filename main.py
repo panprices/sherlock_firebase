@@ -73,7 +73,6 @@ def offer_search_trigger(event, context, production=True):
             gtin = gtin.split(", ")[0]
             # query DB for associated URLs of this GTIN
             offer_urls = fetch_gtin_url(gtin)
-            offer_urls = dict(offer_urls)
             # query DB for google shopping url
             gs_url = fetch_google_shopping_url(gtin)
             if gs_url:
