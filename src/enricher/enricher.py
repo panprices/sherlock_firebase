@@ -297,8 +297,6 @@ def _compose_enriched_row(user_country, row):
         row["max_delivery_time"]
     )
 
-    print("min_delivery_date_with_margin: ", row["min_delivery_date_with_margin"])
-
     # ==========================================================
     # Calculate Direct Checkout, DC Price, and DC Saving
     # ==========================================================
