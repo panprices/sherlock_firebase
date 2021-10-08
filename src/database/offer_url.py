@@ -23,7 +23,7 @@ def fetch_gtin_url(gtin: str) -> dict:
 
     offer_urls = {}
     for row in rows:
-        if not row["url"] and _data_too_old(row["created_at"], row["updated_at"]):
+        if not row["url"] and not _up_to_date(row["created_at"], row["updated_at"]):
             continue
 
         offer_urls[row["offer_source"]] = row["url"]
@@ -41,15 +41,29 @@ def fetch_google_shopping_url(gtin):
     return row[0] if row else None
 
 
-def _data_too_old(
+def _up_to_date(
     created_at: datetime.datetime, updated_at: datetime.datetime = None
 ) -> bool:
-    MAX_CACHE_DAYS = 7
-    if updated_at is not None:
-        timestamp = updated_at
-    else:
-        timestamp = created_at
+    """An offer_url is up to date if:
+    - it's been created within 30 days (for new products) & updated within 12 hours, or
+    - it's been created more than 30 days & updated within 7 days
+    """
+    OLD_PRODUCT_THRESHHOLD_DAYS = 30
+    NEW_PRODUCT_MAX_CACHE_HOURS = 12
+    OLD_PRODUCT_MAX_CACHE_DAYS = 7
 
     now = datetime.datetime.now()
-    time_elapsed = now - timestamp
-    return True if time_elapsed.days > MAX_CACHE_DAYS else False
+    if updated_at is None:
+        updated_at = created_at
+
+    since_creation = now - created_at
+    since_last_update = now - updated_at
+    url_is_new = since_creation.days < OLD_PRODUCT_THRESHHOLD_DAYS
+    if url_is_new:
+        return (
+            True
+            if since_last_update.total_seconds() < NEW_PRODUCT_MAX_CACHE_HOURS * 60
+            else False
+        )
+    else:
+        return True if since_last_update.days < OLD_PRODUCT_MAX_CACHE_DAYS else False
