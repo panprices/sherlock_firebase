@@ -94,7 +94,7 @@ def offer_search_trigger(event, context, production=True):
             )
             publisher_popular_products.publish_messages([payload["delta"]])
             print(
-                f"Trigger offer fetching for gtin {gtin}, published message: {payload['delta']}"
+                f"Trigger offer fetching for gtin {gtin}, published message: {json.dumps(payload['delta'])}"
             )
         else:
             print(f"Empty gtin encountered: {gtin}")
