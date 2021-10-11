@@ -62,7 +62,7 @@ def _up_to_date(
     if url_is_new:
         return (
             True
-            if since_last_update.total_seconds() < NEW_PRODUCT_MAX_CACHE_HOURS * 60
+            if since_last_update.total_seconds() < NEW_PRODUCT_MAX_CACHE_HOURS * 3600
             else False
         )
     else:
