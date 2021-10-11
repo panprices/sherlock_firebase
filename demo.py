@@ -15,7 +15,7 @@ from main import create_product_search_firebase
 
 def demo_offer_search_trigger():
     # Mock a message
-    product_token = "gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw=="
+    product_token = "gAAAAABfdHhq329JYNgxBqU01RukdfNzARIw4yMUD_jpfOOXYbdlYXUenBWntJXe_32aysJ1pAlTTYrtep5KPs1M07vRkzgtMQ=="
     message = {
         "data": None,
         "delta": {
@@ -35,7 +35,7 @@ def demo_offer_search_trigger():
 
     context = Context()
     # Execute the function
-    result = offer_search_trigger(
+    offer_search_trigger(
         # We do not encode this to byte since Firebase input value
         # from trigger is different then that from PubSub.
         message,
