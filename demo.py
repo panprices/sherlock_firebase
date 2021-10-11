@@ -15,12 +15,13 @@ from main import create_product_search_firebase
 
 def demo_offer_search_trigger():
     # Mock a message
+    product_token = "gAAAAABfdHhq329JYNgxBqU01RukdfNzARIw4yMUD_jpfOOXYbdlYXUenBWntJXe_32aysJ1pAlTTYrtep5KPs1M07vRkzgtMQ=="
     message = {
         "data": None,
         "delta": {
             "created_at": 1623244478117,
             "offerFetchComplete": False,
-            "product_token": "gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw==",
+            "product_token": product_token,
             "triggered_from_client": True,
         },
     }
@@ -28,18 +29,19 @@ def demo_offer_search_trigger():
     class Context:
         def __init__(self) -> None:
             self.event_id = "-1"
-            self.resource = "projects/_/instances/panprices/refs/offers/SE/gAAAAABf3D0m2el6n0TB6D5fA-cNWVRCz_HEffoBPkQlb5oP2EU2_7AbWUCwj2145CVkW0C9No1DfWkRuLK5K8PLLu23J8UnFw=="
+            self.resource = (
+                f"projects/_/instances/panprices/refs/offers/SE/{product_token}"
+            )
 
     context = Context()
     # Execute the function
-    result = offer_search_trigger(
+    offer_search_trigger(
         # We do not encode this to byte since Firebase input value
         # from trigger is different then that from PubSub.
         message,
         context,
         production=True,
     )
-    print(result)
 
 
 def demo_live_search_offer_enricher():
