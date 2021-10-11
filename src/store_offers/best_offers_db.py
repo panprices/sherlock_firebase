@@ -1,4 +1,3 @@
-import json
 from src.database.database import connect_to_db
 
 

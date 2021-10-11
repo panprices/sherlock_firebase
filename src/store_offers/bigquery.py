@@ -1,11 +1,14 @@
-from google.cloud import bigquery
+import uuid
 import logging
+
+from google.cloud import bigquery
 
 
 def store_offers_in_bq(product_id, product_token, fetched_offers):
     for offer in fetched_offers:
         offer["product_id"] = product_id
         offer["product_token"] = product_token
+        offer["instance_id"] = str(uuid.uuid4())
 
     bigquery_client = bigquery.Client()
     table_ref = bigquery_client.dataset("offers").table("offers")
