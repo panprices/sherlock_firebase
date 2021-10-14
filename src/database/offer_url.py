@@ -24,6 +24,9 @@ def fetch_gtin_url(gtin: str) -> dict:
     offer_urls = {}
     for row in rows:
         if not row["url"] and not _up_to_date(row["created_at"], row["updated_at"]):
+            print(
+                f"Offer link from {row['offer_source']} for product {gtin} is NULL and is not up to date, does not reuse."
+            )
             continue
 
         offer_urls[row["offer_source"]] = row["url"]
