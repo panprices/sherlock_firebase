@@ -383,6 +383,10 @@ def create_offer_firebase(request):
         msg = "The user_country field was not provided."
         logging.error(msg)
         return msg, 400
+    if "product_id" not in body:
+        msg = "The product_id field was not provided."
+        logging.error(msg)
+        return msg, 400
 
     user_country = body.get("user_country", "SE")
     if user_country not in ["SE", "FI"]:
@@ -391,11 +395,12 @@ def create_offer_firebase(request):
         return msg, 400
 
     product_token = body["product_token"]
+    product_id = body["product_id"]
 
     offer_sources = helpers.get_offer_sources()
     offer = {
         "product_token": product_token,
-        "product_id": body.get("product_id"),
+        "product_id": product_id,
         "created_at": int(time.time() * 1000),  # ms since epoch
         "triggered_from_client": True,
         "offer_fetch_complete": False,
