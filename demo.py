@@ -119,6 +119,7 @@ def demo_get_price_from_firebase():
 
 def demo_create_offer_firebase():
     product_token = "gAAAAABf6hhzN9p1LcmGNtmLilI_Olq1g98g-o27p_7O_cA6KFqN8n3RbhlNRcB_mH3LAGNJK8ufoguy37aSqakO8Ki_1r8inQ=="
+    product_id = 10033999
 
     class Request:
         method = ""
@@ -127,9 +128,10 @@ def demo_create_offer_firebase():
             return {
                 "product_token": product_token,
                 "user_country": "SE",
+                "product_id": 10033999,
             }
 
-    print(f"Trying to create a new offer at /offers/SE/{product_token}")
+    print(f"Trying to create a new offer at /offers/{product_id}_SE")
     request = Request()
     response = create_offer_firebase(request)
     print(response)

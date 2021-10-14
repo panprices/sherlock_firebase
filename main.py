@@ -8,6 +8,7 @@ import logging
 from firebase_admin import credentials
 from firebase_admin import db
 from google.cloud import bigquery
+from firebase_admin import firestore
 
 
 import src.helpers.encryption as encryption
@@ -409,6 +410,15 @@ def create_offer_firebase(request):
     try:
         db.reference(f"offers/{user_country}").child(str(product_token)).delete()
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
+
+        f_db = firestore.client()
+
+        doc_ref = f_db.collection("offer_search").document(
+            f"{product_id}_{user_country}"
+        )
+        doc_ref.delete()
+        doc_ref.set(offer)
+
     except TypeError as ex:
         logging.error(ex)
         return "The request body is not serializable.", 400
