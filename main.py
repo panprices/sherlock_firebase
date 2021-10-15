@@ -408,11 +408,13 @@ def create_offer_firebase(request):
         "offer_sources_done": {source: False for source in offer_sources},
     }
     try:
+        # Realtime DB implementation
         db.reference(f"offers/{user_country}").child(str(product_token)).delete()
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
 
+        # Firestore implementation
         f_db = firestore.client()
-
+        offer["created_at"] = firestore.SERVER_TIMESTAMP
         doc_ref = f_db.collection("offer_search").document(
             f"{product_id}_{user_country}"
         )
