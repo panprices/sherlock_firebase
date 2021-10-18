@@ -516,7 +516,8 @@ def store_finished_offers(event, context):
 
     offer_search = db.reference("offers/SE").child(product_token).get()
     if not offer_search.get("offer_fetch_complete"):
-        raise Exception("Trying to store an offer search that is incomplete")
+        logging.warning("Trying to store an offer search that is incomplete")
+        return None
 
     fetched_offers = offer_search.get("fetched_offers", [])
     product_id = offer_search.get("product_id")
