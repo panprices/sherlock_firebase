@@ -22,6 +22,7 @@ from src.enricher.sources_are_done import mark_source_as_done
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_popular_products
+from src.helpers.chunk import chunkify
 
 logging.basicConfig(level=logging.INFO)
 
@@ -244,7 +245,6 @@ def sherlock_shopping_finish_signal(event, context, production=True):
                 )
 
 
-# TODO: adapt for firestore
 def delete_old_firebase_data(event, context):
     country_codes = ["SE"]
 
@@ -280,13 +280,9 @@ def delete_old_firebase_data(event, context):
 
         # Chunkify because you can delete max 500 docs in one batch
         CHUNK_SIZE = 450  # Have some margin
-
         references = [offer.reference for offer in doc_ref]
-        # Create an iterator over the references
-        it = iter(references)
-        # islice returns 450 elements from the iterator, and the iterator pointer is moved
-        # iter creates an iterator where the lambda is called for every `.next()` until the result is equal to []
-        chunks = iter(lambda: list(islice(it, CHUNK_SIZE)), [])
+
+        chunks = chunkify(references, CHUNK_SIZE)
 
         for (i, chunk) in enumerate(chunks):
             print(f"Deleting chunk {i} with {len(chunk)} offers")
