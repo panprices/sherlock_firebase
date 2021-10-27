@@ -37,7 +37,7 @@ def _initialize_firebase():
 # Global (instance-wide) scope, which runs at instance cold-start.
 app = _initialize_firebase()
 
-
+# TODO: adapt for firestore
 def offer_search_trigger(event, context, production=True):
 
     """
@@ -101,6 +101,7 @@ def offer_search_trigger(event, context, production=True):
             print(f"Empty gtin encountered: {gtin}")
 
 
+# TODO: adapt for firestore
 def live_search_offer_enricher(event, context, production=True):
     """
     Consumes messages on the topic 'live_search_offers', enriches them
@@ -240,6 +241,7 @@ def sherlock_shopping_finish_signal(event, context, production=True):
                 )
 
 
+# TODO: adapt for firestore
 def delete_old_firebase_data(event, context):
     country_codes = db.reference("offers").get(shallow=True)
     country_codes = [c for c in country_codes]
@@ -262,6 +264,7 @@ def delete_old_firebase_data(event, context):
         print("Delete job finished.")
 
 
+# TODO: adapt for firestore
 def popular_product_search_trigger(event, context):
     """Trigger live_search on popular products to keep them up-to-date."""
     product_tokens = get_popular_products()
@@ -315,6 +318,7 @@ def popular_product_search_trigger(event, context):
     print(f"Trigger fetching offers for {len(product_tokens)} popular products")
 
 
+# TODO: adapt for firestore
 def get_price_from_firebase(request):
     user_country = request.headers.get("Panprices-User-Country")
     if user_country is None:
@@ -354,6 +358,7 @@ def get_price_from_firebase(request):
     return ("There wasn't any price on this offer", 400)
 
 
+# TODO: adapt for firestore
 def create_offer_firebase(request):
     """Create a new offer object at /offers/<country_code>/<product_token>.
 
@@ -512,6 +517,7 @@ def create_product_search_firebase(request):
     return json.dumps({"success": True}), 200, response_headers
 
 
+# TODO: adapt for firestore
 def store_finished_offers(event, context):
     payload = json.loads(base64.b64decode(event["data"]))
     product_token = payload.get("product_token")
