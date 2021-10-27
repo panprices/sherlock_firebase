@@ -2,9 +2,9 @@ from typing import Any, List
 from itertools import islice
 
 
-def chunks(lst: List[Any], size: int) -> List[list]:
+def chunkify(lst: List[Any], size: int) -> List[list]:
     """
-    Split a list into size-sized chunks.
+    Split a list into `size`-sized chunks.
 
     Example:
 
