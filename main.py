@@ -43,7 +43,6 @@ app = _initialize_firebase()
 
 # TODO: adapt for firestore
 def offer_search_trigger(event, context, production=True):
-
     """
     Triggered whenever there is a new database entry on the
     offerSearch resource in the Firebase Realtime Database.
@@ -90,6 +89,9 @@ def offer_search_trigger(event, context, production=True):
             user_country = get_user_country_from_fb_context(context)
             print(f"user_country detected: {user_country}")
             payload["delta"]["user_country"] = user_country
+
+            # The offer comes from realtime_db
+            payload["data_source"] = "realtime_db"
 
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
