@@ -37,6 +37,7 @@ def _initialize_firebase():
 # Global (instance-wide) scope, which runs at instance cold-start.
 app = _initialize_firebase()
 
+
 # TODO: adapt for firestore
 def offer_search_trigger(event, context, production=True):
 
