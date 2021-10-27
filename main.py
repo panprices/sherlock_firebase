@@ -126,6 +126,8 @@ def live_search_offer_enricher(event, context, production=True):
             payload["product_token"],
         )
 
+        print("Data source:", payload.get("data_source"))
+
         # Open a connection to the database
         if "user_country" in payload.keys():
             print(f"Key user_country is {payload['user_country']}")
