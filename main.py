@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime, timedelta
 import json
 from src.store_offers.best_offers_db import get_best_offer, store_best_offer_in_db
 from src.store_offers.bigquery import store_offers_in_bq
@@ -9,6 +10,7 @@ from firebase_admin import credentials
 from firebase_admin import db
 from google.cloud import bigquery
 from firebase_admin import firestore
+from itertools import islice
 
 
 import src.helpers.encryption as encryption
@@ -244,20 +246,55 @@ def sherlock_shopping_finish_signal(event, context, production=True):
 
 # TODO: adapt for firestore
 def delete_old_firebase_data(event, context):
-    country_codes = db.reference("offers").get(shallow=True)
-    country_codes = [c for c in country_codes]
+    country_codes = ["SE"]
 
     try:
         print("Starting to flush product_search path of data older then 1 hour.")
         flush_db.delete_data(bucket="product_search", hours_cutoff=1, firebase_db=db)
+
+        # Realtime DB implementation
         for country in country_codes:
-            # Flush offers path of data older then 24 hour
+            # Flush offers path of data older then 24 hours
             print(
                 f"Starting to flush offers path of data older then 24 hour for {country}."
             )
             flush_db.delete_data(
                 bucket=f"offers/{country}", hours_cutoff=24, firebase_db=db
             )
+
+        # Firestore implementation
+        f_db = firestore.client()
+
+        # Flush offers path of data older then 24 hours
+        cutoff = datetime.now() - timedelta(hours=24)
+        doc_ref = (
+            f_db.collection("offer_search")
+            .where(
+                "created_at",
+                "<=",
+                cutoff,
+            )
+            .get()
+        )
+        print(f"Deleting {len(doc_ref)} offers")
+
+        # Chunkify because you can delete max 500 docs in one batch
+        CHUNK_SIZE = 450  # Have some margin
+
+        references = [offer.reference for offer in doc_ref]
+        # Create an iterator over the references
+        it = iter(references)
+        # islice returns 450 elements from the iterator, and the iterator pointer is moved
+        # iter creates an iterator where the lambda is called for every `.next()` until the result is equal to []
+        chunks = iter(lambda: list(islice(it, CHUNK_SIZE)), [])
+
+        for (i, chunk) in enumerate(chunks):
+            print(f"Deleting chunk {i} with {len(chunk)} offers")
+            batch = f_db.batch()
+            for ref in chunk:
+                batch.delete(ref)
+            batch.commit()
+
     except Exception as e:
         print("There was an error: ", e)
         raise e
