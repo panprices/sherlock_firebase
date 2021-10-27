@@ -91,7 +91,7 @@ def offer_search_trigger(event, context, production=True):
             payload["delta"]["user_country"] = user_country
 
             # The offer comes from realtime_db
-            payload["data_source"] = "realtime_db"
+            payload["delta"]["data_source"] = "realtime_db"
 
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
