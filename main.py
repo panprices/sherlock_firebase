@@ -132,6 +132,9 @@ def offer_search_trigger_fs(data, context, production=True):
     converter = FirestoreTriggerConverter(f_db)
     value = converter.convert(data["value"]["fields"])
 
+    print("value", value)
+    return None
+
     product_id = value["product_id"]
     gtin = get_gtin_from_product_id(product_id)
 
