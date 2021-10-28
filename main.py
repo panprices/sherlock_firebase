@@ -107,7 +107,7 @@ def offer_search_trigger(event, context, production=True):
             print(f"Empty gtin encountered: {gtin}")
 
 
-def offer_search_trigger_fs(event, context, production=True):
+def offer_search_trigger_fs(data, context, production=True):
     """
     Triggered whenever there is a new database entry on the
     offer_search resource in the Firebase Firesotre.
@@ -121,15 +121,15 @@ def offer_search_trigger_fs(event, context, production=True):
     # Print out the entire event object
     print("Publishing the following live search for product: ", str(event))
 
-    print("context", context)
+    print("context.resource", context.resource)
 
     # Publish the event to the sherlock_products Pubsub topic
     if not production:
         return
 
-    payload = event
+    value = data["value"]
 
-    product_id = payload["delta"]["product_id"]
+    product_id = value["product_id"]
     gtin = get_gtin_from_product_id(product_id)
 
     if gtin is None:
@@ -143,25 +143,25 @@ def offer_search_trigger_fs(event, context, production=True):
     # if gs_url:
     #     offer_urls["google_shopping_SE"] = gs_url
     # Enrich the data with the GTIN
-    payload["delta"]["gtin"] = gtin
-    payload["delta"]["offer_urls"] = offer_urls
+    value["gtin"] = gtin
+    value["offer_urls"] = offer_urls
 
     # Enrich the data with user_country
     # user_country = get_user_country_from_fb_context(context)
     # print(f"user_country detected: {user_country}")
     # payload["delta"]["user_country"] = user_country
-    payload["delta"]["user_country"] = "SE"
+    value["user_country"] = "SE"
 
     # The offer comes from realtime_db
-    payload["delta"]["data_source"] = "firestore"
+    value["data_source"] = "firestore"
 
     # Publish it to the topics which are consuming it
     publisher = Publisher("panprices", "sherlock_products")
-    publisher.publish_messages([payload["delta"]])
+    publisher.publish_messages([value])
     publisher_popular_products = Publisher("panprices", "sherlock_popular_products")
-    publisher_popular_products.publish_messages([payload["delta"]])
+    publisher_popular_products.publish_messages([value])
     print(
-        f"Trigger offer fetching for gtin {gtin}, published message: {json.dumps(payload['delta'])}"
+        f"Trigger offer fetching for gtin {gtin}, published message: {json.dumps(value)}"
     )
 
 
