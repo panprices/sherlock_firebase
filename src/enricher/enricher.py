@@ -82,9 +82,6 @@ def add_offers_metadata(offers, user_country="SE"):
         for offer in offers
         if offer.get("price") is not None
     )
-
-    print(offers_str)
-
     cur_dict.execute(
         b"""
         WITH offers_data AS (

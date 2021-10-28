@@ -28,7 +28,8 @@ def mark_source_as_done_fs(user_country, product_id, offer_source):
     search_ref.update({f"offer_sources_done.{offer_source}": True})
 
     # Check if all offer sources are done
-    offer_sources_done = search_ref.get()["offer_sources_done"]
+    offer_sources_done = search_ref.get().to_dict()["offer_sources_done"]
+    print("offer_sources_done", offer_sources_done)
     if offer_sources_done is None:
         return False
     else:

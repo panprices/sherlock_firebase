@@ -1,6 +1,8 @@
 {
   "created_at": 1605866599645,
-  "gtin": "04960759026477",
+  "product_id": 11098183,
+  "gtin": "04717677338683",
+  "user_country": "SE",
   "offer_fetch_complete": false,
   "offer_urls": {
     "geizhals_DE": "https://geizhals.de/nikon-af-s-85mm-1-8g-schwarz-jaa341da-a723246.html",
@@ -55,6 +57,6 @@
   ],
   "offer_source": "kelkoo",
   "name": null,
-  "product_id": null,
-  "price": null
+  "price": null,
+  "data_source": "firestore"
 }

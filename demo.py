@@ -62,16 +62,15 @@ def demo_offer_search_trigger():
 
 
 def demo_live_search_offer_enricher():
-    for filepath in glob.iglob("demo_data/live_search_offer_*.json"):
-        with open(filepath) as json_offer:
-            # Modify it to behave like the input in Cloud Functions
-            data = {
-                "data": base64.b64encode(json.dumps(json.load(json_offer)).encode())
-            }
-            # Define a mocked context
-            context = {"event_id": "-1"}
-            # Execute the function
-            live_search_offer_enricher(data, context, production=False)
+    # for filepath in glob.iglob("demo_data/live_search_offer_*.json"):
+    # with open(filepath) as json_offer:
+    with open("demo_data/live_search_offer_firestore.json") as json_offer:
+        # Modify it to behave like the input in Cloud Functions
+        data = {"data": base64.b64encode(json.dumps(json.load(json_offer)).encode())}
+        # Define a mocked context
+        context = {"event_id": "-1"}
+        # Execute the function
+        live_search_offer_enricher(data, context, production=False)
 
 
 def demo_sherlock_shopping_finish_signal():
