@@ -268,6 +268,7 @@ def live_search_offer_enricher(event, context, production=True):
             )
 
             new_offers = payload["offers"]
+            print(new_offers)
             new_enriched_offers = add_offers_metadata(new_offers, user_country)
 
             # If we get more than 500 offers at a time we need to split it up
