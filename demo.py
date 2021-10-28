@@ -17,18 +17,20 @@ def demo_offer_search_trigger():
     # Mock a message
     product_id = 10070776
     message = {
-        "data": None,
-        "delta": {
-            "created_at": 1623244478117,
-            "offerFetchComplete": False,
-            "product_id": product_id,
-            "triggered_from_client": True,
+        "value": {
+            "fields": {
+                "created_at": 1623244478117,
+                "offerFetchComplete": False,
+                "product_id": product_id,
+                "triggered_from_client": True,
+            }
         },
     }
 
     class Context:
         def __init__(self) -> None:
             self.event_id = "-1"
+            self.resource = "blabla"
 
     context = Context()
     # Execute the function
