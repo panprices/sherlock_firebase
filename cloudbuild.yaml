@@ -34,7 +34,6 @@ steps:
       - --runtime=python37
       - --vpc-connector=k8s-connector
       - --set-env-vars=_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}
-      ]
 
   - name: "gcr.io/cloud-builders/gcloud"
     waitFor: ["-"]
