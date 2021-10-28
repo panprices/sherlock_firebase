@@ -119,7 +119,7 @@ def offer_search_trigger_fs(data, context, production=True):
     """
 
     # Print out the entire event object
-    print("Publishing the following live search for product: ", str(event))
+    print("Publishing the following live search for product: ", str(data))
 
     print("context.resource", context.resource)
 
