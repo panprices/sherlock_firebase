@@ -29,7 +29,7 @@ steps:
       - offer_search_trigger_fs
       - --source=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}
       - --trigger-event=providers/cloud.firestore/eventTypes/document.create
-      - --trigger-resource=projects/panprices/databases/(default)/documents/offers_search/{searchID}
+      - --trigger-resource=projects/panprices/databases/(default)/documents/offer_search/{searchID}
       - --region=europe-west1
       - --runtime=python37
       - --vpc-connector=k8s-connector
