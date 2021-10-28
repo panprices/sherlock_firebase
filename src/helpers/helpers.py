@@ -1,9 +1,19 @@
-from typing import List
+from typing import List, Tuple
 
 
 def format_search_offer_msg(firebase_msg):
     print(firebase_msg)
     return firebase_msg
+
+
+def get_collection_and_doc_from_fs_resource_path(path: str) -> Tuple[str, str]:
+    (collection, document) = path.split("/documents/")[1].split("/")
+    return (collection, document)
+
+
+def get_user_country_from_fs_context(path: str) -> str:
+    (collection, document) = get_collection_and_doc_from_fs_resource_path(path)
+    return document.split("_")[1]
 
 
 def get_user_country_from_fb_context(context):

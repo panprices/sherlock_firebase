@@ -16,7 +16,10 @@ from itertools import islice
 
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
-from src.helpers.helpers import get_user_country_from_fb_context
+from src.helpers.helpers import (
+    get_user_country_from_fb_context,
+    get_user_country_from_fs_context,
+)
 from src.helpers import helpers
 from src.enricher.enricher import add_offers_metadata
 from src.enricher.sources_are_done import mark_source_as_done, mark_source_as_done_fs
@@ -143,21 +146,13 @@ def offer_search_trigger_fs(data, context, production=True):
     # gs_url = fetch_google_shopping_url(gtin)
     # if gs_url:
     #     offer_urls["google_shopping_SE"] = gs_url
-    # Enrich the data with the GTIN
+
     value["gtin"] = gtin
     value["offer_urls"] = offer_urls
-
-    # Enrich the data with user_country
-    # user_country = get_user_country_from_fb_context(context)
-    # print(f"user_country detected: {user_country}")
-    # payload["delta"]["user_country"] = user_country
-
-    # TODO: parse country from path. See demo for example path
-    value["user_country"] = "SE"
-
-    # The offer comes from realtime_db
+    value["user_country"] = get_user_country_from_fs_context(context.resource)
     value["data_source"] = "firestore"
 
+    # Dates can not be json-stringified
     value["created_at"] = value["created_at"].isoformat()
 
     # Publish it to the topics which are consuming it
