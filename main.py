@@ -19,7 +19,7 @@ from src.pubsub.pubsub import Publisher
 from src.helpers.helpers import get_user_country_from_fb_context
 from src.helpers import helpers
 from src.enricher.enricher import add_offers_metadata
-from src.enricher.sources_are_done import mark_source_as_done
+from src.enricher.sources_are_done import mark_source_as_done, mark_source_as_done_fs
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_gtin_from_product_id, get_popular_products
@@ -282,7 +282,7 @@ def live_search_offer_enricher(event, context, production=True):
                     batch.set(offer_ref, offer)
                 batch.commit()
 
-            all_sources_done = mark_source_as_done(
+            all_sources_done = mark_source_as_done_fs(
                 user_country,
                 product_id,
                 payload["offer_source"],
