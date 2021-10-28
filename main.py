@@ -120,9 +120,9 @@ def offer_search_trigger_fs(data, context, production=True):
     """
 
     # Print out the entire event object
-    print("Publishing the following live search for product: ", str(data))
+    print("Publishing the following live search for product: ", str(data), sep=" ")
 
-    print("context.resource", context.resource)
+    print("context.resource", context.resource, sep=" ")
 
     # Publish the event to the sherlock_products Pubsub topic
     if not production:
@@ -132,7 +132,7 @@ def offer_search_trigger_fs(data, context, production=True):
     converter = FirestoreTriggerConverter(f_db)
     value = converter.convert(data["value"]["fields"])
 
-    print("value", value)
+    print("value", value, sep=" ")
     return None
 
     product_id = value["product_id"]
