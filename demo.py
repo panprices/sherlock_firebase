@@ -17,20 +17,38 @@ def demo_offer_search_trigger():
     # Mock a message
     product_id = 10070776
     message = {
+        "oldValue": {},
+        "updateMask": {},
         "value": {
+            "createTime": "2021-10-28T10:02:43.754463Z",
             "fields": {
-                "created_at": 1623244478117,
-                "offerFetchComplete": False,
-                "product_id": product_id,
-                "triggered_from_client": True,
-            }
+                "created_at": {"timestampValue": "2021-10-28T10:02:43.713Z"},
+                "offer_fetch_complete": {"booleanValue": False},
+                "offer_sources_done": {
+                    "mapValue": {
+                        "fields": {
+                            "idealo": {"booleanValue": False},
+                            "kelkoo": {"booleanValue": False},
+                            "pricerunner": {"booleanValue": False},
+                            "prisjakt": {"booleanValue": False},
+                        }
+                    }
+                },
+                "product_id": {"integerValue": "10046934"},
+                "product_token": {
+                    "stringValue": "gAAAAABgFA8rf_Ns6sx2uSAQ0dih8QGacSphcee6-zXt0QJ-NgjBUHYS6a2YDOkhUw_1J-NLwYGd9Zlll1TEvgtC0rxwVcNgfg=="
+                },
+                "triggered_from_client": {"booleanValue": True},
+            },
+            "name": "projects/panprices/databases/(default)/documents/offer_search/10046934_SE",
+            "updateTime": "2021-10-28T10:02:43.754463Z",
         },
     }
 
     class Context:
         def __init__(self) -> None:
             self.event_id = "-1"
-            self.resource = "blabla"
+            self.resource = "projects/panprices/databases/(default)/documents/offer_search/10046934_SE"
 
     context = Context()
     # Execute the function
