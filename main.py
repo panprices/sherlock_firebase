@@ -45,7 +45,7 @@ def _initialize_firebase():
 app = _initialize_firebase()
 
 
-# TODO: adapt for firestore
+# TODO: adapt when switching to firestore
 def offer_search_trigger(event, context, production=True):
     """
     Triggered whenever there is a new database entry on the
@@ -165,7 +165,7 @@ def offer_search_trigger_fs(data, context, production=True):
     )
 
 
-# TODO: adapt for firestore
+# TODO: adapt when switching to firestore
 def live_search_offer_enricher(event, context, production=True):
     """
     Consumes messages on the topic 'live_search_offers', enriches them
@@ -235,6 +235,7 @@ def live_search_offer_enricher(event, context, production=True):
 
                 search_complete_payload = {
                     "product_token": str(payload["product_token"]),
+                    "product_id": payload["product_id"],
                     "gtin": payload["gtin"],
                     "user_country": user_country,
                 }
@@ -296,6 +297,7 @@ def live_search_offer_enricher(event, context, production=True):
                 # TODO: Replace product_token with product_id
                 search_complete_payload = {
                     "product_token": str(payload["product_token"]),
+                    "product_id": product_id,
                     "gtin": payload["gtin"],
                     "user_country": user_country,
                 }
@@ -422,7 +424,7 @@ def delete_old_firebase_data(event, context):
         print("Delete job finished.")
 
 
-# TODO: adapt for firestore
+# TODO: adapt when switching to firestore
 def popular_product_search_trigger(event, context):
     """Trigger live_search on popular products to keep them up-to-date."""
     product_tokens = get_popular_products()
@@ -575,13 +577,14 @@ def create_offer_firebase(request):
         db.reference(f"offers/{user_country}").child(str(product_token)).set(offer)
 
         # Firestore implementation
-        f_db = firestore.client()
-        offer["created_at"] = firestore.SERVER_TIMESTAMP
-        doc_ref = f_db.collection("offer_search").document(
-            f"{product_id}_{user_country}"
-        )
-        doc_ref.delete()
-        doc_ref.set(offer)
+        # TODO: activate firestore offer search here
+        # f_db = firestore.client()
+        # offer["created_at"] = firestore.SERVER_TIMESTAMP
+        # doc_ref = f_db.collection("offer_search").document(
+        #     f"{product_id}_{user_country}"
+        # )
+        # doc_ref.delete()
+        # doc_ref.set(offer)
 
     except TypeError as ex:
         logging.error(ex)
