@@ -1,6 +1,7 @@
 import base64
 from datetime import datetime, timedelta
 import json
+from src.helpers.FirestoreTriggerConverter import FirestoreTriggerConverter
 from src.store_offers.best_offers_db import get_best_offer, store_best_offer_in_db
 from src.store_offers.bigquery import store_offers_in_bq
 import firebase_admin
@@ -127,7 +128,9 @@ def offer_search_trigger_fs(data, context, production=True):
     if not production:
         return
 
-    value = data["value"]
+    f_db = firestore.client()
+    converter = FirestoreTriggerConverter(f_db)
+    value = converter.convert(data["value"]["fields"])
 
     product_id = value["product_id"]
     gtin = get_gtin_from_product_id(product_id)
