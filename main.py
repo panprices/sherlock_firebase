@@ -126,8 +126,9 @@ def live_search_offer_enricher(event, context, production=True):
             payload["product_token"],
         )
 
-        # 👇 This works 👇
-        # print("Data source:", payload.get("data_source"))
+        # Only handle offers from realtime_db
+        if payload.get("data_source") != "realtime_db":
+            return None
 
         # Open a connection to the database
         if "user_country" in payload.keys():
