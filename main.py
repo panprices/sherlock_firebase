@@ -307,11 +307,11 @@ def live_search_offer_enricher(event, context, production=True):
                 )
                 search_complete_publisher.publish_messages([search_complete_payload])
 
-        if production:
-            # Publish all data to a separate topic for writing it down in batches to PSQL.
-            publisher = Publisher("panprices", "sherlock_live_offers")
-            payload["offers"] = new_enriched_offers
-            publisher.publish_messages([payload])
+            if production:
+                # Publish all data to a separate topic for writing it down in batches to PSQL.
+                publisher = Publisher("panprices", "sherlock_live_offers")
+                payload["offers"] = new_enriched_offers
+                publisher.publish_messages([payload])
 
     except Exception as e:
         msg_string = json.dumps(payload)
