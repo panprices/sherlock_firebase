@@ -43,7 +43,7 @@ class FirestoreTriggerConverter(object):
         except ValueError as e:
             return datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
 
-    def _parse_doc_ref(self, doc_ref: str) -> Anyd:
+    def _parse_doc_ref(self, doc_ref: str) -> Any:
         path_parts = doc_ref.split("/documents/")[1].split("/")
         collection_path = path_parts[0]
         document_path = "/".join(path_parts[1:])
