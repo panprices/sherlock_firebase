@@ -235,7 +235,8 @@ def live_search_offer_enricher(event, context, production=True):
 
                 search_complete_payload = {
                     "product_token": str(payload["product_token"]),
-                    "product_id": payload["product_id"],
+                    # TODO: uncomment this
+                    # "product_id": payload["product_id"],
                     "gtin": payload["gtin"],
                     "user_country": user_country,
                 }
