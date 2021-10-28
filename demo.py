@@ -3,7 +3,7 @@ import json
 import base64
 import glob
 
-from main import offer_search_trigger, store_finished_offers
+from main import offer_search_trigger, offer_search_trigger_fs, store_finished_offers
 from main import live_search_offer_enricher
 from main import delete_old_firebase_data
 from main import sherlock_shopping_finish_signal
@@ -15,13 +15,13 @@ from main import create_product_search_firebase
 
 def demo_offer_search_trigger():
     # Mock a message
-    product_token = "gAAAAABfdHhq329JYNgxBqU01RukdfNzARIw4yMUD_jpfOOXYbdlYXUenBWntJXe_32aysJ1pAlTTYrtep5KPs1M07vRkzgtMQ=="
+    product_id = 10070776
     message = {
         "data": None,
         "delta": {
             "created_at": 1623244478117,
             "offerFetchComplete": False,
-            "product_token": product_token,
+            "product_id": product_id,
             "triggered_from_client": True,
         },
     }
@@ -29,14 +29,11 @@ def demo_offer_search_trigger():
     class Context:
         def __init__(self) -> None:
             self.event_id = "-1"
-            self.resource = (
-                f"projects/_/instances/panprices/refs/offers/SE/{product_token}"
-            )
 
     context = Context()
     # Execute the function
-    offer_search_trigger(
-        # We do not encode this to byte since Firebase input value
+    offer_search_trigger_fs(
+        # We do not encode this to byte since Firestore input value
         # from trigger is different then that from PubSub.
         message,
         context,

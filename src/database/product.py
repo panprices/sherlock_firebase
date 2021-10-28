@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 from src.database.database import connect_to_db
 
 
@@ -60,3 +61,22 @@ def _get_popular_products(cutoff_time, time_range=10):
     # the returned row is in the form [(token, ), (token, ),...]
     # turn it into [token, token,...]
     return [row[0] for row in rows]
+
+
+def get_gtin_from_product_id(product_id: int) -> Union[None, str]:
+    cur, cur_dict, connection, pg_pool = connect_to_db()
+
+    cur.execute(
+        """
+    SELECT gtin
+    FROM products
+    WHERE id = %(product_id)s
+    """,
+        {"product_id": product_id},
+    )
+
+    row = cur.fetchone()
+    if row is None:
+        return None
+    else:
+        return row[0]

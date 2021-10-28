@@ -21,7 +21,7 @@ from src.enricher.enricher import add_offers_metadata
 from src.enricher.sources_are_done import mark_source_as_done
 from src.firebase import flush_db
 from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
-from src.database.product import get_popular_products
+from src.database.product import get_gtin_from_product_id, get_popular_products
 from src.helpers.chunk import chunkify
 
 logging.basicConfig(level=logging.INFO)
@@ -105,6 +105,64 @@ def offer_search_trigger(event, context, production=True):
             )
         else:
             print(f"Empty gtin encountered: {gtin}")
+
+
+def offer_search_trigger_fs(event, context, production=True):
+    """
+    Triggered whenever there is a new database entry on the
+    offer_search resource in the Firebase Firesotre.
+    create_offer_firebase generates the creation of new database
+    entries in this directory.
+
+    The sole purpose of this function is to simply publish an event
+    on PubSub so that we trigger the offer scrapers.
+    """
+
+    # Print out the entire event object
+    print("Publishing the following live search for product: ", str(event))
+
+    print("context", context)
+
+    # Publish the event to the sherlock_products Pubsub topic
+    if not production:
+        return
+
+    payload = event
+
+    product_id = payload["delta"]["product_id"]
+    gtin = get_gtin_from_product_id(product_id)
+
+    if gtin is None:
+        print(f"No product found for id: {product_id}")
+        return None
+
+    # query DB for associated URLs of this GTIN
+    offer_urls = fetch_gtin_url(gtin)
+    # # query DB for google shopping url
+    # gs_url = fetch_google_shopping_url(gtin)
+    # if gs_url:
+    #     offer_urls["google_shopping_SE"] = gs_url
+    # Enrich the data with the GTIN
+    payload["delta"]["gtin"] = gtin
+    payload["delta"]["offer_urls"] = offer_urls
+
+    # Enrich the data with user_country
+    # user_country = get_user_country_from_fb_context(context)
+    # print(f"user_country detected: {user_country}")
+    # payload["delta"]["user_country"] = user_country
+    payload["delta"]["user_country"] = "SE"
+
+    # The offer comes from realtime_db
+    payload["delta"]["data_source"] = "firestore"
+
+    # Publish it to the topics which are consuming it
+    publisher = Publisher("panprices", "sherlock_products")
+    publisher.publish_messages([payload["delta"]])
+    publisher_popular_products = Publisher("panprices", "sherlock_popular_products")
+    publisher_popular_products.publish_messages([payload["delta"]])
+    print(
+        f"Trigger offer fetching for gtin {gtin}, published message: {json.dumps(payload['delta'])}"
+    )
 
 
 # TODO: adapt for firestore
@@ -398,7 +456,6 @@ def get_price_from_firebase(request):
     return ("There wasn't any price on this offer", 400)
 
 
-# TODO: adapt for firestore
 def create_offer_firebase(request):
     """Create a new offer object at /offers/<country_code>/<product_token>.
 
