@@ -151,6 +151,8 @@ def offer_search_trigger_fs(data, context, production=True):
     # user_country = get_user_country_from_fb_context(context)
     # print(f"user_country detected: {user_country}")
     # payload["delta"]["user_country"] = user_country
+
+    # TODO: parse country from path. See demo for example path
     value["user_country"] = "SE"
 
     # The offer comes from realtime_db
@@ -187,73 +189,130 @@ def live_search_offer_enricher(event, context, production=True):
             payload["product_token"],
         )
 
-        # Only handle offers from realtime_db
-        if payload.get("data_source") != "realtime_db":
-            return None
+        # Realtime DB implementation
+        if payload.get("data_source") == "realtime_db":
 
-        # Open a connection to the database
-        if "user_country" in payload.keys():
-            print(f"Key user_country is {payload['user_country']}")
+            user_country = payload.get("user_country", "SE")
+            ref = db.reference(f"offers/{user_country}")
+            # Choose the relevant search
+            search_ref = ref.child(str(payload["product_token"]))
+            # Get the existing offers data, on this we need to calculate savings
+            fetch_ref = search_ref.child("fetched_offers")
+            # Join existing and new offers together to a list (if existing data exists)
+            """
+                CASES TO CHECK FOR HERE:
+                - If there are no offers Firebase will return this weird tuple:
+                (None, 'null_etag') This happens in test.
+                - If the client has created a message and this function gets triggered
+                in production we will return something like {createdAt:X, gtin:Y, offers:Z}
+                but the key fetchedOffers won't be in there because that property gets
+                set by this function the first time.
+            """
+            # defind function for transaction
+            # use transaction to avoid concurrency bug, because different data from
+            # different fetching modules will come in at different message -> separate function invocation
+            def enrich_data(existing_offers):
+                if existing_offers != None and len(existing_offers) > 0:
+                    all_offers = existing_offers + payload["offers"]
+                else:
+                    all_offers = payload["offers"]
+                # Enrich and format all the combined offers
+                if len(all_offers) > 0:
+                    # metadata from PSQL
+                    return add_offers_metadata(all_offers, user_country)
+                else:
+                    return []
+
+            enriched_offers = fetch_ref.transaction(enrich_data)
+            print(
+                f"Enriched {len(enriched_offers)} offers/{user_country}/{payload['gtin']}"
+            )
+
+            all_sources_done = mark_source_as_done(
+                user_country, str(payload["product_token"]), payload["offer_source"]
+            )
+
+            if all_sources_done:
+                print(
+                    f"Offer fetch for token {str(payload['product_token'])} is complete"
+                )
+                search_ref.child("offer_fetch_complete").set(True)
+
+                search_complete_payload = {
+                    "product_token": str(payload["product_token"]),
+                    "gtin": payload["gtin"],
+                    "user_country": user_country,
+                }
+
+                search_complete_publisher = Publisher(
+                    "panprices", "offer_search_complete"
+                )
+                search_complete_publisher.publish_messages([search_complete_payload])
+
+            if production:
+                # Publish all data to a separate topic for writing it down in batches to PSQL.
+                publisher = Publisher("panprices", "sherlock_live_offers")
+                payload["offers"] = enriched_offers
+                publisher.publish_messages([payload])
+
+        # Firestore implementation
         else:
-            print("Key user_country is not specified in payload. Defaulting to 'SE'.")
-        user_country = payload.get("user_country", "SE")
-        ref = db.reference(f"offers/{user_country}")
-        # Choose the relevant search
-        search_ref = ref.child(str(payload["product_token"]))
-        # Get the existing offers data, on this we need to calculate savings
-        fetch_ref = search_ref.child("fetched_offers")
-        # Join existing and new offers together to a list (if existing data exists)
-        """
-            CASES TO CHECK FOR HERE:
-             - If there are no offers Firebase will return this weird tuple:
-             (None, 'null_etag') This happens in test.
-             - If the client has created a message and this function gets triggered
-             in production we will return something like {createdAt:X, gtin:Y, offers:Z}
-             but the key fetchedOffers won't be in there because that property gets
-             set by this function the first time.
-        """
-        # defind function for transaction
-        # use transaction to avoid concurrency bug, because different data from
-        # different fetching modules will come in at different message -> separate function invocation
-        def enrich_data(existing_offers):
-            if existing_offers != None and len(existing_offers) > 0:
-                all_offers = existing_offers + payload["offers"]
-            else:
-                all_offers = payload["offers"]
-            # Enrich and format all the combined offers
-            if len(all_offers) > 0:
-                # metadata from PSQL
-                return add_offers_metadata(all_offers, user_country)
-            else:
-                return []
+            user_country = payload["user_country"]
+            product_id = payload["product_id"]
+            f_db = firestore.client()
 
-        enriched_offers = fetch_ref.transaction(enrich_data)
-        print(
-            f"Enriched {len(enriched_offers)} offers/{user_country}/{payload['gtin']}"
-        )
+            offers_ref = (
+                f_db.collection("offer_search")
+                .document(f"{product_id}_{user_country}")
+                .collection("fetched_offers")
+            )
 
-        all_sources_done = mark_source_as_done(
-            user_country, str(payload["product_token"]), payload["offer_source"]
-        )
+            new_offers = payload["offers"]
+            new_enriched_offers = add_offers_metadata(new_offers, user_country)
 
-        if all_sources_done:
-            print(f"Offer fetch for token {str(payload['product_token'])} is complete")
-            search_ref.child("offer_fetch_complete").set(True)
+            # If we get more than 500 offers at a time we need to split it up
+            CHUNK_SIZE = 450
+            chunks = chunkify(new_enriched_offers, CHUNK_SIZE)
 
-            search_complete_payload = {
-                "product_token": str(payload["product_token"]),
-                "gtin": payload["gtin"],
-                "user_country": user_country,
-            }
+            for chunk in chunks:
+                batch = f_db.batch()
+                for offer in chunk:
+                    offer_ref = offers_ref.document(offer["offer_id"])
+                    batch.set(offer_ref, offer)
+                batch.commit()
 
-            search_complete_publisher = Publisher("panprices", "offer_search_complete")
-            search_complete_publisher.publish_messages([search_complete_payload])
+            all_sources_done = mark_source_as_done(
+                user_country,
+                product_id,
+                payload["offer_source"],
+            )
+
+            if all_sources_done:
+                print(f"Offer fetch for id {product_id} is complete")
+                (
+                    f_db.collection("offer_search")
+                    .document(f"{product_id}_{user_country}")
+                    .update({"offer_fetch_complete": True})
+                )
+
+                # TODO: Replace product_token with product_id
+                search_complete_payload = {
+                    "product_token": str(payload["product_token"]),
+                    "gtin": payload["gtin"],
+                    "user_country": user_country,
+                }
+
+                search_complete_publisher = Publisher(
+                    "panprices", "offer_search_complete"
+                )
+                search_complete_publisher.publish_messages([search_complete_payload])
 
         if production:
             # Publish all data to a separate topic for writing it down in batches to PSQL.
             publisher = Publisher("panprices", "sherlock_live_offers")
-            payload["offers"] = enriched_offers
+            payload["offers"] = new_enriched_offers
             publisher.publish_messages([payload])
+
     except Exception as e:
         msg_string = json.dumps(payload)
         print(f"something went wrong when handling message: {msg_string}")
