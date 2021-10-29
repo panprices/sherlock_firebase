@@ -181,7 +181,7 @@ def add_offers_metadata(offers, user_country="SE"):
             ON A.offer_id = C.offer_id
             WHERE C.offer_id IS NULL
             -- Blacklisted retailers
-            AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%'
+            AND lower(A.retailer_name) NOT SIMILAR TO 'bluecity%|datapryl%|%rakuten%'
         )
         SELECT
             -- Filter out when we from different sources have gotten the same offer
