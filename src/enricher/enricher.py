@@ -350,6 +350,9 @@ def _calculate_direct_checkout(user_country, row):
     country = row["country"]
     adj_price = row["adj_price"]
 
+    if adj_price is None:
+        return False
+
     # Don't allow checkout on products cheaper than 1500 SEK (or 150 EUR)
     # Note: we assume that adj_price is in SEK here
     if adj_price < 1500:
