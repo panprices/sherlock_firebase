@@ -648,7 +648,7 @@ def create_product_search_firebase(request):
     }
 
     links_to_fetch = body.get("links_to_fetch")
-    if batch_id is not None and not isinstance(batch_id, int):
+    if links_to_fetch is not None and not isinstance(links_to_fetch, int):
         return "links_to_fetch should be an int", 400
 
     cleaned_query = body["cleaned_query"]
