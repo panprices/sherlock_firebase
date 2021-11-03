@@ -214,7 +214,9 @@ def live_search_offer_enricher(event, context, production=True):
                 # Enrich and format all the combined offers
                 if len(all_offers) > 0:
                     # metadata from PSQL
-                    return add_offers_metadata(all_offers, user_country)
+                    return add_offers_metadata(
+                        all_offers, user_country, payload["product_id"]
+                    )
                 else:
                     return []
 
