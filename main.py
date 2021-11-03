@@ -174,14 +174,7 @@ def live_search_offer_enricher(event, context, production=True):
     try:
         payload = json.loads(base64.b64decode(event["data"]))
         print(
-            "Got",
-            str(len(payload["offers"])),
-            "offers for gtin:",
-            payload["gtin"],
-            "from",
-            payload["offer_source"],
-            "with product_token:",
-            payload["product_token"],
+            f"Got {str(len(payload['offers']))} offers for gtin: {payload['gtin']} from {payload['offer_source']} with product_token: {payload['product_token']} and product id: {payload.get('product_id')}""
         )
 
         # Realtime DB implementation
