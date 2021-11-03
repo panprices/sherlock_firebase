@@ -17,10 +17,10 @@ _calendar = SwedishCalendar()
 """
 
 
-def offer_to_tup(offer):
+def offer_to_tup(offer, product_id):
     return (
         offer.get("offer_id") or str(uuid.uuid4()),
-        offer.get("product_id") or None,
+        product_id,
         offer.get("offer_source") or None,
         offer.get("retail_prod_name") or None,
         offer.get("retailer_name") or None,
@@ -47,7 +47,7 @@ def offer_to_tup(offer):
 """
 
 
-def add_offers_metadata(offers, user_country="SE"):
+def add_offers_metadata(offers, user_country, product_id):
     if user_country != "SE" and user_country != "FI":
         raise ValueError("user_country has to be 'SE' or 'FI'")
 
@@ -82,7 +82,7 @@ def add_offers_metadata(offers, user_country="SE"):
                 %s AS stock_status
             UNION ALL
         """,
-            offer_to_tup(offer),
+            offer_to_tup(offer, product_id),
         )
         for offer in offers
         if offer.get("price") is not None
