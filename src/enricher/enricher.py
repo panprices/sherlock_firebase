@@ -92,7 +92,7 @@ def add_offers_metadata(offers, user_country="SE"):
                 NULL AS offer_id,
                 NULL AS updated_at,
                 NULL AS product_id,
-                NULL AS source,
+                NULL AS offer_source,
                 NULL AS retailer_product_name,
                 NULL AS retailer_name,
                 NULL AS country,
