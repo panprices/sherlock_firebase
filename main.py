@@ -177,6 +177,10 @@ def live_search_offer_enricher(event, context, production=True):
             f"Got {str(len(payload['offers']))} offers for gtin: {payload['gtin']} from {payload['offer_source']} with product id: {payload.get('product_id')} and product_token: {payload['product_token']}"
         )
 
+        if payload.get("product_id") is None:
+            logging.warn("Product id is None")
+            return
+
         # Realtime DB implementation
         if payload.get("data_source") == "realtime_db":
 
