@@ -56,9 +56,9 @@ def add_offers_metadata(offers, user_country="SE"):
     # Open a connection to the database
     cur, cur_dict, connection, pg_pool = connect_to_db()
 
-    print("offers ids published:")
+    print("product ids published:")
     for offer in offers:
-        print(f"\t{offer['offer_id']}")
+        print(f"\t{offer.get('product_id')}")
 
     # Concatinate the input data to a long string
     offers_str = b"".join(
