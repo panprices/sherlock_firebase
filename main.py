@@ -263,7 +263,11 @@ def live_search_offer_enricher(event, context, production=True):
             if len(new_offers) == 0:
                 new_enriched_offers = []
             else:
-                new_enriched_offers = add_offers_metadata(new_offers, user_country)
+                new_enriched_offers = add_offers_metadata(
+                    new_offers,
+                    user_country,
+                    product_id,
+                )
 
             # If we get more than 500 offers at a time we need to split it up
             CHUNK_SIZE = 450
