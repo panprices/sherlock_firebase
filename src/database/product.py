@@ -24,7 +24,8 @@ def _get_popular_products(cutoff_time, time_range=10):
         """
         -- Grab all the popular products
 		SELECT
-            product_token
+            product_token,
+            id
         FROM products
         WHERE popularity_idx IS NOT NULL
         AND rand_min_in_day >= {0}
@@ -33,7 +34,8 @@ def _get_popular_products(cutoff_time, time_range=10):
         -- Grab the products which we are doing campaigns on
         UNION ALL
         SELECT
-            A.product_token
+            A.product_token,
+            A.id
         FROM products A
             INNER JOIN campaign_products B
                 ON A.id::text = B.product_id
@@ -43,7 +45,8 @@ def _get_popular_products(cutoff_time, time_range=10):
         -- Grab the products from store offers
         UNION ALL
         SELECT 
-            A.product_token
+            A.product_token,
+            A.id
         FROM products A
             INNER JOIN panprices_offers B
                 ON A.id = B.product_id
@@ -58,9 +61,9 @@ def _get_popular_products(cutoff_time, time_range=10):
 
     pg_pool.putconn(connection)
 
-    # the returned row is in the form [(token, ), (token, ),...]
+    # the returned row is in the form [(token, id), (token, id),...]
     # turn it into [token, token,...]
-    return [row[0] for row in rows]
+    return [(row[0], row[1]) for row in rows]
 
 
 def get_gtin_from_product_id(product_id: int) -> Union[None, str]:

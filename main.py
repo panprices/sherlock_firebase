@@ -427,9 +427,9 @@ def delete_old_firebase_data(event, context):
 # TODO: adapt when switching to firestore
 def popular_product_search_trigger(event, context):
     """Trigger live_search on popular products to keep them up-to-date."""
-    product_tokens = get_popular_products()
+    products = get_popular_products()
 
-    if len(product_tokens) <= 0:
+    if len(products) <= 0:
         print("No popular product to fetch")
         return
 
@@ -452,30 +452,29 @@ def popular_product_search_trigger(event, context):
     country_codes = [c for c in country_codes]
 
     # Delete in bulk by updating them with empty data:
-    products = {}
-    for product_token in product_tokens:
-        products[product_token] = None
+    products_to_update = {}
+    for (product_token, product_id) in products:
+        products_to_update[product_token] = None
 
     for country in country_codes:
-        db.reference(f"offers/{country}").update(products)
-
-        if len(products) > 0:
-            db.reference(f"offers/{country}").update(products)
+        if len(products_to_update) > 0:
+            db.reference(f"offers/{country}").update(products_to_update)
 
     # Recreate the products:
-    for product_token in product_tokens:
-        products[product_token] = {
+    for (product_token, product_id) in products:
+        products_to_update[product_token] = {
             "offer_fetch_complete": False,
             "product_token": product_token,
+            "product_id": product_id,
             "created_at": int(round(time.time() * 1000)),  # ms since epoch
             "triggered_from_client": True,
             "popular": True,
         }
 
     for country in country_codes:
-        db.reference(f"offers/{country}").update(products)
+        db.reference(f"offers/{country}").update(products_to_update)
 
-    print(f"Trigger fetching offers for {len(product_tokens)} popular products")
+    print(f"Trigger fetching offers for {len(products_to_update)} popular products")
 
 
 # TODO: adapt for firestore
