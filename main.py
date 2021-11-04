@@ -461,6 +461,7 @@ def popular_product_search_trigger(event, context):
             db.reference(f"offers/{country}").update(products_to_update)
 
     # Recreate the products:
+    offer_sources = helpers.get_offer_sources()
     for (product_token, product_id) in products:
         products_to_update[product_token] = {
             "offer_fetch_complete": False,
@@ -469,6 +470,7 @@ def popular_product_search_trigger(event, context):
             "created_at": int(round(time.time() * 1000)),  # ms since epoch
             "triggered_from_client": True,
             "popular": True,
+            "offer_sources_done": {source: False for source in offer_sources},
         }
 
     for country in country_codes:
