@@ -174,12 +174,8 @@ def live_search_offer_enricher(event, context, production=True):
     try:
         payload = json.loads(base64.b64decode(event["data"]))
         print(
-            f"Got {str(len(payload['offers']))} offers for gtin: {payload['gtin']} from {payload['offer_source']} with product id: {payload.get('product_id')} and product_token: {payload['product_token']}"
+            f"Got {str(len(payload['offers']))} offers for gtin: {payload['gtin']} from {payload['offer_source']} with product id: {payload['product_id']} and product_token: {payload['product_token']}"
         )
-
-        if payload.get("product_id") is None:
-            logging.warn("Product id is None")
-            return
 
         # Realtime DB implementation
         if payload.get("data_source") == "realtime_db":
@@ -212,7 +208,7 @@ def live_search_offer_enricher(event, context, production=True):
                 if len(all_offers) > 0:
                     # metadata from PSQL
                     return add_offers_metadata(
-                        all_offers, user_country, payload.get("product_id")
+                        all_offers, user_country, payload["product_id"]
                     )
                 else:
                     return []
@@ -232,10 +228,10 @@ def live_search_offer_enricher(event, context, production=True):
                 )
                 search_ref.child("offer_fetch_complete").set(True)
 
+                # TODO: Replace product_token with product_id
                 search_complete_payload = {
                     "product_token": str(payload["product_token"]),
-                    # TODO: uncomment this
-                    # "product_id": payload["product_id"],
+                    "product_id": payload["product_id"],
                     "gtin": payload["gtin"],
                     "user_country": user_country,
                 }
