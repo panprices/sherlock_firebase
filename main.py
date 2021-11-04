@@ -573,13 +573,13 @@ def create_offer_firebase(request):
 
         # Firestore implementation
         # TODO: activate firestore offer search here
-        # f_db = firestore.client()
-        # offer["created_at"] = firestore.SERVER_TIMESTAMP
-        # doc_ref = f_db.collection("offer_search").document(
-        #     f"{product_id}_{user_country}"
-        # )
-        # doc_ref.delete()
-        # doc_ref.set(offer)
+        f_db = firestore.client()
+        offer["created_at"] = firestore.SERVER_TIMESTAMP
+        doc_ref = f_db.collection("offer_search").document(
+            f"{product_id}_{user_country}"
+        )
+        doc_ref.delete()
+        doc_ref.set(offer)
 
     except TypeError as ex:
         logging.error(ex)
