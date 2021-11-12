@@ -23,6 +23,12 @@ def fetch_gtin_url(gtin: str) -> dict:
 
     offer_urls = {}
     for row in rows:
+        # Always reuse cached url from Idealo to reduce cost:
+        if "idealo" in row["offer_source"]:
+            offer_urls[row["offer_source"]] = row["url"]
+            continue
+
+        # Reuse cached url only if it is up to date:
         if not row["url"] and not _up_to_date(row["created_at"], row["updated_at"]):
             print(
                 f"Offer link from {row['offer_source']} for product {gtin} is NULL and is not up to date, does not reuse."
