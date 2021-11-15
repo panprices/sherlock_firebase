@@ -1,3 +1,4 @@
+from typing import Optional
 from src.database.database import connect_to_db
 import datetime
 
@@ -23,13 +24,12 @@ def fetch_gtin_url(gtin: str) -> dict:
 
     offer_urls = {}
     for row in rows:
-        # Always reuse cached url from Idealo to reduce cost:
-        if "idealo" in row["offer_source"]:
-            offer_urls[row["offer_source"]] = row["url"]
-            continue
-
-        # Reuse cached url only if it is up to date:
-        if not row["url"] and not _up_to_date(row["created_at"], row["updated_at"]):
+        # Reuse NULL cached url only if it is up to date:
+        if not row["url"] and not _up_to_date(
+            row["offer_source"],
+            row["created_at"],
+            row["updated_at"],
+        ):
             print(
                 f"Offer link from {row['offer_source']} for product {gtin} is NULL and is not up to date, does not reuse."
             )
@@ -51,7 +51,9 @@ def fetch_google_shopping_url(gtin):
 
 
 def _up_to_date(
-    created_at: datetime.datetime, updated_at: datetime.datetime = None
+    offer_source: str,
+    created_at: datetime.datetime,
+    updated_at: datetime.datetime = None,
 ) -> bool:
     """An offer_url is up to date if:
     - it's been created within 30 days (for new products) & updated within 12 hours, or
@@ -60,7 +62,9 @@ def _up_to_date(
     OLD_PRODUCT_THRESHHOLD_DAYS = 30
     NEW_PRODUCT_MAX_CACHE_HOURS = 12
     OLD_PRODUCT_MAX_CACHE_DAYS = 7
+    IDEALO_NEW_PRODUCT_MAX_CACHE_HOURS = 72  # special rule for Idealo
 
+    # Always reuse cached url from Idealo to reduce cost:
     now = datetime.datetime.now()
     if updated_at is None:
         updated_at = created_at
@@ -68,11 +72,29 @@ def _up_to_date(
     since_creation = now - created_at
     since_last_update = now - updated_at
     url_is_new = since_creation.days < OLD_PRODUCT_THRESHHOLD_DAYS
+
     if url_is_new:
-        return (
-            True
-            if since_last_update.total_seconds() < NEW_PRODUCT_MAX_CACHE_HOURS * 3600
-            else False
-        )
-    else:
-        return True if since_last_update.days < OLD_PRODUCT_MAX_CACHE_DAYS else False
+        if "idealo" in offer_source:
+            up_to_date = (
+                True
+                if since_last_update.total_seconds()
+                < IDEALO_NEW_PRODUCT_MAX_CACHE_HOURS * 3600
+                else False
+            )
+        else:
+            up_to_date = (
+                True
+                if since_last_update.total_seconds()
+                < NEW_PRODUCT_MAX_CACHE_HOURS * 3600
+                else False
+            )
+
+    if not url_is_new:
+        if "idealo" in offer_source:
+            up_to_date = True
+        else:
+            up_to_date = (
+                True if since_last_update.days < OLD_PRODUCT_MAX_CACHE_DAYS else False
+            )
+
+    return up_to_date
