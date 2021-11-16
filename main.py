@@ -179,6 +179,8 @@ def live_search_offer_enricher(event, context, production=True):
     try:
         payload = json.loads(base64.b64decode(event["data"]))
 
+        print(f"Triggered by: {payload['triggered_by']}")
+
         if payload["triggered_by"]["source"] == "b2b_job":
             b2b_collector_publisher.send_messages([payload])
             print("Got b2b message so will abort early")
