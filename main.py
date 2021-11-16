@@ -182,7 +182,7 @@ def live_search_offer_enricher(event, context, production=True):
         print(f"Triggered by: {payload['triggered_by']}")
 
         if payload["triggered_by"]["source"] == "b2b_job":
-            b2b_collector_publisher.send_messages([payload])
+            b2b_collector_publisher.publish_messages([payload])
             print("Got b2b message so will abort early")
             return None
 
