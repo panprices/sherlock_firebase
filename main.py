@@ -97,6 +97,9 @@ def offer_search_trigger(event, context, production=True):
             # The offer comes from realtime_db
             payload["delta"]["data_source"] = "realtime_db"
 
+            # The offer comes from batch or client
+            payload["delta"]["triggered_by"] = {"source": "client_or_batch"}
+
             # Publish it to the topics which are consuming it
             publisher = Publisher("panprices", "sherlock_products")
             publisher.publish_messages([payload["delta"]])
@@ -165,6 +168,8 @@ def offer_search_trigger_fs(data, context, production=True):
     )
 
 
+b2b_collector_publisher = Publisher("panprices", "b2b_live_search_offers")
+
 # TODO: adapt when switching to firestore
 def live_search_offer_enricher(event, context, production=True):
     """
@@ -173,6 +178,12 @@ def live_search_offer_enricher(event, context, production=True):
     """
     try:
         payload = json.loads(base64.b64decode(event["data"]))
+
+        if payload["triggered_by"]["source"] == "b2b_job":
+            b2b_collector_publisher.send_messages([payload])
+            print("Got b2b message so will abort early")
+            return None
+
         print(
             f"Got {str(len(payload['offers']))} offers for gtin: {payload['gtin']} from {payload['offer_source']} with product id: {payload['product_id']} and product_token: {payload['product_token']}"
         )

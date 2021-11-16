@@ -58,5 +58,8 @@
   "offer_source": "kelkoo",
   "name": null,
   "price": null,
-  "data_source": "firestore"
+  "data_source": "realtime_db",
+  "triggered_by": {
+    "source": "client_or_batch"
+  }
 }
