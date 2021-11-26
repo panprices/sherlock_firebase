@@ -474,7 +474,7 @@ def _calculate_shipping_fee(user_country, row):
     adj_price = row["adj_price"]
     country = row["country"]
 
-    # When we don't have shipping data => return estimation in some cases
+    # 1. When we don't have shipping data => return estimation in some cases
     if shipping_fee is None:
         if country in {"UK", "IT", "ES"}:
             return 406
@@ -484,11 +484,13 @@ def _calculate_shipping_fee(user_country, row):
             return 0
         else:
             return None
-    # When we have shipping and there is no min order value => return the fee
-    elif shipping_min_order_val is None:
-        return round((shipping_fee * shipping_to_local_currency) / 100)
-    # When we have shipping and item price is higher than min order value => return the fee
-    elif ((shipping_min_order_val * shipping_to_local_currency) / 100) > adj_price:
+
+    # 2. When we have shipping data => base on that
+    # Default shipping_min_order_val to 0:
+    if not shipping_min_order_val:
+        shipping_min_order_val = 0
+    # When item price is at least min order value => return the fee
+    if adj_price >= ((shipping_min_order_val * shipping_to_local_currency) / 100):
         return round((shipping_fee * shipping_to_local_currency) / 100)
     else:
         return None
