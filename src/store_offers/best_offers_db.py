@@ -55,8 +55,6 @@ def store_best_offer_in_db(product_id, product_token, gtin, user_country, best_o
 
     cur, cur_dict, connection, pg_pool = connect_to_db()
 
-    print("gtin", gtin)
-
     cur.execute(
         b"""
             INSERT INTO best_offers (

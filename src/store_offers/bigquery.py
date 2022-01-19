@@ -1,5 +1,4 @@
 import uuid
-import logging
 import datetime
 import structlog
 
@@ -40,5 +39,5 @@ def store_offers_in_bq(product_id, product_token, fetched_offers):
 
     errors = bigquery_client.insert_rows(table, offer_rows)
     if errors != []:
-        logging.error(str(errors))
+        logger.error("errors when inserting into bigquery", errors=str(errors))
         raise Exception(str(errors))
