@@ -32,7 +32,7 @@ def offer_to_tup(offer, product_id):
         offer.get("requested_at") or None,
         offer.get("match_score") or None,
         offer.get("stock_status") or None,
-        json.loads(offer.get("metadata", {})),
+        json.dumps(offer.get("metadata", {})),
     )
 
 
