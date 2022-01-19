@@ -29,7 +29,7 @@ from src.database.offer_url import fetch_gtin_url, fetch_google_shopping_url
 from src.database.product import get_gtin_from_product_id, get_popular_products
 from src.helpers.chunk import chunkify
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.NOTSET)
 
 config_structlog()
 
