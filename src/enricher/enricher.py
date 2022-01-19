@@ -275,6 +275,8 @@ def _strip_columns(row):
     del row["alexa_site_rank"]
     del row["shipping_min_order_val"]
     del row["shipping_to_local_currency"]
+
+    del row["metadata"]
     return row
 
 
