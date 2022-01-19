@@ -213,7 +213,8 @@ def add_offers_metadata(offers, user_country, product_id):
             trustpilot_num_rating,
             trustpilot_avg_rating,
             alexa_site_rank,
-            stock_status
+            stock_status,
+            metadata
         FROM offers_filtered
         WHERE offer_source IS NOT NULL-- Remove the row needed for the union
         AND offer_source NOT LIKE 'google_shopping%'-- TEMPORARY REMOVE GOOGLE SHOPPING;
