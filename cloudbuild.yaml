@@ -15,7 +15,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--vpc-connector=k8s-connector",
         "--set-env-vars",
         "_FERNET_SECRET_KEY=${_FERNET_SECRET_KEY}",
@@ -31,7 +31,7 @@ steps:
       - --trigger-event=providers/cloud.firestore/eventTypes/document.create
       - --trigger-resource=projects/panprices/databases/(default)/documents/offer_search/{searchID}
       - --region=europe-west1
-      - --runtime=python37
+      - --runtime=python39
       - --vpc-connector=k8s-connector
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -48,7 +48,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--vpc-connector=k8s-connector",
         "--max-instances",
         "50",
@@ -68,7 +68,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
       ]
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -85,7 +85,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--timeout",
         "540s",
         "--memory",
@@ -106,7 +106,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--vpc-connector=k8s-connector",
         "--timeout",
         "540s",
@@ -125,7 +125,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--max-instances",
         "1",
         "--allow-unauthenticated",
@@ -144,7 +144,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--allow-unauthenticated",
       ]
 
@@ -161,7 +161,7 @@ steps:
         "--region",
         "europe-west1",
         "--runtime",
-        "python37",
+        "python39",
         "--allow-unauthenticated",
       ]
 
@@ -175,7 +175,7 @@ steps:
       - https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPO_NAME}/revisions/${REVISION_ID}
       - --trigger-topic=offer_search_complete
       - --region=europe-west1
-      - --runtime=python37
+      - --runtime=python39
       - --vpc-connector=k8s-connector
 
 images: []
