@@ -1,6 +1,7 @@
 import base64
 from datetime import datetime, timedelta
 import json
+import structlog
 from src.helpers.FirestoreTriggerConverter import FirestoreTriggerConverter
 from src.store_offers.best_offers_db import get_best_offer, store_best_offer_in_db
 from src.store_offers.bigquery import store_offers_in_bq
@@ -12,7 +13,7 @@ from firebase_admin import db
 from google.cloud import bigquery
 from firebase_admin import firestore
 from itertools import islice
-
+from src.helpers.structlog import config_structlog
 
 import src.helpers.encryption as encryption
 from src.pubsub.pubsub import Publisher
@@ -29,6 +30,10 @@ from src.database.product import get_gtin_from_product_id, get_popular_products
 from src.helpers.chunk import chunkify
 
 logging.basicConfig(level=logging.INFO)
+
+config_structlog()
+
+logger = structlog.get_logger()
 
 
 def _initialize_firebase():
@@ -695,7 +700,13 @@ def store_finished_offers(event, context):
     product_token = payload.get("product_token")
     user_country = payload.get("user_country")
     gtin = payload.get("gtin")
-    logging.info(f"Storing offers for product with product_token: {product_token}")
+
+    logger.info(
+        f"Storing finished offers",
+        product_token=product_token,
+        user_country=user_country,
+        gtin=gtin,
+    )
 
     offer_search = db.reference("offers/SE").child(product_token).get()
     if not offer_search.get("offer_fetch_complete"):

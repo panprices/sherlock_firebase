@@ -1,8 +1,11 @@
 import uuid
 import logging
 import datetime
+import structlog
 
 from google.cloud import bigquery
+
+logger = structlog.get_logger()
 
 
 def store_offers_in_bq(product_id, product_token, fetched_offers):
@@ -10,6 +13,12 @@ def store_offers_in_bq(product_id, product_token, fetched_offers):
     fetched_at = datetime.datetime.utcnow().isoformat()
 
     for offer in fetched_offers:
+        logger.info(
+            "storing offer",
+            offer=offer,
+            instance_id=instance_id,
+            fetched_at=fetched_at,
+        )
         offer["product_id"] = product_id
         offer["product_token"] = product_token
         offer["instance_id"] = instance_id
