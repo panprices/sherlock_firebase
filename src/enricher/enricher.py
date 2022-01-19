@@ -1,6 +1,8 @@
 import json
 import uuid
 
+import structlog
+
 from src.database.database import connect_to_db
 from pipetools import pipe, maybe, X
 from workalendar.europe import Sweden as SwedishCalendar
@@ -9,6 +11,7 @@ from datetime import date
 
 _calendar = SwedishCalendar()
 
+logger = structlog.get_logger()
 
 """
     This is necessary since Firebase does not sture keys with
@@ -19,6 +22,13 @@ _calendar = SwedishCalendar()
 
 
 def offer_to_tup(offer, product_id):
+    if offer.get("metadata") is not None:
+        logger.debug(
+            "offer has metadata",
+            metadata=offer.get("metadata"),
+            metadata_str=json.dumps(offer.get("metadata", {})),
+        )
+
     return (
         offer.get("offer_id") or str(uuid.uuid4()),
         product_id,
