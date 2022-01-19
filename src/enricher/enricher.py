@@ -22,13 +22,6 @@ logger = structlog.get_logger()
 
 
 def offer_to_tup(offer, product_id):
-    if offer.get("metadata") is not None:
-        logger.warn(
-            "offer has metadata",
-            metadata=offer.get("metadata"),
-            metadata_str=json.dumps(offer.get("metadata", {})),
-        )
-
     return (
         offer.get("offer_id") or str(uuid.uuid4()),
         product_id,
@@ -42,7 +35,7 @@ def offer_to_tup(offer, product_id):
         offer.get("requested_at") or None,
         offer.get("match_score") or None,
         offer.get("stock_status") or None,
-        json.dumps(offer.get("metadata", {})),
+        offer.get("metadata") or None,
     )
 
 
@@ -276,7 +269,6 @@ def _strip_columns(row):
     del row["shipping_min_order_val"]
     del row["shipping_to_local_currency"]
 
-    del row["metadata"]
     return row
 
 
