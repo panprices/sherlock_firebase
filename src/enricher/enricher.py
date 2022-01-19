@@ -23,7 +23,7 @@ logger = structlog.get_logger()
 
 def offer_to_tup(offer, product_id):
     if offer.get("metadata") is not None:
-        logger.debug(
+        logger.warn(
             "offer has metadata",
             metadata=offer.get("metadata"),
             metadata_str=json.dumps(offer.get("metadata", {})),
