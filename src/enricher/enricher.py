@@ -77,7 +77,8 @@ def add_offers_metadata(offers, user_country, product_id):
                 %s AS offer_url,
                 %s AS requested_at,
                 %s::int AS match_score,
-                %s AS stock_status
+                %s AS stock_status,
+                %s AS metadata
             UNION ALL
         """,
             offer_to_tup(offer, product_id),
@@ -104,7 +105,8 @@ def add_offers_metadata(offers, user_country, product_id):
                 NULL AS offer_url,
                 NULL AS requested_at,
                 NULL AS match_score,
-                NULL AS stock_status
+                NULL AS stock_status,
+                NULL AS metadata
         ), offers_raw AS ( ---- take retailer data, calculate the price and filter out blacklisted retailer
             SELECT
                 A.*,
