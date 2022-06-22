@@ -8,5 +8,8 @@ env/
 venv/
 *.csv
 
+# IDEs
+.idea/
+
 # Keys
 fernet_key.env

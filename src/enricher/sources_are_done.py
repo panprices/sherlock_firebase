@@ -25,7 +25,8 @@ def mark_source_as_done_fs(user_country, product_id, offer_source):
     )
 
     # Mark offer source as done
-    search_ref.update({f"offer_sources_done.{offer_source}": True})
+    # Use set as opposed to update, because when we start demo searches there is no document already in the database
+    search_ref.set({f"offer_sources_done.{offer_source}": True})
 
     # Check if all offer sources are done
     offer_sources_done = search_ref.get().to_dict()["offer_sources_done"]

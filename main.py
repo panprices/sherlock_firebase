@@ -307,7 +307,7 @@ def live_search_offer_enricher(event, context, production=True):
                 (
                     f_db.collection("offer_search")
                     .document(f"{product_id}_{user_country}")
-                    .update({"offer_fetch_complete": True})
+                    .set({"offer_fetch_complete": True})
                 )
 
                 # TODO: Replace product_token with product_id
