@@ -1,0 +1,73 @@
+{
+   "created_at":1607443346513,
+   "gtin":"08806090306419",
+   "offer_fetch_complete":false,
+   "offer_urls":{
+      "geizhals_DE":"https://geizhals.de/samsung-galaxy-s20-g985f-ds-128gb-cosmic-gray-a2231336.html",
+      "google_shopping_SE":"https://www.google.com/shopping/product/2485727905043486611",
+      "pricerunner_DK":"/pl/1-5158332/Mobiltelefoner/Samsung-Galaxy-S20-128GB-SM-G985F-DS-Sammenlign-Priser",
+      "pricerunner_SE":"/pl/1-5158332/Mobiltelefoner/Samsung-Galaxy-S20-128GB-SM-G985F-DS-priser",
+      "pricerunner_UK":"/pl/1-5158332/Mobile-Phones/Samsung-Galaxy-S20-128GB-SM-G985F-DS-Compare-Prices",
+      "prisjakt_SE":"5262812"
+   },
+   "product_token":"gAAAAABfpl8qcdibgIA8Cz5hv41lnaBgkdnOyJnn-BJDXUOStJFMVHb0TF7N2cTjAjkf1LeRqqWxBhn1Xrz5kk5qNZQFYNd2Ug==",
+   "triggered_from_client":true,
+   "offers":[
+      {
+         "offer_source":"google_shopping_SE",
+         "retailer_name":"cdon.se",
+         "offer_url":"https://www.google.com/aclk?sa=L&ai=DChcSEwjjosCO4b7tAhUHnLMKHXG2BUcYABAFGgJxbg&sig=AOD64_1WtVLnca4wif48cyErEdUXLQL6xA&ctype=5&q=&ved=0ahUKEwjmmr2O4b7tAhVRGVkFHWWlAigQ2ikIEw&adurl=",
+         "country":"SE",
+         "retail_prod_name":"Samsung Galaxy S20+ Plus G985F-DS 8GB/128GB 4G Dual Sim",
+         "price":"1511900",
+         "currency":"SEK",
+         "requested_at":"2020-12-08T16:02:29Z",
+         "match_score":null
+      },
+      {
+         "offer_source":"google_shopping_SE",
+         "retailer_name":"ComputerSalg.se",
+         "offer_url":"https://www.google.com/aclk?sa=L&ai=DChcSEwjjosCO4b7tAhUHnLMKHXG2BUcYABAEGgJxbg&sig=AOD64_30vXc19S6WwLmdwxntV9GOKiVxRg&ctype=5&q=&ved=0ahUKEwjmmr2O4b7tAhVRGVkFHWWlAigQ2ikIGA&adurl=",
+         "country":"SE",
+         "retail_prod_name":"Samsung Galaxy S20+ Plus G985F-DS 8GB/128GB 4G Dual Sim",
+         "price":"815900",
+         "currency":"SEK",
+         "requested_at":"2020-12-08T16:02:29Z",
+         "match_score":null
+      },
+      {
+         "offer_source":"google_shopping_SE",
+         "retailer_name":"playthek.com",
+         "offer_url":"https://www.google.com/aclk?sa=L&ai=DChcSEwjjosCO4b7tAhUHnLMKHXG2BUcYABAGGgJxbg&sig=AOD64_3iDfDvyJjrJD8Qrql62z_l3v0DFQ&ctype=5&q=&ved=0ahUKEwjmmr2O4b7tAhVRGVkFHWWlAigQ2ikIGw&adurl=",
+         "country":"SE",
+         "retail_prod_name":"Samsung Galaxy S20+ Plus G985F-DS 8GB/128GB 4G Dual Sim",
+         "price":"845429",
+         "currency":"SEK",
+         "requested_at":"2020-12-08T16:02:29Z",
+         "match_score":null
+      },
+      {
+         "offer_source":"google_shopping_SE",
+         "retailer_name":"mmtelecom.co.uk",
+         "offer_url":"https://www.google.com/aclk?sa=L&ai=DChcSEwjjosCO4b7tAhUHnLMKHXG2BUcYABAHGgJxbg&sig=AOD64_31VIJQMPz171Ao3DUhaz4YNbdOig&ctype=5&q=&ved=0ahUKEwjmmr2O4b7tAhVRGVkFHWWlAigQ2ikIIA&adurl=",
+         "country":"SE",
+         "retail_prod_name":"Samsung Galaxy S20+ Plus G985F-DS 8GB/128GB 4G Dual Sim",
+         "price":"731031",
+         "currency":"SEK",
+         "requested_at":"2020-12-08T16:02:29Z",
+         "match_score":null
+      },
+      {
+         "offer_source":"google_shopping_SE",
+         "retailer_name":"SOTEL",
+         "offer_url":"https://www.google.com/aclk?sa=L&ai=DChcSEwjjosCO4b7tAhUHnLMKHXG2BUcYABAJGgJxbg&sig=AOD64_1dhsmc-VTah5L0eHLbUx0Hwb7Dzg&ctype=5&q=&ved=0ahUKEwjmmr2O4b7tAhVRGVkFHWWlAigQ2ikIJA&adurl=",
+         "country":"SE",
+         "retail_prod_name":"Samsung Galaxy S20+ Plus G985F-DS 8GB/128GB 4G Dual Sim",
+         "price":"888192",
+         "currency":"SEK",
+         "requested_at":"2020-12-08T16:02:29Z",
+         "match_score":null
+      }
+   ],
+   "offer_source":"google_shopping_SE"
+}
